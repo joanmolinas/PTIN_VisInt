@@ -1,0 +1,23 @@
+{
+    "mongodb": {
+        "hostname": "localhost",
+        "port": "",
+        "user": "",
+        "pwd": "",
+        "database": "local"
+    },
+
+    "language": {
+        "default_language": "es",
+
+        "es": {
+            "name": "español"
+        },
+        "cat" : {
+            "name": "català"
+        },
+        "en": {
+            "name": "english"
+        }
+    }
+}

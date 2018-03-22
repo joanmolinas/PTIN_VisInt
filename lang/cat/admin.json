@@ -1,0 +1,10 @@
+{
+    "login": {
+        "__meta": {
+            "title":"Autentificació"
+        },
+        "__user":"usuari",
+        "__pwd":"clau",
+        "__validate":"validar"
+    }
+}

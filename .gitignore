@@ -57,3 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+# vs code
+*.code-workspace
+
+# node_modules
+node_modules
