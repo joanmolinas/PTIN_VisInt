@@ -9,8 +9,7 @@ exports.findAll = function ( req,res) {
 };
 //Get- Retorna un sol Registre per el nom del dispositiu
 exports.findDevice=function(req,res){
-	console.log (req.params.name);
-	device.find({'id':req.params.name},function(err,Device){
+	device.find({'id':req.params.id},function(err,Device){
 	
 	if(err) return res.send(500,err.message);
 	if(Device[0]!=null){
@@ -39,7 +38,7 @@ exports.add=function(req,res){
 
 //Delete borra un registre per el id del dispositiu
 exports.deleteDevice=function(req, res){
-	device.find({'id':req.params.name},function(err, Device){
+	device.find({'id':req.params.id},function(err, Device){
 		if(err) return res.send(500, err.message);
 		if(Device[0]!=null){
 			Device[0].remove(function(err){
