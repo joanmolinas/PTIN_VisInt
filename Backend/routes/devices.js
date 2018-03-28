@@ -7,11 +7,17 @@ exports.findAll = function ( req,res) {
 	res.status(200).jsonp(devices);
 	});
 };
-//Get- Retorna un sol Registre
+//Get- Retorna un sol Registre per el nom del dispositiu
 exports.findDevice=function(req,res){
-	device.find({'name':req.params.name},function(err,device){
+	console.log (req.params.name);
+	device.find({'id':req.params.name},function(err,Device){
+	
 	if(err) return res.send(500,err.message);
-	res.status(200).jsonp(device);
+	if(Device[0]!=null){
+		res.status(200).jsonp(Device);
+	}else{
+		res.status(400).jsonp("No Trobat");
+	}
 	});
 };
 
@@ -22,15 +28,32 @@ exports.add=function(req,res){
 		name:req.body.name,
 		latitude:req.body.latitude,
 		longitude:req.body.longitude,
-		creationDate:req.body.creationDate,
-		modificationDate:req.body.modificationDate,
+		creationDate:new Date(), //o posem nosaltres
+		modificationDate:new Date(), // o posem nosaltres IsO 8601
 	});
 	Device.save(function(err,Device){
 		if(err) return res.send(500,err.message);
 		res.status(200).json(Device);
 	});
 };
+
+//Delete borra un registre per el id del dispositiu
+exports.deleteDevice=function(req, res){
+	device.find({'id':req.params.name},function(err, Device){
+		if(err) return res.send(500, err.message);
+		if(Device[0]!=null){
+			Device[0].remove(function(err){
+				if(err) return res.send(500,err.message);
+				res.status(200).jsonp("Borrat correctament");
+			});
+		}else{
+			res.status(400).jsonp("No Trobat");
+		}
+	});
+};
+	
 		
+
 //Delete borra tots els registres
 exports.borra=function(req,res){
 	device.find(function(err,devices){
