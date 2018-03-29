@@ -16,8 +16,10 @@ POST: /device/add
 > Request
 ``` json
 {
-	"email" : "elon@usehamp.io",
-	"password" : "1234567890"
+	"id" : "00001",
+	"name" : "Dispositiu Pepe",
+	"latitude" : "47.993",
+	"longitude" : "5.115"
 }
 ```
 > Response
@@ -25,11 +27,10 @@ POST: /device/add
 {
     "message": "",
     "data": {
-        "cards": [],
-        "surname": "Musk",
-        "email": "elon@usehamp.io",
-        "identifier": "92da06f492c3435b883d845df00dacd4",
-        "name": "Elon"
+        "id": [],
+        "name": "Dispositiu Pepe",
+        "latitude": "47.993",
+        "longitude": "5.115",
     },
     "code": 200
 }
