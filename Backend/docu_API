@@ -1,0 +1,74 @@
+# VisInt
+
+**API endpoint**
+
+```
+Production: https://ptin2018.herokuapp.com/
+```
+
+**Content-Type**
+```
+application/json
+```
+
+### Description
+
+### Auth
+**Add new Device**
+```
+POST: /device/add
+```
+> Request
+``` json
+{
+	"id" : "00001",
+	"name" : "Dispositiu Pepe",
+  "latitude" : "47.117",
+  "longitude" : "5.776"
+}
+```
+> Response
+``` json
+{
+
+}
+```
+
+
+**Find All**
+```
+GET: /device/fin
+```
+
+> Request
+``` json
+{
+	"name" : "Elon",
+	"surname" : "Musk",
+	"email" : "elon@usehamp.io",
+	"password" : "1234567890",
+	"phone" : "666777888",
+	"gender" : "M",
+	"tokenFCM" : "834hhfjkhsdkhsfk8348738975hf",
+	"os" : "ios",
+	"language" : "esES"
+}
+```
+
+> Response
+``` json
+{
+    "message": "",
+    "data": {
+        "phone": "666777888",
+        "gender": "M",
+        "stripeID": "cus_CK7cQdXY17w9Mc",
+        "cards": [],
+        "surname": "Musk",
+        "email": "elon@usehamp.io",
+        "identifier": "92da06f492c3435b883d845df00dacd4",
+        "name": "Elon"
+    },
+    "code": 200
+}
+```
