@@ -92,9 +92,9 @@ DELETE: /device/borra
 }
 ```
 
-**Get/Find device**
+**Find device**
 ```
-GET: /device/
+GET: /device/findDevice
 ```
 > Request
 ``` json
@@ -119,9 +119,9 @@ GET: /device/
 }
 ```
 
-**Get/Find ALL**
+**Find ALL**
 ```
-GET: /device/
+GET: /device/findAll
 ```
 > Request
 ``` json
