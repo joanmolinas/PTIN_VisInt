@@ -2,9 +2,10 @@
 
 **API endpoint**
 
-```
-Production: https://ptin2018.herokuapp.com/
-```
+* **URL**
+
+https://ptin2018.herokuapp.com/
+
 
 ### Description
 
