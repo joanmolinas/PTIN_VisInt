@@ -1,25 +1,16 @@
-# Hampy
+# VisInt
 
 **API endpoint**
 
 ```
-Development: http://localhost:8181/api/v1
-```
-```
-Production: http://usehamp.io/api/v1
-```
-
-**Content-Type**
-```
-application/json
+Production: https://ptin2018.herokuapp.com/
 ```
 
 ### Description
 
-### Auth
-**Sign in**
+**Add device**
 ```
-POST: /auth/signin
+POST: /device/add
 ```
 > Request
 ``` json
