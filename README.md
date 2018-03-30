@@ -2,6 +2,14 @@
 
 First of all npm must be installed in your system.
 
+__IMPORTANT!__ replace url variable routes/public.js line 25 with a valid getall devices url.
+
+## Version S1.ncarmona ##
+
+- Layout has been implemented.
+- Devices can be displayed in the sidebar.
+- Responsive design.
+
 ## Installing dependencies ##
 
 Open your terminal, go to project folder and execute the follow command:

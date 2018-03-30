@@ -11,9 +11,11 @@ var bcrypt = require('bcrypt-nodejs')
 
 var default_lang = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config.json'))).language.default_language
 
-/**
- * if user is registered this route will redirect to dashboard.
- * otherwhise will display admin login.
+ /**
+ * @author ncarmona
+ * @description this is /admin. if user has been validated will redirect to dashboard, otherwhise will 
+ * display admin login.
+ * @version S1
  */
 router.get('/', function(req, res, next){
   // if user session exists -> redirect to dashboard.
@@ -23,9 +25,10 @@ router.get('/', function(req, res, next){
   // res.redirect('/dashboard.html')
 })
 
-/**
- * display admin login.
- * req.headers["accept-language"] will get browser language.
+ /**
+ * @author ncarmona
+ * @description Display admin login.
+ * @version S1
  */
 router.get('/login.html', function(req, res, next) {
 
@@ -38,9 +41,12 @@ router.get('/login.html', function(req, res, next) {
   })
 })
 
-/**
- * validate user and password sended by /login.html --> user : Noel clave: pepe
- * msg must be a translate string.
+ /**
+ * @author ncarmona
+ * @description Looks for a user with req.body.username and then compare req.body.password with user password..
+ * @version S1
+ * @requires bcrypt-nodejs 
+ * @returns 
  */
 router.post('/auth', function(req, res, next){
   let user = require('../models/User')
