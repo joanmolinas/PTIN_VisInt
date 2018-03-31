@@ -33,7 +33,7 @@ router.get('/', function(req, res, next) {
     //           })
     //     }
     // })
-    console.log("public")
+    res.send("{OK}")
 
 });
 
