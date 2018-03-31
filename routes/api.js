@@ -2,8 +2,6 @@
  * This router file contains api routes.
  */
 
-var device = mongoose.model('Device');
-
 var express = require('express');
 var router = express.Router();
 
