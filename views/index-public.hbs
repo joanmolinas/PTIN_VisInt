@@ -1,0 +1,67 @@
+<div class="container-fluid">
+  <div class="row" style="padding:0;border:0;">
+    <!-- top menu -->
+    <div id="header" class="col-md-12">
+      <nav>
+        <a href="#" title="{{trans.home_icon}}">
+          <i class="fas fa-home"></i>
+        </a>
+        <span class="pull-right" id="settings">
+          <a href="#" title="{{trans.notifications_icon}}">
+            <i class="fas fa-bell"></i>
+            <sup class="no-notification">0</sup>
+          </a>
+          <a href="#" title="{{trans.language_icon}}">
+            <i class="fas fa-language"></i>
+          </a>
+        </span>
+      </nav>
+    </div>
+    <!-- sidebar -->
+    <div id="sidebar" class="col-md-6">
+      <div id="devices">
+
+        <!-- header sidebar. Filter devices, show/hide devices -->
+        <div id="filter" class="row" style="padding-left:15px;">
+          <!-- filter textbox -->
+          <div class="col-md-6 filter-input">
+            <input type="text" placeholder="{{trans.filter_device}}" />
+            <i class="fas fa-search pull-right filter-search-icon"></i>
+          </div>
+          <div>
+            <select id="type" class="col-md-5 filter-input">
+              <option selected="selected">{{trans.filter_device_by_type}}</option>
+              <option value="*">Todos los dispositivos</option>
+              <option value="dispositivo">Dispositivo</option>
+              <option value="paciente">Paciente</option>
+            </select>
+            <a href="#" role="hide-devices" title="Ocultar dispositivos">
+              <i class="fas fa-angle-double-left"></i>
+            </a>
+          </div>
+        </div>
+
+        <div id="devices-list">
+          <div class="row">
+            <div class="col-md-12">
+              {{#each content}}
+              <div class="device">
+                <p>Nombre: <strong>{{this.name}}</strong></p>
+                <p>Latitud: <strong>{{this.latitude}}</strong></p>
+                <p>Longitud: <strong>{{this.longitude}}</strong></p>
+                <p>Fecha de alta: <strong>{{this.creationDate}}</strong></p>
+              </div>
+              {{/each}}            
+            </div>
+          </div>
+          <!--<div class="col-md-6"></div>-->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Display map -->
+    <div id="content" class="col-md-6">
+    </div>
+  </div>
+</div>
