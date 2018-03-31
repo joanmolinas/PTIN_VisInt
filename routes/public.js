@@ -18,21 +18,22 @@ var default_lang = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config
  */
 router.get('/', function(req, res, next) {
 
-    var trans = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'lang', default_lang, 'public.json')))
-
-    // Getting all devices using api.
-    request({
-        url: "http://localhost:3000/api/device/getall",
-        json: true
-    }, function (error, response, body) {
-        if (!error && response.statusCode === 200) {
-            console.log(body)
-            res.render('index-public', {
-                'trans': trans.map_display, 
-                'content': body
-              })
-        }
-    })
+    // var trans = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'lang', default_lang, 'public.json')))
+    //
+    // // Getting all devices using api.
+    // request({
+    //     url: "http://localhost:3000/api/device/getall",
+    //     json: true
+    // }, function (error, response, body) {
+    //     if (!error && response.statusCode === 200) {
+    //         console.log(body)
+    //         res.render('index-public', {
+    //             'trans': trans.map_display,
+    //             'content': body
+    //           })
+    //     }
+    // })
+    console.log("public")
 
 });
 
