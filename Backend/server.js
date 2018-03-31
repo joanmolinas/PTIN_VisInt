@@ -25,8 +25,9 @@ api.route('/devices')
 	.get(device.findAll)
 	.post(device.add)
 	.delete(device.borra);
-api.route('/devices/:name')
+api.route('/devices/:id')
 	.get(device.findDevice)
+	.delete(device.deleteDevice);
 
 app.use('/api',api);
 

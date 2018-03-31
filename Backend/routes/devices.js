@@ -8,8 +8,7 @@ exports.findAll = function ( req,res) {
 	res.status(200).jsonp(devices);
 	});
 };
-
-//GET- Retorna un sol Registre per l'id del dispositiu
+//Get- Retorna un sol Registre per el nom del dispositiu
 exports.findDevice=function(req,res){
 	device.find({'id':req.params.id},function(err,Device){
 	
