@@ -1,11 +1,11 @@
 {
 
     "mongodb": {
-        "hostname": "localhost",
-        "port": "",
-        "user": "",
-        "pwd": "",
-        "database": "local"
+        "hostname": "ds231229.mlab.com",
+        "port": "31229",
+        "user": "heroku_p6gcvtfs",
+        "pwd": "9ricmnjhbjjg4oap8jq37s113",
+        "database": "heroku_p6gcvtfs"
     },
 
     "language": {
