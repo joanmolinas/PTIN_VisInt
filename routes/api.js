@@ -84,7 +84,7 @@ router.get('/devices/list', function (req, res, next) {
     console.log(123)
  // Getting all devices using api.
  request({
-   url: "http://localhost:3000/api/devices/",
+   url: "https://ptin2018.herokuapp.com/api/devices/",
    json: true
  }, function (error, response, body) {
    if (!error && response.statusCode === 200) {
