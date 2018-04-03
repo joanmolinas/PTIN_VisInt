@@ -31,12 +31,12 @@ let mongodb_conn = mongoose.connection
 // sass support
 var sass = require('node-sass-middleware')
 
-// app.use(sass({
-//   src: path.join(__dirname, 'public'),
-//   dest: path.join(__dirname, 'public'),
-//   debug: true,
-//   outputStyle: 'compressed'
-// }))
+app.use(sass({
+  src: path.join(__dirname, 'public'),
+  dest: path.join(__dirname, 'public'),
+  debug: true,
+  outputStyle: 'compressed'
+}))
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

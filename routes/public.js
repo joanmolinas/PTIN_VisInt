@@ -22,7 +22,7 @@ router.get('/', function(req, res, next) {
 
     // Getting all devices using api.
     request({
-        url: "https://ptin2018.herokuapp.com/api/device/getall",
+        url: "http://localhost:3000/api/devices",
         json: true
     }, function (error, response, body) {
         if (!error && response.statusCode === 200) {

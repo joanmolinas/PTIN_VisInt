@@ -8,10 +8,10 @@ var router = express.Router();
 /**
  *  GET - Nombre de un usuario por "nombre"
  */
-router.get('/user/:nombre', function(req, res, next) {
+router.get('/users/:id', function(req, res, next) {
   let user = require('../models/User')
 
-  user.find({'nombre': req.params.nombre}, "" ,function(err, users_doc){
+  user.find({'id': req.params.nombre}, "" ,function(err, users_doc){
     res.json(users_doc)
   })
 
@@ -22,10 +22,8 @@ router.get('/user/:nombre', function(req, res, next) {
  * @description Displays a add device form. Crida a un formulari semblant al de la web Postman
  * @version S1
  */
-router.get('/device/addform', function(req, res, next){
-
+router.get('/devices/addform', function(req, res, next){
   res.render('add-device')
-
 })
 
 /**
@@ -34,7 +32,7 @@ router.get('/device/addform', function(req, res, next){
  * @version S1
  * @returns a JSON response with a satus code and a message.
  */
-router.post('/device/add', function(req, res, next){
+router.post('/devices', function(req, res, next){
   let device = require('../models/Device')
 
   var insertObject = {
@@ -43,6 +41,7 @@ router.post('/device/add', function(req, res, next){
     "longitude": req.body.longitude,
     "creationDate" : new Date()
   }
+
   device.insertMany(insertObject, function(err, result){
     if (err){
       console.log("Error.")
@@ -62,7 +61,7 @@ router.post('/device/add', function(req, res, next){
  * @version S1
  * @returns a JSON response with a satus code and a message.
  */
-router.get('/device/delete/:id', function(req, res, next){
+router.delete('/devices/:id', function(req, res, next){
   let device = require('../models/Device')
 
   device.findByIdAndRemove(req.params.id, function(err, device_doc){
@@ -80,15 +79,31 @@ router.get('/device/delete/:id', function(req, res, next){
   })
 })
 
+router.get("/devices/list", function() {
+    request({
+        url: "http://localhost:3000/api/device/",
+        json: true
+    }, function(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(body)
+            } res.render('list-devices', {
+                content: body
+            })
+        }
+    })
+
+
+})
+
 /**
  * @author ncarmona
  * @description Count how many devices exists on database.
  * @version S1
  * @returns a JSON response with an integer indicating how many devices exists on database.
  */
-router.get('/device/count', function(req, res, next){
+router.get('/devices/count', function(req, res, next){
   let device = require('../models/Device')
-  
+
   device.count({}, function(err, count){
     if(err){
       res.json({
@@ -110,8 +125,9 @@ router.get('/device/count', function(req, res, next){
  * @returns a JSON response with all devices data.
  * @todo Implement pagination
  */
-router.get('/device/getall', function(req, res, next){
+router.get('/devices', function(req, res, next){
   let device = require('../models/Device')
+  console.log("get all")
 
   device.find({}, "" ,function(err, devices_doc){
     res.json(devices_doc)
@@ -125,7 +141,7 @@ router.get('/device/getall', function(req, res, next){
  * @version S1
  * @returns a JSON response with device date otherwhise null.
  */
-router.get('/device/getByID/:id', function(req, res, next){
+router.get('/devices/:id', function(req, res, next){
   let device = require('../models/Device')
 
   device.findById(req.params.id, "" ,function(err, users_doc){
