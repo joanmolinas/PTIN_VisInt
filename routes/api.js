@@ -2,8 +2,9 @@
  * This router file contains api routes.
  */
 
-var express = require('express');
-var router = express.Router();
+var express = require('express')
+var router = express.Router()
+var request = require('request')
 
 /**
  *  GET - Nombre de un usuario por "nombre"
@@ -61,9 +62,9 @@ router.post('/devices', function(req, res, next){
  * @version S1
  * @returns a JSON response with a satus code and a message.
  */
-router.delete('/devices/:id', function(req, res, next){
+router.get('/devices/:id/delete', function(req, res, next){
+    console.log("123")
   let device = require('../models/Device')
-
   device.findByIdAndRemove(req.params.id, function(err, device_doc){
     if(err){
       res.json({
@@ -79,21 +80,22 @@ router.delete('/devices/:id', function(req, res, next){
   })
 })
 
-router.get("/devices/list", function() {
-    request({
-        url: "http://localhost:3000/api/device/",
-        json: true
-    }, function(error, response, body) {
-            if (!error && response.statusCode == 200) {
-                console.log(body)
-            } res.render('list-devices', {
-                content: body
-            })
-        }
-    })
-
-
+router.get('/devices/list', function (req, res, next) {
+    console.log(123)
+ // Getting all devices using api.
+ request({
+   url: "http://localhost:3000/api/devices/",
+   json: true
+ }, function (error, response, body) {
+   if (!error && response.statusCode === 200) {
+     console.log(body)
+     res.render('list-devices', {
+       'content': body
+     })
+   }
+ })
 })
+
 
 /**
  * @author ncarmona

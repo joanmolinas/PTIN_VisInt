@@ -1,0 +1,18 @@
+<table border="1">
+    <thead>
+        <th>Nombre</th>
+        <th>Borrar</th>
+    </thead>
+    <tbody>
+        {{#each content}}
+        <tr>
+            <td>
+                {{this.name}}
+            </td>
+            <td>
+                <a href="http://localhost:3000/api/devices/"{{this._id}}/delete">Eliminar</a>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
