@@ -6,7 +6,7 @@ $sidebar-device-list-color: #FAFAFA;
 
 * {
   padding: 0;
-  margin:0; 
+  margin:0;
   font-family: 'Roboto','Arial';
 }
 
@@ -74,7 +74,7 @@ body {
       padding-right: 10px;
       background-color: white;
       border-bottom: 1px solid #ccc;
-      
+
       .filter-input {
         border-radius: 10px;
         padding-left: 10px;
@@ -84,7 +84,7 @@ body {
         margin-right: 10px;
         border: 1px solid $sidebar-menu-color;
         background-color: white;
-        
+
         input {
           width: 95%;
           border:0;
@@ -101,7 +101,7 @@ body {
         font-size: 25px;
       }
     }
-    
+
     #devices-list {
       color: inherit;
       overflow-y: scroll;
@@ -124,5 +124,5 @@ body {
 #content {
   min-height: $vh;
   max-height: $vh;
-  background-image: url('../images/mapa.svg');
+  background-image: url('../images/mapa.png');
 }

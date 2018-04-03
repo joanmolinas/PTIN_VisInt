@@ -63,7 +63,7 @@ router.post('/devices', function(req, res, next){
  * @returns a JSON response with a satus code and a message.
  */
 router.get('/devices/:id/delete', function(req, res, next){
-    console.log("123")
+    console.log("id " + req.params.id)
   let device = require('../models/Device')
   device.findByIdAndRemove(req.params.id, function(err, device_doc){
     if(err){
