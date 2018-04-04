@@ -3,15 +3,16 @@
  */
 
 var express = require('express')
-var router = express.Router()
 var request = require('request')
+let user = require('../models/User')
+let device = require('../models/Device')
+
+var router = express.Router()
 
 /**
  *  GET - Nombre de un usuario por "nombre"
  */
 router.get('/users/:id', function(req, res, next) {
-  let user = require('../models/User')
-
   user.find({'id': req.params.nombre}, "" ,function(err, users_doc){
     res.json(users_doc)
   })
@@ -34,8 +35,6 @@ router.get('/devices/addform', function(req, res, next){
  * @returns a JSON response with a satus code and a message.
  */
 router.post('/devices', function(req, res, next){
-  let device = require('../models/Device')
-
   var insertObject = {
     "name": req.body.name,
     "latitude": req.body.latitude,
@@ -63,8 +62,6 @@ router.post('/devices', function(req, res, next){
  * @returns a JSON response with a satus code and a message.
  */
 router.get('/devices/:id/delete', function(req, res, next){
-    console.log("id " + req.params.id)
-  let device = require('../models/Device')
   device.findByIdAndRemove(req.params.id, function(err, device_doc){
     if(err){
       res.json({
@@ -81,7 +78,6 @@ router.get('/devices/:id/delete', function(req, res, next){
 })
 
 router.get('/devices/list', function (req, res, next) {
-    console.log(123)
  // Getting all devices using api.
  request({
    url: "https://ptin2018.herokuapp.com/api/devices/",
@@ -104,8 +100,6 @@ router.get('/devices/list', function (req, res, next) {
  * @returns a JSON response with an integer indicating how many devices exists on database.
  */
 router.get('/devices/count', function(req, res, next){
-  let device = require('../models/Device')
-
   device.count({}, function(err, count){
     if(err){
       res.json({
@@ -128,9 +122,6 @@ router.get('/devices/count', function(req, res, next){
  * @todo Implement pagination
  */
 router.get('/devices', function(req, res, next){
-  let device = require('../models/Device')
-  console.log("get all")
-
   device.find({}, "" ,function(err, devices_doc){
     res.json(devices_doc)
   })
@@ -144,12 +135,9 @@ router.get('/devices', function(req, res, next){
  * @returns a JSON response with device date otherwhise null.
  */
 router.get('/devices/:id', function(req, res, next){
-  let device = require('../models/Device')
-
   device.findById(req.params.id, "" ,function(err, users_doc){
     res.json(users_doc)
   })
-
 })
 
 module.exports = router;
