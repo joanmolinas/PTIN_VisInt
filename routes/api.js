@@ -4,6 +4,7 @@
 
 var express = require('express')
 var request = require('request')
+var url = require('url');
 let user = require('../models/User')
 let device = require('../models/Device')
 
@@ -122,7 +123,8 @@ router.get('/devices/count', function(req, res, next){
  * @todo Implement pagination
  */
 router.get('/devices', function(req, res, next){
-  device.find({}, "" ,function(err, devices_doc){
+  var queryData = url.parse(req.url, true).query;
+  device.find(queryData, "" ,function(err, devices_doc){
     res.json(devices_doc)
   })
 
