@@ -6,6 +6,6 @@ var deviceSchema = new mongoose.Schema({
 	longitude: Number,
 	creationDate: Date,
 	modificationDate: Date
-}, {collection: 'devices'});
+}, { collection: 'devices' });
 
-let user = module.exports = mongoose.model('devices', deviceSchema);
+let user = module.exports = mongoose.model( 'devices' , deviceSchema);

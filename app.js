@@ -7,7 +7,8 @@ var bodyParser = require('body-parser');
 var fs = require('fs')
 
 //Routes files
-var api = require('./routes/api');
+// var api = require('./routes/api');
+var routes = require('./routes/routes')
 var public = require('./routes/public')
 var admin = require('./routes/admin')
 
@@ -51,15 +52,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', public)
-app.use('/api', api);
 app.use('/admin', admin)
+routes.create(app)
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+// app.use(function(req, res, next) {
+//   var err = new Error('Not Found');
+//   err.status = 404;
+//   next(err);
+// });
 
 // error handler
 app.use(function(err, req, res, next) {
