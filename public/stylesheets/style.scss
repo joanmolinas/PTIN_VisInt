@@ -6,8 +6,7 @@ $sidebar-device-list-color: #FAFAFA;
 
 * {
   padding: 0;
-  margin:0;
-  font-family: 'Roboto','Arial';
+  margin:0; 
 }
 
 body {
@@ -68,13 +67,14 @@ body {
     background-color: $sidebar-device-list-color;
     min-height: inherit;
     margin-left: 2px;
+
     #filter {
       padding-top:10px;
       padding-bottom: 10px;
       padding-right: 10px;
       background-color: white;
       border-bottom: 1px solid #ccc;
-
+      
       .filter-input {
         border-radius: 10px;
         padding-left: 10px;
@@ -84,7 +84,7 @@ body {
         margin-right: 10px;
         border: 1px solid $sidebar-menu-color;
         background-color: white;
-
+        
         input {
           width: 95%;
           border:0;
@@ -101,21 +101,18 @@ body {
         font-size: 25px;
       }
     }
-
+    
     #devices-list {
       color: inherit;
       overflow-y: scroll;
       height: $vh;
+      padding-bottom: 50px;
 
       .device {
         border: 1px solid #ccc;
         background-color: whitesmoke;
         margin: 20px;
         padding: 10px;
-      }
-
-      .device:last-child {
-        margin-bottom: 70px;
       }
     }
   }
@@ -124,5 +121,5 @@ body {
 #content {
   min-height: $vh;
   max-height: $vh;
-  background-image: url('../images/mapa.png');
+  background-image: url('../mapa.png');
 }
