@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title> Visint </title>
+
+  <meta charset="UTF-8">
+  <meta name="description" content="Map display" lang="es">
+  <meta name="keywords" lang="en" content="keywords,for,this,website">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+  <meta name="theme-color" content="#344152">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#344152">
+
+  <!-- Vendors -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c"
+    crossorigin="anonymous"></script>
+
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+  <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l"
+    crossorigin="anonymous"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Rock+Salt|Roboto" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <!-- blue scripts -->
+  <link rel="stylesheet" href="stylesheets/style.css" />
+  <script src="javascripts/visint.js"></script>
+</head>
+
+<body>
+  <div class="container-fluid" id="body-content">
+    <div class="row" style="padding:0;border:0;">
+      <!-- top menu -->
+      <div id="header" class="col-md-12">
+        <nav>
+          <a href="#" title="Inicio">
+            <i class="fas fa-home"></i>
+          </a>
+          <span class="pull-right" id="settings">
+            <a href="#" title="Notificaciones">
+              <i class="fas fa-bell"></i>
+              <sup class="no-notification">0</sup>
+            </a>
+            <a href="#" title="Idioma">
+              <i class="fas fa-language"></i>
+            </a>
+          </span>
+        </nav>
+      </div>
+      <!-- sidebar -->
+      <div id="sidebar" class="col-md-6">
+        <div id="devices">
+
+          <!-- header sidebar. Filter devices, show/hide devices -->
+          <div id="filter" class="row" style="padding-left:15px;">
+            <!-- filter textbox -->
+            <div class="col-md-6 filter-input">
+              <input type="text" v-on:keyup="filterByText" v-model="filter_text" placeholder="Filtrar dispositivos ..." />
+              <i class="fas fa-search pull-right filter-search-icon"></i>
+            </div>
+            <div>
+              <select id="type" v-model="device_type" v-on:change="filterByType" class="col-md-5 filter-input">
+                <option selected="selected">Tipos de dispositivos ...</option>
+                <option value="*">Todos los dispositivos</option>
+                <option value="1">Dispositivo</option>
+                <option value="2">Paciente</option>
+              </select>
+              <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
+                <i class="fas fa-angle-double-left"></i>
+              </a>
+            </div>
+          </div>
+
+          <div id="devices-list">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="device" v-for="device in devices_column1" v-on:click="selected_device=device._id" style="cursor: pointer;">
+                    <p>
+                      <i class="fas fa-microchip"></i> Nombre:
+                      <strong>{{ device.name }}</strong>
+                    </p>
+                    <p>
+                      <i class="fas fa-arrows-alt-v"></i> Latitud:
+                      <strong>{{ device.latitude }}</strong>
+                    </p>
+                    <p>
+                      <i class="fas fa-arrows-alt-h"></i> Longitud:
+                      <strong>{{ device.longitude }}</strong>
+                    </p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="device" v-for="device in devices_column2" v-on:click="selected_device=device._id" style="cursor: pointer;">
+                  <p>
+                    <i class="fas fa-microchip"></i> Nombre:
+                    <strong>{{ device.name }}</strong>
+                  </p>
+                  <p>
+                    <i class="fas fa-arrows-alt-v"></i> Latitud:
+                    <strong>{{ device.latitude }}</strong>
+                  </p>
+                  <p>
+                    <i class="fas fa-arrows-alt-h"></i> Longitud:
+                    <strong>{{ device.longitude }}</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Display map -->
+      <div id="content" class="col-md-6">
+
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
