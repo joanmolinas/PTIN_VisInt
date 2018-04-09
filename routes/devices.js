@@ -1,7 +1,7 @@
 express = require('express')
+url = require('url');
+Device = require('../models/Device')
 router = express.Router()
-const Device = require('../models/Device')
-require("mongoose").Promise = require("bluebird");
 
 router.get('/:id', function(req, res, next){
     Device.findById(req.params.id)
@@ -14,12 +14,13 @@ router.get('/:id', function(req, res, next){
 })
 
 router.get('/', function(req, res, next){
-  Device.find({})
-  .then(doc => {
+    var queryData = url.parse(req.url, true).query;
+    Device.find(queryData)
+    .then(doc => {
       res.send(doc)
-  }).then(e => {
+    }).then(e => {
       res.send({"status": "400"})
-  })
+    })
 })
 
 router.post('/', function(req, res, next) {
