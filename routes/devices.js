@@ -17,10 +17,10 @@ router.get('/', function(req, res, next){
     let query = url.parse(req.url, true).query
 
     if (query.name) {
-        let regexp = new RegExp("^"+ query.name);
+        let regexp = new RegExp("^"+ query.name, "i");
         query.name = regexp
     }
-    
+
     console.log(query)
 
     Device.find(query)
