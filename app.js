@@ -7,27 +7,11 @@ var bodyParser = require('body-parser');
 var fs = require('fs')
 
 //Routes files
-// var api = require('./routes/api');
 var routes = require('./routes/routes')
 var public = require('./routes/public')
 var admin = require('./routes/admin')
 
 var app = express();
-
-// mongodb connection
-var mongoose = require('mongoose')
-var config = JSON.parse(fs.readFileSync("config.json"))
-
-user_str = ""
-
-if(!config.mongodb.user == "" && !config.mongodb.pwd == "")
-  user_str = config.mongodb.user + ":" + config.mongodb.pwd + "@"
-
-if(config.mongodb.port == "")
-config.mongodb.port = 27017
-
-mongoose.connect('mongodb://' + user_str + config.mongodb.hostname + ":" + config.mongodb.port + "/" + config.mongodb.database)
-let mongodb_conn = mongoose.connection
 
 // sass support
 var sass = require('node-sass-middleware')
@@ -56,11 +40,11 @@ app.use('/admin', admin)
 routes.create(app)
 
 // catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-//   var err = new Error('Not Found');
-//   err.status = 404;
-//   next(err);
-// });
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
 
 // error handler
 app.use(function(err, req, res, next) {

@@ -1,12 +1,8 @@
 #!/usr/bin/env node
-
-/**
- * Module dependencies.
- */
-
 var app = require('../app');
 var debug = require('debug')('web:server');
 var http = require('http');
+var db_handler = require('../handlers/db-handler')
 
 /**
  * Get port from environment and store in Express.
@@ -27,9 +23,17 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+
+db_handler.connect()
+    .then(() => {
+        server.listen(port);
+        server.on('error', onError);
+        server.on('listening', onListening);
+    })
+    .catch(e => {
+        console.log(e)
+    })
+
 
 /**
  * Normalize a port into a number, string, or false.
