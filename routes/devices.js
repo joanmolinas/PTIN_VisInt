@@ -14,8 +14,16 @@ router.get('/:id', function(req, res, next){
 })
 
 router.get('/', function(req, res, next){
-    var queryData = url.parse(req.url, true).query;
-    Device.find(queryData)
+    let query = url.parse(req.url, true).query
+
+    if (query.name) {
+        let regexp = new RegExp("^"+ query.name);
+        query.name = regexp
+    }
+    
+    console.log(query)
+
+    Device.find(query)
     .then(doc => {
       res.send(doc)
     }).then(e => {
