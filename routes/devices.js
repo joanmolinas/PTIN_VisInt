@@ -21,8 +21,6 @@ router.get('/', function(req, res, next){
         query.name = regexp
     }
 
-    console.log(query)
-
     Device.find(query)
     .then(doc => {
       res.send(doc)
@@ -37,8 +35,9 @@ router.post('/', function(req, res, next) {
     let longitude = req.body.longitude
     let creationDate = new Date()
     let modificationDate = new Date()
+    let type = req.body.type
 
-    if (!name || !latitude || !longitude) {
+    if (!name || !latitude || !longitude || !type) {
         res.send({'status': '400'})
         return
     }
@@ -47,6 +46,7 @@ router.post('/', function(req, res, next) {
         name: name,
         latitude: latitude,
         longitude: longitude,
+        type: type,
         creationDate: creationDate,
         modificationDate: modificationDate
     })
