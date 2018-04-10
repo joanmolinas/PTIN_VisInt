@@ -8,7 +8,6 @@ var fs = require('fs')
 
 //Routes files
 var routes = require('./routes/routes')
-var public = require('./routes/public')
 var admin = require('./routes/admin')
 
 var app = express();
@@ -42,7 +41,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', public)
 app.use('/admin', admin)
 routes.create(app)
 
