@@ -5,7 +5,8 @@ var deviceSchema = new mongoose.Schema({
 	active: Boolean,
 	type: Number,
 	creationDate: Date,
-	modificationDate: Date
+	modificationDate: Date,
+	lastInfo: {}
 }, { collection: 'devices' });
 
 module.exports = mongoose.model( 'devices' , deviceSchema);

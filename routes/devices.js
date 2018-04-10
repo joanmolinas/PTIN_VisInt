@@ -5,12 +5,14 @@ DeviceInformation = require('../models/Device-information')
 router = express.Router()
 
 router.get('/:id', function(req, res, next){
-    Device.findById(req.params.id)
-    .then(doc => {
-        res.send(doc)
-    })
-    .catch(e => {
-        res.send({"status": "400"})
+    Promise.all([
+        Device.findById(req.params.id),
+        DeviceInformation.findOne({'id_device': req.params.id}, {'info': {'$slice': -1}},)
+    ]).then(([device, information]) => {
+        device.lastInfo = information.info[0]
+        res.send(device)
+    }).catch(([eDevice, eInformation]) => {
+        res.send('status': 400)
     })
 })
 
@@ -61,7 +63,7 @@ router.put('/:id', function(req, res, body) {
     if (!req.body) {
         res.send({"status": 400})
     }
-    
+
     let modificationDate = new Date()
     req.body.date = modificationDate
 
