@@ -1,6 +1,7 @@
 express = require('express')
 url = require('url');
 Device = require('../models/Device')
+DeviceInformation = require('../models/Device-information')
 router = express.Router()
 
 router.get('/:id', function(req, res, next){
@@ -31,21 +32,18 @@ router.get('/', function(req, res, next){
 
 router.post('/', function(req, res, next) {
     let name = req.body.name
-    let latitude = req.body.latitude
-    let longitude = req.body.longitude
     let creationDate = new Date()
     let modificationDate = new Date()
     let type = req.body.type
 
-    if (!name || !latitude || !longitude || !type) {
+    if (!name || !type) {
         res.send({'status': '400'})
         return
     }
 
     let device = new Device({
         name: name,
-        latitude: latitude,
-        longitude: longitude,
+        active: true,
         type: type,
         creationDate: creationDate,
         modificationDate: modificationDate
@@ -60,37 +58,57 @@ router.post('/', function(req, res, next) {
 })
 
 router.put('/:id', function(req, res, body) {
-    let lat = req.body.latitude
-    let long = req.body.longitude
-    let modificationDate = new Date()
-
-    if (!lat || !long) {
-        res.send({'status': '400'})
-        return
+    if (!req.body) {
+        res.send({"status": 400})
     }
+    
+    let modificationDate = new Date()
+    req.body.date = modificationDate
 
-    Device.findByIdAndUpdate(req.params.id, {
+    Device.findByIdAndUpdate(req.params.id,{
         $set: {
-            latitude: lat,
-            longitude: long,
             modificationDate: modificationDate
         }
     })
-    .then(doc => {
-        res.send({'status': '200'})
+    .then(device => {
+        DeviceInformation.findOneAndUpdate({'id_device': device._id}, {
+            $push: {
+                info: req.body
+            }
+        })
+        .then(doc => {
+            if (!doc) {
+                // Schema create cause didn't exists before
+                let schema = new DeviceInformation({ id_device: req.params.id, info: [ req.body ] })
+
+                schema.save()
+                .then(doc => {
+                    res.send({'status': 201})
+                })
+                .catch(e => {
+                    res.send({'status': 400})
+                })
+            } else {
+                res.send({'status': 200})
+            }
+        })
+        .catch(e => {
+            res.send({'status': 400})
+        })
     })
     .catch(e => {
-        res.send({'status': '400'})
+        res.send({'status': 500})
+
     })
 })
 
 router.get('/delete/:id', function(req, res, next){
   Device.findByIdAndRemove(req.params.id)
   .then(doc => {
-      res.send({'status': '200'})
+      res.send({'status': 200})
   })
   .catch(e => {
-      res.send({'status': '400'})
+      res.send({'status': 400})
   })
 })
 
