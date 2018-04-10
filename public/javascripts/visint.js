@@ -137,18 +137,18 @@ window.addEventListener('load', function () {
 
 
                 //Defineix l'estil del punt que col·loquem al mapa.
-                /*this.iconStyle = new ol.style.Style({
-                        image: new ol.style.Icon( /** @type {olx.style.IconOptions} */// ({
-			    /*	anchor: [0.5, 46],
+              /*  this.iconStyle = new ol.style.Style({
+                        image: new ol.style.Icon( /** @type {olx.style.IconOptions} ({
+			    	anchor: [0.5, 46],
 			    	anchorXUnits: 'fraction',
 			    	anchorYUnits: 'pixels',
 			    	opacity: 0.75,
-			    	src: 'icon.png'
+			    	src: 'map-marker.svg'
 	    		}))
     		});*/
 
                 //Apliquem l'estil a la capa vectorial
-                //point.setStyle(iconStyle)
+                this.vectorLayer.setStyle(this.iconStyle)
 
 
                 //Crea variable mapa, amb dues capes una capa amb el mapa OSM i la capa vectorial
