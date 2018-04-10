@@ -19,6 +19,7 @@ window.addEventListener('load', function () {
         },
         mounted: function () {
             this.loadMap()
+            this.drawDevices()
             return this.getDevices()
         },
         methods: {
@@ -128,14 +129,7 @@ window.addEventListener('load', function () {
                     name: "vector",
                     source: new ol.source.Vector({
                         features: [
-                            new ol.Feature({
-                                name: 'p1',
-                                geometry: new ol.geom.Point([1.7300289, 41.2219107])
-                            }),
-                            new ol.Feature({
-                                name: 'p2',
-                                geometry: new ol.geom.Point([1.7300289, 41.2209107])
-                            })
+                           
                         ]
                     })
 
@@ -183,6 +177,25 @@ window.addEventListener('load', function () {
                     })
                 })
 
+            },
+            drawDevices: function () {
+                let self = this
+
+                axios.get(this.base_url_api + 'devices').then(function (response) {
+                    self.devices = response.data
+                    self.devices.forEach(function (device) {
+                        console.log(device.latitude)
+                        let source=self.vectorLayer.getSource();
+                        source.addFeature(new ol.Feature({
+                            name:device.name,
+                            geometry: new ol.geom.Point([device.latitude,device.longitude])
+                        }))
+                        
+
+                    });
+                }).catch(function (error) {
+                    console.log(error)
+                })
             }
         }
     })
