@@ -18,13 +18,14 @@ router.get('/:id', function(req, res, next){
 
 router.get('/', function(req, res, next){
     let query = url.parse(req.url, true).query
-
+    let size = parseInt(query.size || 10)
+    delete query.size
     if (query.name) {
         let regexp = new RegExp("^"+ query.name, "i");
         query.name = regexp
     }
 
-    Device.find(query)
+    Device.find(query).limit(size)
     .then(doc => {
       res.send(doc)
     }).then(e => {

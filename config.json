@@ -1,13 +1,19 @@
 {
 
-    "mongodb": {
+    "mongodb_prod": {
         "hostname": "ds231229.mlab.com",
         "port": "31229",
         "user": "heroku_p6gcvtfs",
         "pwd": "9ricmnjhbjjg4oap8jq37s113",
         "database": "heroku_p6gcvtfs"
     },
-
+    "mongodb_dev": {
+        "hostname": "localhost",
+        "port": "27017",
+        "user": "",
+        "pwd": "",
+        "database": "ptin-dev"
+    },
     "language": {
         "default_language": "es",
 

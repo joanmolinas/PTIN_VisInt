@@ -5,20 +5,23 @@ let config = require('../config.json')
 let bluebird = require("bluebird");
 
 let db;
+let env = 0 // 0 = prod, 1 = dev
 exports.connect = function() {
     return new Promise(function(resolve, reject) {
         if (db) return db
 
-        mongoose.promise = bluebird
-        let user_str = config.mongodb.user + ":" + config.mongodb.pwd + "@"
+        let conf = env === 1 ? config.mongodb_dev : config.mongodb_prod
 
-        mongoose.connect('mongodb://' + user_str + config.mongodb.hostname + ":" + config.mongodb.port + "/" + config.mongodb.database)
+        mongoose.promise = bluebird
+        let user_str = env === 1 ? '' : conf.user + ":" + conf.pwd + "@"
+
+        mongoose.connect('mongodb://' + user_str + conf.hostname + ":" + conf.port + "/" + conf.database)
         .then(() => {
             console.log('mongo connection created')
             resolve(db)
         })
         .catch(e => {
-            console.log('error creating db connection: ' + err)
+            console.log('error connecting db connection: ' + err)
             reject(db)
         })
     })
