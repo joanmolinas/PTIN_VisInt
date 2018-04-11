@@ -12,7 +12,7 @@ router.get('/:id', function(req, res, next){
         device.lastInfo = information.info[0]
         res.send(device)
     }).catch(([eDevice, eInformation]) => {
-        res.send('status': 400)
+        res.send({'status': 400})
     })
 })
 
