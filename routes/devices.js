@@ -40,7 +40,7 @@ router.post('/', function(req, res, next) {
     let type = req.body.type
 
     if (!name || !type) {
-        res.send({'status': '400'})
+        res.send({'status': 400})
         return
     }
 
@@ -53,10 +53,10 @@ router.post('/', function(req, res, next) {
     })
 
     device.save()
-    .then(doc => {
-        res.send(doc)
+    .then(device => {
+        res.send({"status": 201, "id": device._id})
     }).catch(e => {
-        res.send({"status": '400'})
+        res.send({"status": 400})
     })
 })
 
