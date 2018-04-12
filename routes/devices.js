@@ -1,18 +1,21 @@
 express = require('express')
 url = require('url');
 Device = require('../models/Device')
-DeviceInformation = require('../models/Device-information')
+DeviceInformation = require('../models/Device-Information')
 router = express.Router()
 
 router.get('/:id', function(req, res, next){
     let query = url.parse(req.url, true).query
     let dict = {}
-    let arr = query.fields.replace("[",'').replace("]",'').split(',') //TODO: Improve it, this is a shit
-    let filter = arr.join('')
+    let filter = ''
+    if (query.fields) {
+        let arr = query.fields.replace("[",'').replace("]",'').split(',') //TODO: Improve it, this is a shit
+        filter = arr.join('')
+    }
 
     Promise.all([
         Device.findById(req.params.id).select(filter),
-        DeviceInformation.findOne({'id_device': req.params.id}, {'info': {'$slice': -1}},)
+        DeviceInformation.findOne({'id_device': req.params.id}, {'info': {'$slice': -1}})
     ]).then(([device, information]) => {
         device.lastInfo = information.info[0]
         res.send(device)
@@ -29,18 +32,21 @@ router.get('/', function(req, res, next){
         let regexp = new RegExp("^"+ query.name, "i");
         query.name = regexp
     }
-
-    let arr = query.fields.replace("[",'').replace("]",'').split(',') //TODO: Improve it, this is a shit
-    filter = arr.join('')
-    delete query.fields
+    let filter = ''
+    if (query.fields) {
+        let arr = query.fields.replace("[",'').replace("]",'').split(',') //TODO: Improve it, this is a shit
+        filter = arr.join('')
+        delete query.fields
+    }
     let response = []
 
     let prom = Device.find(query).limit(size).select(filter)
     .then(doc => {
         let count = 0
+        if (doc.length == 0) { res.send([]) }
 
         doc.forEach(u => {
-            DeviceInformation.findOne({'id_device': u._id}, {'info': {'$slice': -1}},)
+            DeviceInformation.findOne({'id_device': u._id}, {'info': {'$slice': -1}})
             .then(info => {
                 if(info) u.lastInfo = info.info
                 response.push(u)
