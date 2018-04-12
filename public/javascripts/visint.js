@@ -10,7 +10,7 @@ window.addEventListener('load', function () {
             filter_text: '',
             device_type: '*',
             queryDelay: 1000,
-            zoomInicial: 18,
+            zoomInicial: 17,
             maxzm: 20,
             minzm: 17,
             vectorLayer: '',
@@ -124,7 +124,7 @@ window.addEventListener('load', function () {
                 document.getElementById("content").className = "col-md-6"
             },
             loadMap: function () {
-                //Crea capa vectorial, amb dos Features que son dos punts geometrics
+                //Inicialitzate the vectorial layer empty.
                 this.vectorLayer = new ol.layer.Vector({
                     name: "vector",
                     source: new ol.source.Vector({
@@ -136,36 +136,27 @@ window.addEventListener('load', function () {
                 });
 
 
-                //Defineix l'estil del punt que col·loquem al mapa.
-              /*  this.iconStyle = new ol.style.Style({
-                        image: new ol.style.Icon( /** @type {olx.style.IconOptions} ({
+                //Define the style of vectorial layer
+               /* this.iconStyle = new ol.style.Style({
+                        image: new ol.style.Icon( /** @type {olx.style.IconOptions}**/ /*({
 			    	anchor: [0.5, 46],
 			    	anchorXUnits: 'fraction',
 			    	anchorYUnits: 'pixels',
 			    	opacity: 0.75,
-			    	src: 'map-marker.svg'
+			    	src: ''
 	    		}))
     		});*/
 
-                //Apliquem l'estil a la capa vectorial
-                this.vectorLayer.setStyle(this.iconStyle)
+                //Aply the style to vectorial layer
+             //  this.vectorLayer.setStyle(this.iconStyle)
 
 
-                //Crea variable mapa, amb dues capes una capa amb el mapa OSM i la capa vectorial
-                //Defineix targer (contenidor de l'HTML on es situa el mapa)
-                //Defineix la vista del mapa, tipus de sistema de cordenades centre del mapa (coordenades que estaran al centre), zoom inicial, zoom minim i zoom maxim
+                //Start variable map 
+                //Define target (div where map is placed)
+                //Define layers (vectorial and Open Street Maps)
+                //Define map center, map inital zoom, maxzoom and min zoom
                 this.map = new ol.Map({
                     layers: [new ol.layer.Tile({ source: new ol.source.OSM() }), this.vectorLayer],
-                    /*interactions:ol.interaction.defaults({
-                        doubleClickZoom: false,
-                        mouseWheelZoom: false,
-                        keyboardZoom: false
-                    }),*/
-                    /*controls: ol.control.defaults({
-                  zoom: false,
-                  attribution: false,
-                  rotate: false
-                      }),*/
                     target: document.getElementById('content'),
                     view: new ol.View({
                         projection: 'EPSG:4326',
@@ -178,18 +169,21 @@ window.addEventListener('load', function () {
                 })
 
             },
+            //Make a request of the Devices in BD and draw all devices then have latitude and longitude.
             drawDevices: function () {
                 let self = this
 
                 axios.get(this.base_url_api + 'devices').then(function (response) {
                     self.devices = response.data
                     self.devices.forEach(function (device) {
-                        console.log(device.latitude)
-                        let source=self.vectorLayer.getSource();
-                        source.addFeature(new ol.Feature({
-                            name:device.name,
-                            geometry: new ol.geom.Point([device.latitude,device.longitude])
-                        }))
+                        
+                        if(device.lastInfo){
+                            let source=self.vectorLayer.getSource();
+                            source.addFeature(new ol.Feature({
+                                name:device.name,
+                                geometry: new ol.geom.Point([device.lastInfo[0].longitude,device.lastInfo[0].latitude])
+                            }))
+                        }
                         
 
                     });
