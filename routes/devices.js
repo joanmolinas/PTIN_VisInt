@@ -5,8 +5,13 @@ DeviceInformation = require('../models/Device-information')
 router = express.Router()
 
 router.get('/:id', function(req, res, next){
+    let query = url.parse(req.url, true).query
+    let dict = {}
+    let arr = query.fields.replace("[",'').replace("]",'').split(',') //TODO: Improve it, this is a shit
+    let filter = arr.join('')
+
     Promise.all([
-        Device.findById(req.params.id),
+        Device.findById(req.params.id).select(filter),
         DeviceInformation.findOne({'id_device': req.params.id}, {'info': {'$slice': -1}},)
     ]).then(([device, information]) => {
         device.lastInfo = information.info[0]
@@ -25,12 +30,32 @@ router.get('/', function(req, res, next){
         query.name = regexp
     }
 
-    Device.find(query).limit(size)
+    let arr = query.fields.replace("[",'').replace("]",'').split(',') //TODO: Improve it, this is a shit
+    filter = arr.join('')
+    delete query.fields
+    let response = []
+
+    let prom = Device.find(query).limit(size).select(filter)
     .then(doc => {
-      res.send(doc)
-    }).then(e => {
-      res.send({"status": "400"})
+        let count = 0
+
+        doc.forEach(u => {
+            DeviceInformation.findOne({'id_device': u._id}, {'info': {'$slice': -1}},)
+            .then(info => {
+                if(info) u.lastInfo = info.info
+                response.push(u)
+
+                // TODO: Improve this shit, wait to finish all promises
+                if (++count == doc.length) res.send(response)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+        })
     })
+    .catch(e => {
+      res.send({"status": "400"})
+  })
 })
 
 router.post('/', function(req, res, next) {
