@@ -60,15 +60,15 @@
 
           <!-- header sidebar. Filter devices, show/hide devices -->
           <div id="filter" class="row" style="padding-left:15px;">
+            
             <!-- filter textbox -->
             <div class="col-md-6 filter-input">
               <input type="text" v-on:keyup="filterByText" v-model="filter_text" placeholder="Filtrar dispositivos ..." />
               <i class="fas fa-search pull-right filter-search-icon"></i>
             </div>
             <div>
-              <select id="type" v-model="device_type" v-on:change="filterByType" class="col-md-5 filter-input">
-                <option selected="selected">Tipos de dispositivos ...</option>
-                <option value="*">Todos los dispositivos</option>
+              <select id="type" v-model="device_type" v-on:change="filterByType" v-on:keyup="filterByType" class="col-md-5 filter-input">
+                <option value="">Todos los dispositivos</option>
                 <option value="1">Dispositivo</option>
                 <option value="2">Paciente</option>
               </select>

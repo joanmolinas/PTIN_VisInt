@@ -8,14 +8,16 @@ window.addEventListener('load', function () {
             devices_column2: [],
             selected_device: '',
             filter_text: '',
-            device_type: '*',
+            device_type: '',
             queryDelay: 1000,
             zoomInicial: 17,
             maxzm: 20,
             minzm: 17,
             vectorLayer: '',
             iconstyle: '',
-            map: ''
+            map: '',
+            min_length_filter: 3,
+            debug: true
         },
         mounted: function () {
             this.loadMap()
@@ -34,6 +36,7 @@ window.addEventListener('load', function () {
 
                 axios.get(this.base_url_api + 'devices').then(function (response) {
                     self.devices = response.data
+                    
                     self.devices.forEach(function (device, index) {
                         if (index % 2 == 0)
                             self.devices_column1.push(device)
@@ -62,45 +65,81 @@ window.addEventListener('load', function () {
             /**
              * @author ncarmona
              * @description Filter devices by name.
-             * @version S2 - Removed this feature from routes/public.
-             * @todo add spinner while.
-             * @requires axios
+             * @version S2
+             * @todo add spinner while. Filter by specified field.
              */
-            filterByText: function () {
-                if (this.filter_text.length == 0)
-                    this.getDevices()
-                else if (this.filter_text.length > 0 && this.filter_text.length < 3)
-                    console.log("Nothing TO DO")
-                else {
+            filterByText: function(){
+                if (this.filter_text.length == 0){
+                    this.removeDevicesFromList()
+                    this.filterByType()
+                } else if (this.filter_text.length > 0 && this.filter_text.length < this.min_length_filter)
+                    console.log ("Nothing TO DO")
+                else{
                     let self = this
-                    setTimeout(function () {
-                        // https://ptin2018.herokuapp.com/api/devices/?name=pepito
-                        axios.get(self.base_url_api + 'devices/?name=' + self.filter_text).then(function (response) {
+                    setTimeout(function(){
+                        let query = self.base_url_api + 'devices/?'
+
+                        if(self.filter_text.length >= self.min_length_filter){
+                            query += 'name=' + self.filter_text
+                        }
+                        if(self.device_type.length > 0)
+                            query += '&type=' + self.device_type
+
+                        if(self.debug) console.log(query)
+
+                        axios.get(query).then(function(response){
                             self.removeDevicesFromList()
                             self.devices = response.data
-                            self.devices.forEach(function (device, index) {
 
-                                if (index % 2 == 0)
+                            self.devices.forEach(function(device, index){                  
+                                if(index % 2 == 0)
                                     self.devices_column1.push(device)
                                 else
                                     self.devices_column2.push(device)
                             });
-                        }).catch(function (error) {
+                        }).catch( function(error){
                             console.log(error.message)
                         })
                     }, this.queryDelay)
                 }
-
             },
 
             /**
-             * @author 
-             * @description
-             * @version 
-             */
-            filterByType: function () {
+             * @author ncarmona
+             * @description Filter devices by type.
+             * @version S2
+             * @todo add spinner while.
+             */         
+            filterByType: function(){
+                
                 this.removeDevicesFromList()
-                console.log("Llamamos AJAX")
+                let self = this
+                let query = this.base_url_api + 'devices/?'
+
+                if(this.device_type.length > 0)
+                    query += 'type=' + this.device_type
+
+                if(this.filter_text.length >= this.min_length_filter){
+                    if (query.slice(-1) != '?')
+                        query+='&'
+                    query += 'name=' + this.filter_text
+                }
+                
+                if (this.debug) console.log(query)
+
+                axios.get(query).then(function(response){
+                    self.removeDevicesFromList()
+                    self.devices = response.data
+                    self.devices.forEach(function(device, index){
+                        
+                        if(index % 2 == 0)
+                            self.devices_column1.push(device)
+                        else
+                            self.devices_column2.push(device)
+                    });
+                }).catch( function(error){
+                    console.log(error.message)
+                })             
             },
 
             /**
@@ -123,6 +162,7 @@ window.addEventListener('load', function () {
                 document.getElementById("sidebar").style.display = "block"
                 document.getElementById("content").className = "col-md-6"
             },
+
             loadMap: function () {
                 //Inicialitzate the vectorial layer empty.
                 this.vectorLayer = new ol.layer.Vector({
