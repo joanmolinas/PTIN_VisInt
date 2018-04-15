@@ -116,6 +116,64 @@ body {
       }
     }
   }
+    #detail{
+      display: none;
+     #close{
+      text-align: right;
+      font-size: 30px;
+     }
+      
+      #icon{
+       text-align: center;
+       font-size: 100px;
+      }
+      
+      .separators{
+        text-align: center;
+        font-weight: bold;
+        font-size: x-large;
+       }
+      .blocinfo{
+        margin-left: 15%;
+        margin-right: 15%;
+        border: 1px solid #ccc;
+        border-radius: 5px 5px;
+        width: 70%;
+        
+        
+        
+        .info{
+          border: 1px solid #ccc;
+         
+        }
+        .camps{
+          display: inline-block;
+          padding-left: 5%;
+          width: 30%;
+          text-align: left;
+          font-weight: bold;
+        }
+        
+        .campsInfo{
+          display: inline-block;
+          width: 40%;
+          padding-left: 30%;
+          text-align: left;
+
+        }
+       
+      }
+      .blocs{
+        margin: 20px; 
+      }
+        
+        
+       
+      
+          
+        
+     
+  }
 }
 
 #content {
