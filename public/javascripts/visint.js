@@ -198,23 +198,20 @@ window.addEventListener('load', function () {
                     console.log(error)
                 })
             },
-            deviceDetail: function (idDevice) {
-                document.getElementsByClassName('device').innerHTML=''
-                document.getElementById('deviceColu1').style.display='none'
-                this.devices_column1=[]
-                this.devices_column2=[]
-                this.getDevices()
-
-                document.getElementById('deviceColu1').style.display='inherit'
-                document.getElementById('deviceColu2').style.display='inherit'
-               /* let self=this
-               
+            //ShowDetail function params idDevice
                 
+            deviceDetail: function (idDevice) {
+                let self=this
+               //Rquest for device data
+              
                 axios.get(this.base_url_api + 'devices/'+idDevice).then(function (response) {
                     
                 self.selected_device=response.data
+                  //Get array with the keys of diferent basic parameters                
                 let keys=Object.keys(self.selected_device)
-               
+               //For each parameters, is used the atributesTraductionNames and the atributesNames arrays to get de name of the parameter
+                    //each parameter is keepst in array
+  
                 keys.forEach(function(k){
                     if((k!="lastInfo")&&(k!="__v")){
                         self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
@@ -225,8 +222,11 @@ window.addEventListener('load', function () {
                 })
                 
                 if(self.selected_device.lastInfo){
+                    //Get array with the keys of diferent Sensors parameters
                     let keysSensors=Object.keys(self.selected_device.lastInfo)
-               
+                //For each parameters, is used the atributesTraductionNames and the atributesNames arrays to get de name of the parameter
+                    //each parameter is keepst in array
+
                     keysSensors.forEach(function(k){
                         if(k!="date"){
                             self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
@@ -237,15 +237,18 @@ window.addEventListener('load', function () {
                         }
                     })
                 }
-                
+                 //The layer device and filter is hide and show the detail layer
                 document.getElementById("devices").style.display = "none"
                 document.getElementById("filter").style.display = "none"
                 document.getElementById("detail").style.display = "inherit"
                 })
                 
-                */
+                
+                   
+                   
             },
-            closeDetaill:function(){
+            //Closes the detailview
+            closeDetail:function(){
                 let self=this
                 self.deviceAtributes=[]
                 self.deviceInfo=[]

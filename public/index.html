@@ -81,7 +81,7 @@
           <div id="devices-list">
             <div class="row">
               <div class="col-md-6">
-                <div id='deviceColu1' class="device" v-for="device in devices_column1" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
+                <div  class="device" v-for="device in devices_column1" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
                   <p>
                     <i class="fas fa-microchip"></i> Nombre:
                     <strong>{{ device.name }}</strong>
@@ -97,7 +97,7 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <div id='deviceColu2' class="device" v-for="device in devices_column2" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
+                <div class="device" v-for="device in devices_column2" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
                   <p>
                     <i class="fas fa-microchip"></i> Nombre:
                     <strong>{{ device.name }}</strong>
@@ -117,7 +117,7 @@
 
         </div>
         <div id="detail">
-          <div id="close" v-on:click="closeDetaill" style="cursor: pointer;" class="row blocs">
+          <div id="close" v-on:click="closeDetail" style="cursor: pointer;" class="row blocs">
             <i class="fas fa-times" ></i>
           </div>
           <div class="row blocs">
@@ -132,8 +132,8 @@
 
 
             <div class=" info" v-for="deviceInf in deviceAtributes">
-              <div class="camps">{{ deviceInf[0] }}</div>
-              <div class="campsInfo">{{ deviceInf[1] }}</div>
+              <div class="field">{{ deviceInf[0] }}</div>
+              <div class="fieldInfo">{{ deviceInf[1] }}</div>
             </div>
 
           </div>
@@ -145,8 +145,8 @@
           <div class="row  blocinfo">
 
             <div class=" info" v-for="deviceInf in deviceSensors">
-              <div class="camps">{{ deviceInf[0] }}</div>
-              <div class="campsInfo">{{ deviceInf[1] }}</div>
+              <div class="field">{{ deviceInf[0] }}</div>
+              <div class="fieldInfo">{{ deviceInf[1] }}</div>
             </div>
 
 
