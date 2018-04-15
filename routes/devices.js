@@ -3,6 +3,7 @@ url = require('url');
 Device = require('../models/Device')
 DeviceInformation = require('../models/Device-Information')
 router = express.Router()
+socket = require("../handlers/socket-handler")
 
 router.get('/:id', function(req, res, next){
     let query = url.parse(req.url, true).query
@@ -17,10 +18,10 @@ router.get('/:id', function(req, res, next){
         Device.findById(req.params.id).select(filter),
         DeviceInformation.findOne({'id_device': req.params.id}, {'info': {'$slice': -1}})
     ]).then(([device, information]) => {
-        device.lastInfo = information.info[0]
+        if (information) { device.lastInfo = information.info[0] }
         res.send(device)
-    }).catch(([eDevice, eInformation]) => {
-        res.send({'status': 400})
+    }).catch(e => {
+        console.log(e);
     })
 })
 
@@ -86,6 +87,7 @@ router.post('/', function(req, res, next) {
     device.save()
     .then(device => {
         res.send({"status": 201, "id": device._id})
+        socket.deviceWasUpdated()
     }).catch(e => {
         res.send({"status": 400})
     })
@@ -118,12 +120,14 @@ router.put('/:id', function(req, res, body) {
                 schema.save()
                 .then(doc => {
                     res.send({'status': 201})
+                    socket.deviceWasUpdated()
                 })
                 .catch(e => {
                     res.send({'status': 400})
                 })
             } else {
                 res.send({'status': 200})
+                socket.deviceWasUpdated()
             }
         })
         .catch(e => {

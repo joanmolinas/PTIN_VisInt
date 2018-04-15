@@ -3,6 +3,10 @@ var app = require('../app');
 var debug = require('debug')('web:server');
 var http = require('http');
 var db_handler = require('../handlers/db-handler')
+var server = http.createServer(app);
+// let io = require('socket.io')(server)
+let socket = require('../handlers/socket-handler')
+socket.connect(server)
 
 /**
  * Get port from environment and store in Express.
@@ -12,17 +16,6 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 console.log(port)
-
-/**
- * Create HTTP server.
- */
-
-var server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-
 
 db_handler.connect()
     .then(() => {
@@ -34,6 +27,11 @@ db_handler.connect()
         console.log(e)
     })
 
+// // Socket.io
+
+//
+//
+// // End Socket.io
 
 /**
  * Normalize a port into a number, string, or false.
