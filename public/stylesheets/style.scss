@@ -196,3 +196,37 @@ body {
   max-height: $vh;
  
 }
+
+#login {
+
+  margin-top: 100px;
+  
+  #header-login{
+    background-color: $sidebar-menu-color;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px; 
+    padding:15px 10px 15px 10px;
+    text-align: center;
+    color: white;
+    font-size: large;
+  }
+
+  #content-login {
+    background-color:$sidebar-device-list-color;
+    padding: 20px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: 1px solid #ccc;
+    color: $sidebar-menu-color;
+
+    #form-error {
+      font-style: italic;
+      font-size: small;
+      font-weight: initial;
+      padding-left: 15px;
+      color:#a94442;
+      display: none;
+    }
+  }
+
+}
