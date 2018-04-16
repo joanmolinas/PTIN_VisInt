@@ -113,52 +113,67 @@ body {
         background-color: whitesmoke;
         margin: 20px;
         padding: 10px;
+        
       }
     }
   }
     #detail{
       display: none;
+      height: 100%;
+      overflow-y:scroll;
+      height: $vh;
+      
      #close{
-      text-align: right;
+      text-align: left;
       font-size: 30px;
+      
      }
       
       #icon{
        text-align: center;
        font-size: 100px;
-      }
+       font-size-adjust: inherit;
+       color:white;
+       
+       width: 150px;
+       
+       
       
+      }
+      .iconPicture{
+        padding:5%;
+      }
       .separators{
         text-align: center;
         font-weight: bold;
         font-size: x-large;
        }
       .blocinfo{
-        margin-left: 15%;
+        margin-left: 12%;
         margin-right: 15%;
         border: 1px solid #ccc;
         border-radius: 5px 5px;
-        width: 70%;
-        
-        
-        
+        width: 78%;
         .info{
-          border: 1px solid #ccc;
-         
+          width: 100%;
+          margin-left: 0%;
+          border:1px solid #ccc;
         }
+        
+        
+      
         .field{
-          display: inline-block;
-          padding-left: 5%;
-          width: 30%;
-          text-align: left;
-          font-weight: bold;
+         padding: 3%;
+         font-size: large;
+         text-align: center;
+         font-weight: bold;
         }
         
         .fieldInfo{
-          display: inline-block;
-          width: 40%;
-          padding-left: 30%;
-          text-align: left;
+         color:#ccc;
+         padding: 3%;
+         text-align: center;
+         font-size: large;
 
         }
        

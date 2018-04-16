@@ -120,20 +120,23 @@
           <div id="close" v-on:click="closeDetail" style="cursor: pointer;" class="row blocs">
             <i class="fas fa-times" ></i>
           </div>
-          <div class="row blocs">
-            <div id="icon">
-              <i class="fas fa-user-md"></i>
+          <div  class=" row blocs">
+            <div v-if="selected_device.type==1" id="icon" class="img-circle center-block " >
+              <i class="fas fa-user-md  iconPicture"></i>
+            </div>
+            <div v-if="selected_device.type==2" id="icon" class="img-circle center-block " >
+              <i class="fas fa-ambulance  iconPicture"></i>
             </div>
           </div>
           <div class="row blocs">
             <div class="separators">—— Información ——</div>
           </div>
-          <div class="row  blocinfo">
+          <div class="row blocinfo">
 
 
-            <div class=" info" v-for="deviceInf in deviceAtributes">
-              <div class="field">{{ deviceInf[0] }}</div>
-              <div class="fieldInfo">{{ deviceInf[1] }}</div>
+            <div class="info row" v-for="deviceInf in deviceAtributes">
+              <div class="field col-md-6">{{ deviceInf[0] }}</div>
+              <div class="fieldInfo col-md-6">{{ deviceInf[1] }}</div>
             </div>
 
           </div>
@@ -144,14 +147,16 @@
 
           <div class="row  blocinfo">
 
-            <div class=" info" v-for="deviceInf in deviceSensors">
-              <div class="field">{{ deviceInf[0] }}</div>
-              <div class="fieldInfo">{{ deviceInf[1] }}</div>
+            <div class=" info row" v-for="deviceInf in deviceSensors">
+              <div class="field col-md-6">{{ deviceInf[0] }}</div>
+              <div class="fieldInfo col-md-6">{{ deviceInf[1] }}</div>
             </div>
 
 
           </div>
-
+          <div class="row blocs">
+            <div class="separators"></div>
+          </div>
 
         </div>
       </div>

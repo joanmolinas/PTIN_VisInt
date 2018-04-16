@@ -187,7 +187,7 @@ window.addEventListener('load', function () {
                         if (device.lastInfo) {
                             let source = self.vectorLayer.getSource();
                             source.addFeature(new ol.Feature({
-                                name: device.name,
+                                name: device._id,
                                 geometry: new ol.geom.Point([device.lastInfo[0].longitude, device.lastInfo[0].latitude])
                             }))
                         }
@@ -199,26 +199,72 @@ window.addEventListener('load', function () {
                 })
             },
             //ShowDetail function params idDevice
-                
+           
             deviceDetail: function (idDevice) {
+                
                 let self=this
                //Rquest for device data
-              
+                self.deviceAtributes=[]
+                self.deviceInfo=[]
+                self.deviceSensors=[]
+                self.selected_device=''
                 axios.get(this.base_url_api + 'devices/'+idDevice).then(function (response) {
-                    
-                self.selected_device=response.data
+                
+                     self.selected_device=response.data
+                
                   //Get array with the keys of diferent basic parameters                
+                 
+                }).then(function(){
+                    self.showDetail()
+                })
+                                  
+                
+                
+                
+                
+                
+                   
+                   
+            },
+            showDetail:function(){
+                let self=this
                 let keys=Object.keys(self.selected_device)
                //For each parameters, is used the atributesTraductionNames and the atributesNames arrays to get de name of the parameter
                     //each parameter is keepst in array
-  
+                
                 keys.forEach(function(k){
                     if((k!="lastInfo")&&(k!="__v")){
-                        self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
-                        self.deviceInfo.push(self.selected_device[k])
-                        self.deviceAtributes.push(self.deviceInfo)
-                        self.deviceInfo=[]
+                        if(k=="active"){
+                           
+                            if(self.selected_device[k]==true){
+                                
+                                 document.getElementById('icon').style.boxShadow=" 0px 0px 20px 5px greenyellow"
+                            
+                            }else{
+                                document.getElementById('icon').style.boxShadow="0px 0px 20px 5px red"
+                            }
+                        }else{
+                            if(k=="type"){
+                               switch(self.selected_device[k]){
+                                   case 1:
+                                   document.getElementById('icon').style.backgroundColor="rgb(0, 140, 255)"
+                                   document.getElementById('close').style.color="rgb(0, 140, 255)"
+                                   break;
+                                   case 2:
+                                   document.getElementById('icon').style.backgroundColor="rgb(243, 123, 11)"
+                                   document.getElementById('close').style.color="rgb(243, 123, 11)"
+                                   break;
+                                    
+                               }
+                            }
+                            self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                            self.deviceInfo.push(self.selected_device[k])
+                            self.deviceAtributes.push(self.deviceInfo)
+                            self.deviceInfo=[]
+                        }
+                       
                     }
+                        
                 })
                 
                 if(self.selected_device.lastInfo){
@@ -229,23 +275,27 @@ window.addEventListener('load', function () {
 
                     keysSensors.forEach(function(k){
                         if(k!="date"){
+                            
                             self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
                             
                             self.deviceInfo.push( self.deviceInfo.push(self.selected_device.lastInfo[k]))
                             self.deviceSensors.push(self.deviceInfo)
                             self.deviceInfo=[]
                         }
+
                     })
+                    if((self.selected_device.lastInfo.latitude)&&(self.selected_device.lastInfo.longitude)){
+                       console.log([self.selected_device.lastInfo.longitude, self.selected_device.lastInfo.latitude])
+                        self.map.getView().setCenter([self.selected_device.lastInfo.longitude, self.selected_device.lastInfo.latitude])
+                        self.map.getView().setZoom(20)
+                    }
                 }
                  //The layer device and filter is hide and show the detail layer
                 document.getElementById("devices").style.display = "none"
                 document.getElementById("filter").style.display = "none"
                 document.getElementById("detail").style.display = "inherit"
-                })
                 
                 
-                   
-                   
             },
             //Closes the detailview
             closeDetail:function(){
@@ -253,10 +303,14 @@ window.addEventListener('load', function () {
                 self.deviceAtributes=[]
                 self.deviceInfo=[]
                 self.deviceSensors=[]
-                document.getElementsByClassName("blocInfo").innerHTML=""
-                document.getElementById("detail").style.display = "inherit"
+                document.getElementsByClassName("detail").innerHTML=""
+                document.getElementById("detail").style.display = "none"
                 document.getElementById("devices").style.display = "inherit"
                 document.getElementById("filter").style.display = "inherit"
+                self.selected_device=''
+                self.map.getView().setCenter([1.7310788, 41.2220107])
+                self.map.getView().setZoom(18)
+                
                 
             }
 
