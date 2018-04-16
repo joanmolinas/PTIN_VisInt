@@ -50,6 +50,12 @@ window.addEventListener('load', function () {
                 })
             },
 
+            refreshDevices: function() {
+                self.removeDevicesFromList()
+                self.getDevices()
+
+            },
+
             /**
              * @author ncarmona
              * @description Clear devices list.

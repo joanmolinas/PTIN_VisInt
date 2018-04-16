@@ -41,7 +41,7 @@
   var socket = io();
   socket.on('refreshDevicesTable', function() {
       console.log('refresh')
-      $("#devices-list").load(location.href+" #devices-list>*","");
+      $("device").load(location.href+" device>*","");
   })
 </script>
 
