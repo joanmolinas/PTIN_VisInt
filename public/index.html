@@ -29,21 +29,20 @@
   <link rel="stylesheet" href="https://openlayers.org/en/v4.0.1/css/ol.css" type="text/css">
   <script src="https://openlayers.org/en/v4.0.1/build/ol.js"></script>
 
-  <!-- blue scripts -->
+  <!-- visint scripts -->
   <link rel="stylesheet" href="stylesheets/style.css" />
   <script src="javascripts/visint.js"></script>
-  <!-- jquery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <!-- End jquery -->
+
   <!-- Socket io -->
   <script src="/socket.io/socket.io.js"></script>
+  <!-- REMOVE WHEN PAGE RESFRESH WORKS CORRECTLY.
 <script>
   var socket = io();
   socket.on('refreshDevicesTable', function() {
       console.log('refresh')
       $("#devices-list").load(location.href+" #devices-list>*","");
   })
-</script>
+</script> -->
 
   <!-- End socket io -->
 </head>
