@@ -29,20 +29,21 @@ window.addEventListener('load', function () {
              * @author ncarmona
              * @description Get all devices and print them in right and left column at the sidebar.
              * @version S2 - Removed this feature from routes/public.
-             * @todo add spinner while 
+             * @todo add spinner while
              */
             getDevices: function () {
                 let self = this
 
                 axios.get(this.base_url_api + 'devices').then(function (response) {
                     self.devices = response.data
-                    
-                    self.devices.forEach(function (device, index) {
+
+                    self.devices.filter(function(device) {
+                        return device.lastInfo != null || device.lastInfo != undefined
+                    }).forEach(function (device, index) {
                         if (index % 2 == 0)
                             self.devices_column1.push(device)
                         else
                             self.devices_column2.push(device)
-
                     });
                 }).catch(function (error) {
                     console.log(error)
@@ -91,7 +92,7 @@ window.addEventListener('load', function () {
                             self.removeDevicesFromList()
                             self.devices = response.data
 
-                            self.devices.forEach(function(device, index){                  
+                            self.devices.forEach(function(device, index){
                                 if(index % 2 == 0)
                                     self.devices_column1.push(device)
                                 else
@@ -109,9 +110,9 @@ window.addEventListener('load', function () {
              * @description Filter devices by type.
              * @version S2
              * @todo add spinner while.
-             */         
+             */
             filterByType: function(){
-                
+
                 this.removeDevicesFromList()
                 let self = this
                 let query = this.base_url_api + 'devices/?'
@@ -124,14 +125,14 @@ window.addEventListener('load', function () {
                         query+='&'
                     query += 'name=' + this.filter_text
                 }
-                
+
                 if (this.debug) console.log(query)
 
                 axios.get(query).then(function(response){
                     self.removeDevicesFromList()
                     self.devices = response.data
                     self.devices.forEach(function(device, index){
-                        
+
                         if(index % 2 == 0)
                             self.devices_column1.push(device)
                         else
@@ -139,7 +140,7 @@ window.addEventListener('load', function () {
                     });
                 }).catch( function(error){
                     console.log(error.message)
-                })             
+                })
             },
 
             /**
@@ -169,7 +170,7 @@ window.addEventListener('load', function () {
                     name: "vector",
                     source: new ol.source.Vector({
                         features: [
-                           
+
                         ]
                     })
 
@@ -191,7 +192,7 @@ window.addEventListener('load', function () {
              //  this.vectorLayer.setStyle(this.iconStyle)
 
 
-                //Start variable map 
+                //Start variable map
                 //Define target (div where map is placed)
                 //Define layers (vectorial and Open Street Maps)
                 //Define map center, map inital zoom, maxzoom and min zoom
@@ -216,7 +217,7 @@ window.addEventListener('load', function () {
                 axios.get(this.base_url_api + 'devices').then(function (response) {
                     self.devices = response.data
                     self.devices.forEach(function (device) {
-                        
+
                         if(device.lastInfo){
                             let source=self.vectorLayer.getSource();
                             source.addFeature(new ol.Feature({
@@ -224,7 +225,7 @@ window.addEventListener('load', function () {
                                 geometry: new ol.geom.Point([device.lastInfo[0].longitude,device.lastInfo[0].latitude])
                             }))
                         }
-                        
+
 
                     });
                 }).catch(function (error) {
