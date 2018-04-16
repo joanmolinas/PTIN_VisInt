@@ -11,6 +11,42 @@ https://ptin2018.herokuapp.com/api
 application/json
 ```
 
+## Auth
+**Sign in**
+```
+POST: /auth/signin
+```
+
+### Request
+```json
+{
+	"email": "name@email.com",
+	"password": "my_super_password"
+}
+```
+
+### Response
+**OK**
+```json
+{
+    "status": 200,
+    "data": {
+        "_id": "5ad4add1f8204b7be202dfc6",
+        "email": "pepito@gmail.com",
+        "__v": 0
+    }
+}
+```
+
+**ERROR**
+> Error 404 user didn't found it. Error 400 something wrong happened.
+
+```json
+{
+    "status": 400
+}
+```
+
 ## Devices
 
 **List of devices**
@@ -32,10 +68,10 @@ You can filter by the following parameters:
 ```json
 [
  {
- 
+
  },
  {
- 
+
  }
 ]
 ```
@@ -112,4 +148,3 @@ PUT: /devices
   "status": 400
 }
 ```
-
