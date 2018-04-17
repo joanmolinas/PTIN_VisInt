@@ -1,5 +1,5 @@
 {
-
+    "SECRET_TOKEN": "GNkhxvfrjE",
     "mongodb_prod": {
         "hostname": "ds231229.mlab.com",
         "port": "31229",
