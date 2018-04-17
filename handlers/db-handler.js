@@ -5,7 +5,7 @@ let config = require('../config.json')
 let bluebird = require("bluebird");
 
 let db;
-let env = 1 // 0 = prod, 1 = dev
+let env = 0 // 0 = prod, 1 = dev
 exports.connect = function() {
     return new Promise(function(resolve, reject) {
         if (db) return db
