@@ -188,7 +188,7 @@ window.addEventListener('load', function () {
 
                 });
 
-                
+
                 //Defining diferents sytles for the points in the map
                 let style=new ol.style.Style({
                     image:new ol.style.Circle({
@@ -196,7 +196,7 @@ window.addEventListener('load', function () {
                         fill: new ol.style.Fill({
                             color: [0, 140, 255,1]
                         }),
-                       
+
                     })
                 })
                 this.iconstyle.push(style)
@@ -206,11 +206,11 @@ window.addEventListener('load', function () {
                         fill: new ol.style.Fill({
                             color: [243, 123, 11,1]
                         }),
-                       
+
                     })
                 })
                 this.iconstyle.push(style)
-                
+
 
 
                 //Start variable map
@@ -242,25 +242,25 @@ window.addEventListener('load', function () {
                     let latitudeCenter=0
                     let longitudeCenter=0*/
                     self.devices.forEach(function (device) {
-                        
+
                         if (device.lastInfo) {
                             if((device.lastInfo[0].latitude)&&(device.lastInfo[0].longitude)){
                                 //Compute a sum of latituds and a sum of longituds only if the device values are not very diferents from the map center
                                 /*if((device.lastInfo[0].latitude<self.mapCenter[1]+0.1)&&(device.lastInfo[0].latitude>self.mapCenter[1]-0.1)){
-                                    
+
                                     if((device.lastInfo[0].longitude<self.mapCenter[0]+0.1)&&(device.lastInfo[0].longitude>self.mapCenter[0]-0.1)){
                                         latitudeCenter=latitudeCenter+device.lastInfo[0].latitude
                                         longitudeCenter=longitudeCenter+device.lastInfo[0].longitude
                                         i=i+1
                                     }
-                                   
+
                                 }*/
-                                
+
                                 let source = self.vectorLayer.getSource();
                                 let point=new ol.Feature({
                                     name: device._id,
                                     geometry: new ol.geom.Point([device.lastInfo[0].longitude, device.lastInfo[0].latitude])
-                                
+
                                 })
                                 //For each device type is set one syle point.
                                 switch(device.type){
@@ -271,13 +271,13 @@ window.addEventListener('load', function () {
                                         point.setStyle(self.iconstyle[1])
                                         break;
                                 }
-                            
+
                                 //point is added
                                 source.addFeature(point)
                          }
                         }
-                        
-                       
+
+
 
                     });
                     //Compute the average center map and set the map center.
@@ -291,7 +291,7 @@ window.addEventListener('load', function () {
             //ShowDetail function params idDevice
             //Makes a request for the device data, when request finish execute the function showdetail
             deviceDetail: function (idDevice) {
-                
+
                 let self=this
                //Rquest for device data
                 self.deviceAtributes=[]
@@ -299,46 +299,46 @@ window.addEventListener('load', function () {
                 self.deviceSensors=[]
                 self.selected_device=''
                 axios.get(this.base_url_api + 'devices/'+idDevice).then(function (response) {
-                
+
                      self.selected_device=response.data
-                
-                  //             
-                 
+
+                  //
+
                 }).then(function(){
                     self.showDetail()
                 })
-                                  
-                
-                
-                
-                
-                
-                   
-                   
+
+
+
+
+
+
+
+
             },
             //Show the detail view with all the data from the deviece.
             showDetail:function(){
                 let self=this
-                //Get array with the keys of diferent basic parameters   
+                //Get array with the keys of diferent basic parameters
                 let keys=Object.keys(self.selected_device)
                //For each parameters, is used the atributesTraductionNames and the atributesNames arrays to get de name of the parameter
                     //each parameter is keepst in array
-                
+
                 keys.forEach(function(k){
                     if((k!="lastInfo")&&(k!="__v")){
                         //If device is active the icon shadow wil be green, if it is not active the icon shadow will be red
                         if(k=="active"){
-                           
+
                             if(self.selected_device[k]==true){
-                                
+
                                  document.getElementById('icon').style.boxShadow=" 0px 0px 20px 5px greenyellow"
-                            
+
                             }else{
                                 document.getElementById('icon').style.boxShadow="0px 0px 20px 5px red"
                             }
                         }else{
                             if(k=="type"){
-                                //Each type of device have his own icon background color color 
+                                //Each type of device have his own icon background color color
                                switch(self.selected_device[k]){
                                    case 1:
                                    document.getElementById('icon').style.backgroundColor="rgb(0, 140, 255)"
@@ -348,7 +348,7 @@ window.addEventListener('load', function () {
                                    document.getElementById('icon').style.backgroundColor="rgb(243, 123, 11)"
                                    document.getElementById('close').style.color="rgb(243, 123, 11)"
                                    break;
-                                    
+
                                }
                             }
                             self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
@@ -356,11 +356,11 @@ window.addEventListener('load', function () {
                             self.deviceAtributes.push(self.deviceInfo)
                             self.deviceInfo=[]
                         }
-                       
+
                     }
-                        
+
                 })
-                
+
                 if(self.selected_device.lastInfo){
                     //Get array with the keys of diferent Sensors parameters
                     let keysSensors=Object.keys(self.selected_device.lastInfo)
@@ -369,9 +369,9 @@ window.addEventListener('load', function () {
 
                     keysSensors.forEach(function(k){
                         if(k!="date"){
-                            
+
                             self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
-                            
+
                             self.deviceInfo.push( self.deviceInfo.push(self.selected_device.lastInfo[k]))
                             self.deviceSensors.push(self.deviceInfo)
                             self.deviceInfo=[]
@@ -389,8 +389,8 @@ window.addEventListener('load', function () {
                 document.getElementById("devices").style.display = "none"
                 document.getElementById("filter").style.display = "none"
                 document.getElementById("detail").style.display = "inherit"
-                
-                
+
+
             },
             //Closes the detailview
             closeDetail:function(){
@@ -408,8 +408,8 @@ window.addEventListener('load', function () {
                 //The map returns to initial position
                 self.map.getView().setCenter([1.7310788, 41.2220107])
                 self.map.getView().setZoom(18)
-                
-                
+
+
             }
 
         }
