@@ -4,14 +4,14 @@ User = require('../models/User')
 service = require("../handlers/token-service")
 
 router.post("/signin", function(req, res, next) {
-    let email = req.body.email
+    let username = req.body.username
     let password = req.body.password
-    if (!email && !password) {
-        res.status(400).send({ 'message': 'Email or password missing' })
+    if (!username && !password) {
+        res.status(400).send({ 'message': 'Username or password missing' })
         return
     }
 
-    let request = { "email": email, "password": password }
+    let request = { "username": username, "password": password }
     User.findOne(request, "-password")
     .then(user => {
         if (user) {
@@ -27,16 +27,16 @@ router.post("/signin", function(req, res, next) {
 })
 
 router.post("/signup", function(req, res, next) {
-    let email = req.body.email
+    let username = req.body.username
     let password = req.body.password
-    if (!email || !password) {
+    if (!username || !password) {
         console.log("hey");
-        res.status(400).send({ 'message': 'Email or password missing' })
+        res.status(400).send({ 'message': 'Username or password missing' })
         return
     }
 
     let user = new User({
-    	email: req.body.email,
+    	username: req.body.username,
     	password: req.body.password,
     })
 
@@ -47,7 +47,7 @@ router.post("/signup", function(req, res, next) {
         res.status(200).send({'data': u, 'token': token})
     })
     .catch(e => {
-        res.status(400).send({'message': 'Email already exists'})
+        res.status(400).send({'message': 'Username already exists'})
     })
 
 })
