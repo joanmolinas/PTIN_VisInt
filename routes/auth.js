@@ -16,7 +16,10 @@ router.post("/signin", function(req, res, next) {
     .then(user => {
         if (user) {
             let token = service.createToken(user)
-            res.status(200).send({ 'data': user, 'token': token })
+            user.token = token
+            user.save()
+            .then(u => res.status(200).send({ 'data': u }))
+            .catch(e => { res.status(500).send({'message': 'Internal error'})})
         }
         else res.status(400).send({ 'message': "User doesn't exists" })
     })
@@ -37,14 +40,23 @@ router.post("/signup", function(req, res, next) {
 
     let user = new User({
     	username: req.body.username,
-    	password: req.body.password,
+    	password: req.body.password
     })
+
 
     user.save()
     .then(u => {
         let token = service.createToken(u)
-        delete u.password
-        res.status(200).send({'data': u, 'token': token})
+        u.token = token
+        u.save()
+        .then(u => {
+            delete u.password
+            res.status(200).send({'data': u})
+        })
+        .catch(e => {
+            res.status(500).send({'message': 'Internal error'})
+        })
+
     })
     .catch(e => {
         res.status(400).send({'message': 'Username already exists'})
