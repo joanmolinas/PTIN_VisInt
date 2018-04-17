@@ -1,5 +1,5 @@
 {
-    "environtment": 0,
+    "environtment": 1,
     "SECRET_TOKEN": "GNkhxvfrjE",
     "mongodb_prod": {
         "hostname": "ds231229.mlab.com",
@@ -27,5 +27,9 @@
         "en": {
             "name": "english"
         }
+    },
+    "urls": {
+        "production": "https://ptin2018.herokuapp.com",
+        "development": "http://localhost:3000"
     }
 }

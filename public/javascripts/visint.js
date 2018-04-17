@@ -1,9 +1,10 @@
+// http://localhost:3000/api/
+// https://ptin2018.herokuapp.com
 window.addEventListener('load', function () {
     new Vue({
         el: '#sidebar',
         data: {
-            base_url_api: 'http://localhost:3000/api/',
-            devices: [],
+            base_url_api: 'https://ptin2018.herokuapp.com'
             devices_column1: [],
             devices_column2: [],
             selected_device: '',
@@ -27,7 +28,7 @@ window.addEventListener('load', function () {
         },
         mounted: function () {
             this.loadMap()
-            
+
             return this.getDevices()
         },
         methods: {
@@ -235,7 +236,7 @@ window.addEventListener('load', function () {
             drawDevices: function () {
                 let self = this
 
-                
+
                     //Defining variables for compute the average center
                    /* let i=0
                     let latitudeCenter=0
@@ -283,7 +284,7 @@ window.addEventListener('load', function () {
                     /*self.mapCenter=[longitudeCenter/i,latitudeCenter/i]
                     self.map.getView().setCenter(self.mapCenter)*/
 
-              
+
             },
             //ShowDetail function params idDevice
             //Makes a request for the device data, when request finish execute the function showdetail
