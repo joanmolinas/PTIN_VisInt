@@ -4,7 +4,7 @@ window.addEventListener('load', function () {
     new Vue({
         el: '#sidebar',
         data: {
-            base_url_api: 'https://ptin2018.herokuapp.com'
+            base_url_api: 'https://ptin2018.herokuapp.com/api/'
             devices_column1: [],
             devices_column2: [],
             selected_device: '',
