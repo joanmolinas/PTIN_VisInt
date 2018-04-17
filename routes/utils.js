@@ -2,6 +2,12 @@ var express = require('express')
 var router = express.Router()
 var request = require('request')
 
+let config = require('../config.json')
+let env = config.environtment
+let baseURL = env == 0 ? config.urls.production : config.urls.development
+console.log(baseURL + '/api/');
+
+
 // Form to add a device
 router.get('/addform', function(req, res, next){
   res.render('add-device')
@@ -10,7 +16,7 @@ router.get('/addform', function(req, res, next){
 // Form to list and optionally delete Devices
 router.get('/list', function (req, res, next) {
  request({
-   url: "http://localhost:3000/api/devices",
+   url: baseURL + '/api/devices/',
    json: true
  }, function (error, response, body) {
    if (!error && response.statusCode === 200) {
