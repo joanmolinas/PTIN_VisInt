@@ -1,13 +1,28 @@
 window.addEventListener('load', function () {
     new Vue({
-        el: '#login',
+        el: '#vue',
 
         data: {
+            base_url_api: 'https://ptin2018.herokuapp.com/api/',
             debugging: true,
-            userInputValue: document.getElementById("user").value,
-            passwordInputValue: document.getElementById("password").value
+            userInputValue: '',
+            passwordInputValue: '',
+            token: localStorage.token,
+            username: ''
         },
+        mounted: function () {
 
+            if(localStorage.username == null)
+                this.username = "Invitado"
+            else
+                this.username = localStorage.username
+                
+            if(document.getElementById("user")){
+                this.userInputValue = document.getElementById("user").value
+                this.passwordInputValue = document.getElementById("password").value
+            }
+            if(this.debugging) console.log("Usuario:" + this.username +"\nToken:" + this.token)
+        },
         methods: {
             /**
              * @author ncarmona
@@ -17,20 +32,23 @@ window.addEventListener('load', function () {
             validating: function(){
                 this.waitingValidationButton()
                 self = this
-                axios.post('/api/auth/signin', {
-                    email: self.userInputValue,
+                axios.post(this.base_url_api + 'auth/signin', {
+                    username: self.userInputValue,
                     password: self.passwordInputValue
                   })
                   .then(function (response) {
-                    if(response.data.status == 404)
-                        self.displayError("El usuario o la clave son incorrectas.")
-                    else if(response.data.status == 200)
+                    if(response.data.token != 'undefined'){                        
+                        localStorage.username = response.data.data.username
+                        localStorage.token = response.data.token
                         window.location.replace("/admin/dashboard.html")
+                    }
+
                     else
                         self.displayError("Error inesperado al validar el usuario.")
                   })
                   .catch(function (error) {
-                    self.displayError("El usuario o clave son incorrectos.")
+                      if(error.response.status == "400")
+                        self.displayError("Usuario o clave incorrectos.")
                   });
 
                   // Restore form
@@ -39,6 +57,23 @@ window.addEventListener('load', function () {
                   document.getElementById("user").focus()
                   self.disableValidation()
                   self.restoreValidationButton()
+            },
+
+            /**
+             * @author ncarmona
+             * @description Remove token and username from localstorage
+             * @version S2.
+             */               
+            logout: function(){
+                if(this.debugging) console.log("Cerrando sesión")
+                if(localStorage.token) {
+                    this.username = null
+                    this.token = null
+                    localStorage.token = null
+                    localStorage.username = null
+                    
+                    window.location.replace("../index.html")
+                }
             },
 
             /**

@@ -2,9 +2,9 @@
 // https://ptin2018.herokuapp.com/api/
 window.addEventListener('load', function () {
     new Vue({
-        el: '#sidebar',
+        el: '#vue',
         data: {
-            base_url_api: 'http://localhost:3000/api/',
+            base_url_api: 'https://ptin2018.herokuapp.com/api/',
             devices_column1: [],
             devices_column2: [],
             selected_device: '',
@@ -22,13 +22,12 @@ window.addEventListener('load', function () {
             deviceAtributes:[],
             deviceSensors:[],
             atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active"],
-            atributesTraductionNames:["Latitud","Longitud","Creacion","Nombre","Identificador","Modificacion","Tipo","Activo",],
+            atributesTraductionNames:["Latitud","Longitud","Creación","Nombre","Identificador","Modificación","Tipo","Activo",],
             min_length_filter: 3,
             debug: true
         },
         mounted: function () {
             this.loadMap()
-
             return this.getDevices()
         },
         methods: {
@@ -43,7 +42,6 @@ window.addEventListener('load', function () {
 
                 axios.get(this.base_url_api + 'devices').then(function (response) {
                     self.devices = response.data
-
                     self.devices.filter(function(device) {
                         return device.lastInfo != null || device.lastInfo != undefined
                     }).forEach(function (device, index) {
@@ -53,7 +51,7 @@ window.addEventListener('load', function () {
                             self.devices_column2.push(device)
                     });
                 }).catch(function (error) {
-                    console.log(error)
+                    console.log(error.message)
                 }).then(function(){self.drawDevices()})
             },
 
@@ -105,8 +103,11 @@ window.addEventListener('load', function () {
                             self.removeDevicesFromList()
                             self.devices = response.data
 
-                            self.devices.forEach(function(device, index){
-                                if(index % 2 == 0)
+                            self.devices.filter(function(device) {
+                                return device.lastInfo != null || device.lastInfo != undefined
+                            }).forEach(function (device, index) {
+                                console.log(device)
+                                if (index % 2 == 0)
                                     self.devices_column1.push(device)
                                 else
                                     self.devices_column2.push(device)
@@ -144,9 +145,10 @@ window.addEventListener('load', function () {
                 axios.get(query).then(function(response){
                     self.removeDevicesFromList()
                     self.devices = response.data
-                    self.devices.forEach(function(device, index){
-
-                        if(index % 2 == 0)
+                    self.devices.filter(function(device) {
+                        return device.lastInfo != null || device.lastInfo != undefined
+                    }).forEach(function (device, index) {
+                        if (index % 2 == 0)
                             self.devices_column1.push(device)
                         else
                             self.devices_column2.push(device)
@@ -164,7 +166,7 @@ window.addEventListener('load', function () {
             expandMap: function () {
                 document.getElementById("sidebar").style.display = "none"
                 document.getElementById("content").className = "col-md-12"
-                console.log(this.selected_device)
+                document.getElementById("shrink").style.display = "block"
             },
 
             /**
@@ -175,6 +177,7 @@ window.addEventListener('load', function () {
             shrinkMap: function () {
                 document.getElementById("sidebar").style.display = "block"
                 document.getElementById("content").className = "col-md-6"
+                document.getElementById("shrink").style.display = "none"
             },
 
             loadMap: function () {

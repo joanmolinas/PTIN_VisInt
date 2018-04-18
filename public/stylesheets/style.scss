@@ -182,20 +182,34 @@ body {
       .blocs{
         margin: 20px; 
       }
-        
-        
-       
-      
-          
-        
-     
   }
 }
 
 #content {
   min-height: $vh;
   max-height: $vh;
- 
+  margin:0;
+  padding:0;
+
+  #shrink {
+    z-index:9999;
+    background-color:rgba(0,60,136,.7);
+    position: fixed;
+    top: 60px+ $header-height;
+    left: 9px;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: .4em;
+    display: block;
+    margin: 1px;
+    box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.19), 0 6px 20px 0 rgba(255, 255, 255, 0.19);
+    display: none;
+    opacity: 30%;
+    border-radius: 2px;
+  }
 }
 
 #login {

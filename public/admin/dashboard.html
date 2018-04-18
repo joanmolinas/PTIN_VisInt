@@ -32,15 +32,16 @@
 </head>
 
 <body>
+  <div id="vue">
   <div class="container-fluid" id="body-content">
     <div class="row" style="padding:0;border:0;">
       <!-- top menu -->
       <div id="header" class="col-md-12">
         <nav>
-          <a href="#" title="Inicio">
+          <a href="../" title="Inicio">
             <i class="fas fa-home"></i>
           </a>
-          <a href="#" title="Inicio del panel de administración">
+          <a href="/admin/dashboard.html" title="Inicio del panel de administración">
                 <i class="fas fa-wrench"></i>
               </a>          
           <span class="pull-right" id="settings">
@@ -51,8 +52,8 @@
             <a href="#" title="Idioma">
               <i class="fas fa-language"></i>
             </a>
-            <a href="#" title="Cerrar sesión como admin">
-                <i class="fas fa-sign-out-alt"></i>
+            <a href="#logout" title="Cerrar sesión como admin">
+                <i class="fas fa-sign-out-alt" v-on:click="logout"></i>
             </a>
           </span>
         </nav>
@@ -60,16 +61,16 @@
       <!-- sidebar -->
       <div id="sidebar" class="col-md-3">
         <div id="devices">
-
+          {{ username }}
         </div>
       </div>
 
       <!-- Display map -->
       <div id="content" class="col-md-9">
-
       </div>
     </div>
   </div>
+</div>
 </body>
 
 </html>
