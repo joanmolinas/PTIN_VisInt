@@ -1,6 +1,19 @@
 // http://localhost:3000/api/
 // https://ptin2018.herokuapp.com/api/
+
 window.addEventListener('load', function () {
+    /* Window resize behavior */
+    window.onresize = function(){
+
+        if(window.innerWidth <= 990){
+            document.getElementsByTagName("body")[0].style.overflowX = "hidden"
+            document.getElementsByTagName("body")[0].style.overflowX = "scroll"        
+           
+        }else{
+            document.getElementsByTagName("body")[0].style.overflow = "hidden"   
+            window.scrollTo(0, 0);         
+        }
+    }
     new Vue({
         el: '#vue',
         data: {

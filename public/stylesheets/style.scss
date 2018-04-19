@@ -40,14 +40,14 @@ body {
           padding: 2px 4px 2px 4px;
           border-radius: 4px;
         }
-        .no-notification {
-          background-color: violet;
-        }
+      }
+      .no-notification {
+        background-color: violet;
+      }
 
-        .new-notification {
-          background-color: blue;
-          font-weight: bolder;
-        }
+      .new-notification {
+        background-color: blue;
+        font-weight: bolder;
       }
     }
 
@@ -86,7 +86,7 @@ body {
         background-color: white;
         
         input {
-          width: 95%;
+          width: 90%;
           border:0;
         }
 
@@ -105,6 +105,7 @@ body {
     #devices-list {
       color: inherit;
       overflow-y: scroll;
+      overflow-x: hidden;
       height: $vh;
       padding-bottom: 50px;
 
@@ -190,6 +191,7 @@ body {
   max-height: $vh;
   margin:0;
   padding:0;
+  overflow: hidden;
 
   #shrink {
     z-index:9999;
