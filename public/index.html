@@ -32,17 +32,20 @@
   <!-- visint scripts -->
   <link rel="stylesheet" href="stylesheets/style.css" />
   <script src="javascripts/visint.js"></script>
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <!-- Socket io -->
   <script src="/socket.io/socket.io.js"></script>
-  <!-- REMOVE WHEN PAGE RESFRESH WORKS CORRECTLY.
+  <!-- REMOVE WHEN PAGE RESFRESH WORKS CORRECTLY.-->
 <script>
   var socket = io();
   socket.on('refreshDevicesTable', function() {
       console.log('refresh')
-      $("device").load(location.href+" device>*","");
+     
+      document.getElementById("inici").click()
+     
+     $("device").load(location.href+" device>*","");
   })
-</script> -->
+</script> 
 
   <!-- End socket io -->
 </head>
@@ -54,7 +57,11 @@
       <!-- top menu -->
       <div id="header" class="col-md-12">
         <nav>
+<<<<<<< HEAD
           <a href="/" title="Inicio">
+=======
+          <a id="inici" v-on=click:"getDevices()" href="#" title="Inicio">
+>>>>>>> ricard
             <i class="fas fa-home"></i>
           </a>
           <span class="pull-right" id="settings">
@@ -92,7 +99,7 @@
             </div>
           </div>
 
-          <div id="devices-list">
+          <div id="devices-list" >
             <div class="row">
               <div class="col-md-6">
                 <div  class="device" v-for="device in devices_column1" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
