@@ -10,6 +10,7 @@ function connect(http) {
 }
 
 function deviceWasUpdated() {
+    
     io.emit('refreshDevicesTable', { for: 'everyone' });
 }
 

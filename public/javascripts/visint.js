@@ -38,8 +38,11 @@ window.addEventListener('load', function () {
              * @todo add spinner while
              */
             getDevices: function () {
-                let self = this
 
+                let self = this
+                self.devices_column1=[]
+                self.devices_column2=[]
+                console.log("getDevi")
                 axios.get(this.base_url_api + 'devices').then(function (response) {
                     self.devices = response.data
 
