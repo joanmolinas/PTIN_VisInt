@@ -8,6 +8,7 @@ var fs = require('fs')
 //Routes files
 var routes = require('./routes/routes')
 var admin = require('./routes/admin')
+var session = require('express-session')
 
 var app = express();
 
@@ -38,6 +39,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({secret:"UIBoefwoiHJIN",resave:false,saveUninitialized:true}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/admin', admin)
