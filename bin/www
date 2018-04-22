@@ -4,7 +4,6 @@ var debug = require('debug')('web:server');
 var http = require('http');
 var db_handler = require('../handlers/db-handler')
 var server = http.createServer(app);
-// let io = require('socket.io')(server)
 let socket = require('../handlers/socket-handler')
 socket.connect(server)
 
@@ -27,11 +26,6 @@ db_handler.connect()
         console.log(e)
     })
 
-// // Socket.io
-
-//
-//
-// // End Socket.io
 
 /**
  * Normalize a port into a number, string, or false.
