@@ -257,15 +257,15 @@ window.addEventListener('load', function () {
 
 
                     //Defining variables for compute the average center
-                   /* let i=0
+                    let i=0
                     let latitudeCenter=0
-                    let longitudeCenter=0*/
+                    let longitudeCenter=0
                     self.devices.forEach(function (device) {
 
                         if (device.lastInfo) {
                             if((device.lastInfo[0].latitude)&&(device.lastInfo[0].longitude)){
                                 //Compute a sum of latituds and a sum of longituds only if the device values are not very diferents from the map center
-                                /*if((device.lastInfo[0].latitude<self.mapCenter[1]+0.1)&&(device.lastInfo[0].latitude>self.mapCenter[1]-0.1)){
+                                if((device.lastInfo[0].latitude<self.mapCenter[1]+0.1)&&(device.lastInfo[0].latitude>self.mapCenter[1]-0.1)){
 
                                     if((device.lastInfo[0].longitude<self.mapCenter[0]+0.1)&&(device.lastInfo[0].longitude>self.mapCenter[0]-0.1)){
                                         latitudeCenter=latitudeCenter+device.lastInfo[0].latitude
@@ -273,7 +273,7 @@ window.addEventListener('load', function () {
                                         i=i+1
                                     }
 
-                                }*/
+                                }
 
                                 let source = self.vectorLayer.getSource();
                                 let point=new ol.Feature({
@@ -281,6 +281,7 @@ window.addEventListener('load', function () {
                                     geometry: new ol.geom.Point([device.lastInfo[0].longitude, device.lastInfo[0].latitude])
 
                                 })
+
                                 //For each device type is set one syle point.
                                 switch(device.type){
                                     case 1:
@@ -299,9 +300,10 @@ window.addEventListener('load', function () {
 
 
                     });
-                    //Compute the average center map and set the map center.
-                    /*self.mapCenter=[longitudeCenter/i,latitudeCenter/i]
-                    self.map.getView().setCenter(self.mapCenter)*/
+
+                    //Compute the average center map and set the map center
+                    self.mapCenter=[longitudeCenter/i,latitudeCenter/i]
+                    self.map.getView().setCenter(self.mapCenter)
 
 
             },
