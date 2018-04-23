@@ -27,7 +27,7 @@ router.get('/:id', function(req, res, next){
 
 router.get('/', function(req, res, next){
     let query = url.parse(req.url, true).query
-    let size = parseInt(query.size || 10)
+    let size = parseInt(query.size || 20)
     delete query.size
     if (query.name) {
         let regexp = new RegExp("^"+ query.name, "i");
@@ -41,7 +41,8 @@ router.get('/', function(req, res, next){
     }
     let response = []
 
-    let prom = Device.find(query).limit(size).select(filter)
+    // let foo = Device.find(query).sort({modificationDate: -1}).limit(10).select(filter)∫
+    let prom = Device.find(query).sort({modificationDate: -1}).limit(size).select(filter)
     .then(doc => {
         let count = 0
         if (doc.length == 0) { res.send([]) }
