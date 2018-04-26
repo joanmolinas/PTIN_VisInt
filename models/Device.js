@@ -9,6 +9,7 @@ var deviceSchema = new mongoose.Schema({
 		min: 1,
 		max: 100,
 	},
+	token: String,
 	creationDate: Date,
 	modificationDate: Date,
 	lastInfo: {}

@@ -76,7 +76,7 @@ router.post('/', function(req, res, next) {
         res.send({'status': 400})
         return
     }
-
+    
     let device = new Device({
         name: name,
         active: true,
@@ -85,9 +85,12 @@ router.post('/', function(req, res, next) {
         modificationDate: modificationDate
     })
 
+    let token = service.createToke(device)
+    device.token = token
+
     device.save()
     .then(device => {
-        res.send({"status": 201, "id": device._id})
+        res.send({"status": 201, "id": device._id, "token": device.token})
         socket.deviceWasUpdated()
     }).catch(e => {
         res.send({"status": 400})
