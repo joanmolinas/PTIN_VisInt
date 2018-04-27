@@ -15,6 +15,7 @@ function createToken(user){
 }
 
 function ensureAuthenticated(req, res, next) {
+	
 	if (!req.headers.authorization) { res.status(401).send({'message': 'Provide a token'})}
 
 	let token = req.headers.authorization.split(" ")[1]
@@ -27,6 +28,7 @@ function ensureAuthenticated(req, res, next) {
 		res.status(400).send({'message': 'Invalid token'})
 	})
 	next()
+	
 }
 
 module.exports = {

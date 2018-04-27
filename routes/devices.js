@@ -71,9 +71,9 @@ router.post('/', function(req, res, next) {
     let creationDate = new Date()
     let modificationDate = new Date()
     let type = req.body.type
-
+    
     if (!name || !type) {
-        res.send({'status': 400})
+        res.send({'statuss': 400})
         return
     }
     
@@ -85,7 +85,7 @@ router.post('/', function(req, res, next) {
         modificationDate: modificationDate
     })
 
-    let token = service.createToke(device)
+    let token = service.createToken(device)
     device.token = token
 
     device.save()
