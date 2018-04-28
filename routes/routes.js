@@ -6,8 +6,8 @@ let tokenMiddleware = require('../handlers/token-service')
 
 exports.create = function(app) {
     let baseAPI = '/api'
-    app.use(baseAPI + '/users', tokenMiddleware.ensureAuthenticated, users)
-    app.use(baseAPI + '/devices', tokenMiddleware.ensureAuthenticated, devices)
+    app.use(baseAPI + '/users', tokenMiddleware.ensureUserAuthenticated, users)
+    app.use(baseAPI + '/devices', tokenMiddleware.ensureDeviceAuthenticated, devices)
     app.use(baseAPI,  utils)
     app.use(baseAPI + "/auth", auth)
 }
