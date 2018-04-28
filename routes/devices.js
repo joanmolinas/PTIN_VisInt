@@ -4,6 +4,7 @@ Device = require('../models/Device')
 DeviceInformation = require('../models/Device-Information')
 router = express.Router()
 socket = require("../handlers/socket-handler")
+tokenMiddleware = require('../handlers/token-service')
 
 router.get('/:id', function(req, res, next){
     let query = url.parse(req.url, true).query
@@ -15,7 +16,7 @@ router.get('/:id', function(req, res, next){
     }
 
     Promise.all([
-        Device.findById(req.params.id).select(filter),
+        Device.findById(req.params.id, "-token").select(filter),
         DeviceInformation.findOne({'id_device': req.params.id}, {'info': {'$slice': -1}})
     ]).then(([device, information]) => {
         if (information) { device.lastInfo = information.info[0] }
@@ -41,7 +42,6 @@ router.get('/', function(req, res, next){
     }
     let response = []
 
-    // let foo = Device.find(query).sort({modificationDate: -1}).limit(10).select(filter)∫
     let prom = Device.find(query).sort({modificationDate: -1}).limit(size).select(filter)
     .then(doc => {
         let count = 0
@@ -71,12 +71,12 @@ router.post('/', function(req, res, next) {
     let creationDate = new Date()
     let modificationDate = new Date()
     let type = req.body.type
-    
+
     if (!name || !type) {
         res.send({'statuss': 400})
         return
     }
-    
+
     let device = new Device({
         name: name,
         active: true,
@@ -97,7 +97,7 @@ router.post('/', function(req, res, next) {
     })
 })
 
-router.put('/:id', function(req, res, body) {
+router.put('/:id', tokenMiddleware.ensureDeviceAuthenticated, function(req, res, body) {
     if (!req.body) {
         res.send({"status": 400})
     }

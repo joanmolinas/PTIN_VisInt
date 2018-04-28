@@ -15,7 +15,7 @@ function createToken(user){
 }
 
 function ensureUserAuthenticated(req, res, next) {
-	
+
 	if (!req.headers.authorization) { res.status(401).send({'message': 'Provide a token'})}
 
 	let token = req.headers.authorization.split(" ")[1]
@@ -31,7 +31,6 @@ function ensureUserAuthenticated(req, res, next) {
 }
 
 function ensureDeviceAuthenticated(req, res, next) {
-	
 	if (!req.headers.authorization) { res.status(401).send({'message': 'Provide a token'})}
 
 	let token = req.headers.authorization.split(" ")[1]
