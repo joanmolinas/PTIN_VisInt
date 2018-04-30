@@ -4,6 +4,7 @@ Device = require('../models/Device')
 DeviceInformation = require('../models/Device-Information')
 router = express.Router()
 socket = require("../handlers/socket-handler")
+service = require("../handlers/token-service")
 
 router.get('/:id', function(req, res, next){
     let query = url.parse(req.url, true).query
@@ -97,7 +98,7 @@ router.post('/', function(req, res, next) {
     })
 })
 
-router.put('/:id', function(req, res, body) {
+router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
     if (!req.body) {
         res.send({"status": 400})
     }
