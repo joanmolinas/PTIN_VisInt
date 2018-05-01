@@ -1,16 +1,14 @@
 let io;
 
+let sockets = {}
+
 function connect(http) {
     io = require('socket.io')(http);
 
     io.on('connection', (socket) => {
         console.log('Webpage connected')
-        listenAlarm(socket)
-
-
-        setTimeout(() => {
-            io.emit('shutdown')
-        }, 3000);
+        console.log(socket)
+        // listenAlarm(socket)
     })
 }
 
@@ -20,11 +18,16 @@ function listenAlarm(socket) {
     })
 }
 
+function emitShutdown(clientID) {
+    // io.emit("shutdown", )
+}
+
 function deviceWasUpdated() {
     io.emit('refreshDevicesTable', { for: 'everyone' });
 }
 
 module.exports = {
     connect,
-    deviceWasUpdated
+    deviceWasUpdated,
+    emitShutdown
 }
