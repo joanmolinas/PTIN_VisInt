@@ -4,6 +4,7 @@ Device = require('../models/Device')
 DeviceInformation = require('../models/Device-Information')
 router = express.Router()
 socket = require("../handlers/socket-handler")
+service = require("../handlers/token-service")
 
 router.get('/:id', function(req, res, next){
     let query = url.parse(req.url, true).query
@@ -27,7 +28,7 @@ router.get('/:id', function(req, res, next){
 
 router.get('/', function(req, res, next){
     let query = url.parse(req.url, true).query
-    let size = parseInt(query.size || 10)
+    let size = parseInt(query.size || 20)
     delete query.size
     if (query.name) {
         let regexp = new RegExp("^"+ query.name, "i");
@@ -41,7 +42,8 @@ router.get('/', function(req, res, next){
     }
     let response = []
 
-    let prom = Device.find(query).limit(size).select(filter)
+    // let foo = Device.find(query).sort({modificationDate: -1}).limit(10).select(filter)∫
+    let prom = Device.find(query).sort({modificationDate: -1}).limit(size).select(filter)
     .then(doc => {
         let count = 0
         if (doc.length == 0) { res.send([]) }
@@ -70,12 +72,12 @@ router.post('/', function(req, res, next) {
     let creationDate = new Date()
     let modificationDate = new Date()
     let type = req.body.type
-
+    
     if (!name || !type) {
-        res.send({'status': 400})
+        res.send({'statuss': 400})
         return
     }
-
+    
     let device = new Device({
         name: name,
         active: true,
@@ -84,16 +86,19 @@ router.post('/', function(req, res, next) {
         modificationDate: modificationDate
     })
 
+    let token = service.createToken(device)
+    device.token = token
+
     device.save()
     .then(device => {
-        res.send({"status": 201, "id": device._id})
+        res.send({"status": 201, "id": device._id, "token": device.token})
         socket.deviceWasUpdated()
     }).catch(e => {
         res.send({"status": 400})
     })
 })
 
-router.put('/:id', function(req, res, body) {
+router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
     if (!req.body) {
         res.send({"status": 400})
     }

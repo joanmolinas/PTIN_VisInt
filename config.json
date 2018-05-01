@@ -1,5 +1,6 @@
 {
-
+    "environtment": 0,
+    "SECRET_TOKEN": "GNkhxvfrjE",
     "mongodb_prod": {
         "hostname": "ds231229.mlab.com",
         "port": "31229",
@@ -12,7 +13,7 @@
         "port": "27017",
         "user": "",
         "pwd": "",
-        "database": "ptin-dev"
+        "database": "ptindev"
     },
     "language": {
         "default_language": "es",
@@ -26,5 +27,9 @@
         "en": {
             "name": "english"
         }
+    },
+    "urls": {
+        "production": "https://ptin2018.herokuapp.com",
+        "development": "http://localhost:3000"
     }
 }
