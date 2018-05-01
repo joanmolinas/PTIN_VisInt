@@ -69,7 +69,7 @@ router.post("/signup", async function(req, res, next) {
     })
 })
 
-// Modifica user languaje
+// Modifique user languaje
 router.put("/languaje/:id", service.ensureUserAuthenticated, async function(req, res, next) {
     let lang = req.body.languaje
 
