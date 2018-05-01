@@ -1,0 +1,17 @@
+{
+    "map_display": {
+        "__meta": {
+            "title":"VisInt - Inicio"
+        },
+        "home_icon":"Inicio",
+        "notifications_icon":"Notificaciones.",
+        "language_icon":"Cambiar de idioma.",
+        "filter_device": "Filtrar dispositivo",
+        "filter_device_by_type": "Tipos de dispositivo",
+        "device_name": "Nombre",
+        "device_latitude": "Latitud",
+        "device_longitude": "Longitud",
+        "creation_date": "Fecha de creación",
+        "modified_date": "Fecha de modificación"
+    }
+}
