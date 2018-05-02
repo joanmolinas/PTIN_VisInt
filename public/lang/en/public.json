@@ -1,0 +1,24 @@
+{
+    "__meta": {
+        "title":"VisInt - Home"
+    },
+    
+    "home_icon":"Home",
+    "notifications_icon":"Notifications.",
+    "language_icon":"Change language.",
+    "filter_device": "Filter device ...",
+    "filter_device_by_type": "All devices",
+    "device_name": "Alias",
+    "device_latitude": "Latitude",
+    "device_longitude": "Longitude",
+    "creation_date": "Creation date",
+    "modified_date": "Modification date",
+    "patient": "Patient",
+    "doctor": "Doctor",
+    "ambulance": "Ambulancie",
+    "smoke": "Smoke sensor",
+    "weather": "weather sensor",
+    "air_quality": "Air quality sensor",
+    "information": "Information",
+    "sensors": "Sensors"
+}
