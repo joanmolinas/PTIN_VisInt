@@ -53,9 +53,51 @@ body {
         font-weight: bolder;
       }
     }
-
+    
     #settings {
-
+      #mobilFilterIcon{
+        padding-right: 10px;
+      }
+      #deviceMbl-list{
+        display: none;
+        overflow-y:scroll;
+        height: $vh;
+          .device {
+            border: 1px solid #ccc;
+            background-color: whitesmoke;
+            margin: 10px;
+            padding: 5px;
+            
+          }
+        
+      }
+      #filterMobile {
+          display: none;
+          background-color: white;
+          border-bottom: 1px solid #ccc;
+          padding: 3%;
+          .filter-input {
+            border-radius: 10px;
+            padding-left: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-right: 15px;
+            margin-right: 10px;
+            border: 1px solid $sidebar-menu-color;
+            background-color: white;
+            
+            input {
+              width: 90%;
+              border:0;
+            }
+    
+            .filter-search-icon {
+              font-size:20px;
+              color: $sidebar-menu-color;
+            }
+        
+      }
+      }
       #lang-list {
         display: none;
 

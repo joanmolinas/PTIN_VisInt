@@ -38,7 +38,7 @@ window.addEventListener('load', function () {
             atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active"],
             atributesTraductionNames:["Latitud","Longitud","Creación","Nombre","Identificador","Modificación","Tipo","Activo",],
             min_length_filter: 3,
-
+            mobillist:false,
             trans: [],
             debug: false
         },
@@ -89,9 +89,12 @@ window.addEventListener('load', function () {
              */
             removeDevicesFromList: function () {
                 devices = document.getElementById("devices-list")
-
+                devicesMobile=document.getElementById("deviceMbl-list")
                 devices.getElementsByClassName("col-md-6")[0].innerHTML = ''
                 devices.getElementsByClassName("col-md-6")[1].innerHTML = ''
+                devicesMobile.getElementsByClassName("col")[0].innerHTML = ''
+                devicesMobile.getElementsByClassName("col")[1].innerHTML = ''
+                
             },
 
             /**
@@ -398,7 +401,7 @@ window.addEventListener('load', function () {
                     //If device have a localitzation the map view is center in the device.
                     if((self.selected_device.lastInfo.latitude)&&(self.selected_device.lastInfo.longitude)){
                        console.log([self.selected_device.lastInfo.longitude, self.selected_device.lastInfo.latitude])
-                        self.map.getView().setCenter([self.selected_device.lastInfo.longitude, self.selected_device.lastInfo.latitude])
+                        self.map.getView().setCenter([parseFloat(self.selected_device.lastInfo.longitude), parseFloat(self.selected_device.lastInfo.latitude)])
                         self.map.getView().setZoom(20)
                     }
                 }
@@ -406,6 +409,18 @@ window.addEventListener('load', function () {
                 document.getElementById("devices").style.display = "none"
                 document.getElementById("filter").style.display = "none"
                 document.getElementById("detail").style.display = "inherit"
+                let devList = document.getElementById("deviceMbl-list").style
+
+                if(devList.display == "block"){
+                   self.mobillist= true
+                   devList.display = "none"
+                   document.getElementById("content").style.display="none"
+                   document.getElementById("mobilListIcon").style.display="none"
+                   document.getElementById("mobilFilterIcon").style.display="none"
+                }else{
+                    self.mobillist= false
+                   
+                }
 
 
             },
@@ -425,6 +440,13 @@ window.addEventListener('load', function () {
                 //The map returns to initial position
                 self.map.getView().setCenter([1.7310788, 41.2220107])
                 self.map.getView().setZoom(18)
+                if(self.mobillist){
+                    let devList = document.getElementById("deviceMbl-list").style
+                    devList.display="block"
+                    document.getElementById("content").style.display="block"
+                    document.getElementById("mobilListIcon").style.display="inherit"
+                    document.getElementById("mobilFilterIcon").style.display="inherit"
+                }
 
 
             },
@@ -523,6 +545,28 @@ window.addEventListener('load', function () {
                     langlist.display = "none"
                 else
                     langlist.display = "block"
+            },
+            toggleDeviceList: function(){
+                let devList = document.getElementById("deviceMbl-list").style
+
+                if(devList.display == "block"){
+                    devList.display = "none"
+                   
+                }else{
+                    devList.display = "block"
+                 
+                }
+            },
+            toggleFilter: function(){
+                let devFilter = document.getElementById("filterMobile").style
+
+                if(devFilter.display == "block"){
+                    devFilter.display = "none"
+                  
+                }else{
+                    devFilter.display = "block"
+                   
+                }
             }
         }
 
