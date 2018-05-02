@@ -53,7 +53,7 @@ router.post("/signup", async function(req, res, next) {
     .then(u => {
         let token = service.createToken(u)
         u.token = token
-        u.languaje = 1
+        u.preferences.language = 1
         u.save()
         .then(u => {
             delete u.password
@@ -69,21 +69,21 @@ router.post("/signup", async function(req, res, next) {
     })
 })
 
-// Modifica user languaje
-router.put("/languaje/:id", service.ensureUserAuthenticated, async function(req, res, next) {
-    let lang = req.body.languaje
+// Modify user language
+router.put("/language/:id", service.ensureUserAuthenticated, async function(req, res, next) {
+    let lang = req.body.language
 
     if (!lang) {
-        res.status(400).send({ 'message': 'ERROR: Languaje invalid' })
+        res.status(400).send({ 'message': 'ERROR: Language invalid' })
         return
     }
 
     User.findByIdAndUpdate(req.params.id,{
         $set: {
-            languaje: lang
+        	preferences: req.body
         }
     }).then(u => {
-        res.status(200).send({'message': 'Languaje changed'})
+        res.status(200).send({'message': 'Language changed'})
         console.log(u)
     }).catch(e => {
         res.send({"status": 400})
