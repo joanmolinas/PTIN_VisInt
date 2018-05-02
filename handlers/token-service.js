@@ -18,15 +18,15 @@ function ensureUserAuthenticated(req, res, next) {
 	
 	if (!req.headers.authorization) { res.status(401).send({'message': 'Provide a token'})}
 
-	let tok = req.headers.authorization.split(" ")[1]
-	User.findOne({'token': tok})
+	let token = req.headers.authorization.split(" ")[1]
+	User.findOne({'token': token})
 	.then(doc => {
 		console.log(doc)
 		let payload = jwt.decode(token, config.SECRET_TOKEN)
 		if (payload.exp <= moment().unix) { res.status(401).send({'message' : 'Invalid token'})}
 	})
 	.catch(e => {
-		res.status(400).send({'message': 'Invaliddd token'})
+		res.status(400).send({'message': 'Invalidd token'})
 	})
 	next()
 }
