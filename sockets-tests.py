@@ -25,7 +25,8 @@ menu_choices = {
 }
 
 # Main
-socketIO = SocketIO('localhost', 3000)
+socketIO = SocketIO('localhost', 3000, {'name': 'joan'})
+
 def shutDown(*args):
     print 'shut down received'
 
