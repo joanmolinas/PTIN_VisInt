@@ -13,6 +13,8 @@ body {
   overflow: hidden;
 }
 
+
+
 #header {
   height: $header-height;
   background-color:$sidebar-menu-color;
@@ -28,6 +30,7 @@ body {
       color:white;
       font-size: 25px;
       margin-left: 20px;
+      text-decoration: none;
 
       sup {
         font-size: small;
@@ -52,7 +55,42 @@ body {
     }
 
     #settings {
-      margin-right: 20px;
+
+      #lang-list {
+        display: none;
+
+        nav {
+          margin-top:13px;
+          border:1px solid #ccc;
+          background-color: white;
+        
+
+          a {
+            display: block;
+            font-size: 15px;
+            color: #ccc;
+            border-bottom: 1px solid #ccc;
+            margin-left: 0;
+            padding-bottom: 5px;
+            padding-top: 5px;
+            
+            img {
+             margin-right:8px; 
+             margin-left:8px;
+            }
+
+          }
+          a:hover {
+            background-color: #ccc;
+            color: white;
+          }
+
+          .selected-lang {
+            font-weight:bolder;
+          }
+
+        }
+      }
     }
   }
 }
@@ -71,7 +109,7 @@ body {
     #filter {
       padding-top:10px;
       padding-bottom: 10px;
-      padding-right: 10px;
+      padding-right: 15px;
       background-color: white;
       border-bottom: 1px solid #ccc;
       
@@ -162,8 +200,6 @@ body {
           border:1px solid #ccc;
         }
         
-        
-      
         .field{
          padding: 3%;
          font-size: large;
@@ -192,7 +228,7 @@ body {
   margin:0;
   padding:0;
   overflow: hidden;
-
+  z-index: -1; // Error filterbar.
   #shrink {
     z-index:9999;
     background-color:rgba(0,60,136,.7);

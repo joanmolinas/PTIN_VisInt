@@ -7,17 +7,18 @@ window.addEventListener('load', function () {
 
         if(window.innerWidth <= 990){
             document.getElementsByTagName("body")[0].style.overflowX = "hidden"
-            document.getElementsByTagName("body")[0].style.overflowX = "scroll"        
+            document.getElementsByTagName("body")[0].style.overflowX = "hidden"        
            
         }else{
             document.getElementsByTagName("body")[0].style.overflow = "hidden"   
             window.scrollTo(0, 0);         
         }
     }
+    
     new Vue({
         el: '#vue',
         data: {
-            base_url_api: 'https://ptin2018.herokuapp.com/api/',
+            base_url_api: 'http://localhost:3000/api/',
             devices_column1: [],
             devices_column2: [],
             selected_device: '',
@@ -37,11 +38,15 @@ window.addEventListener('load', function () {
             atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active"],
             atributesTraductionNames:["Latitud","Longitud","Creación","Nombre","Identificador","Modificación","Tipo","Activo",],
             min_length_filter: 3,
+
+            trans: [],
             debug: true
         },
         mounted: function () {
             this.loadMap()
-            return this.getDevices()
+            this.getLanguage()
+            this.getDevices()
+            console.log('Usuario: ' + localStorage.username)
         },
         methods: {
             /**
@@ -51,11 +56,8 @@ window.addEventListener('load', function () {
              * @todo add spinner while
              */
             getDevices: function () {
-
                 let self = this
-                self.devices_column1=[]
-                self.devices_column2=[]
-                console.log("getDevi")
+
                 axios.get(this.base_url_api + 'devices').then(function (response) {
                     self.devices = response.data
                     self.devices.filter(function(device) {
@@ -257,15 +259,15 @@ window.addEventListener('load', function () {
 
 
                     //Defining variables for compute the average center
-                    let i=0
+                   /* let i=0
                     let latitudeCenter=0
-                    let longitudeCenter=0
+                    let longitudeCenter=0*/
                     self.devices.forEach(function (device) {
 
                         if (device.lastInfo) {
                             if((device.lastInfo[0].latitude)&&(device.lastInfo[0].longitude)){
                                 //Compute a sum of latituds and a sum of longituds only if the device values are not very diferents from the map center
-                                if((device.lastInfo[0].latitude<self.mapCenter[1]+0.1)&&(device.lastInfo[0].latitude>self.mapCenter[1]-0.1)){
+                                /*if((device.lastInfo[0].latitude<self.mapCenter[1]+0.1)&&(device.lastInfo[0].latitude>self.mapCenter[1]-0.1)){
 
                                     if((device.lastInfo[0].longitude<self.mapCenter[0]+0.1)&&(device.lastInfo[0].longitude>self.mapCenter[0]-0.1)){
                                         latitudeCenter=latitudeCenter+device.lastInfo[0].latitude
@@ -273,7 +275,7 @@ window.addEventListener('load', function () {
                                         i=i+1
                                     }
 
-                                }
+                                }*/
 
                                 let source = self.vectorLayer.getSource();
                                 let point=new ol.Feature({
@@ -281,7 +283,6 @@ window.addEventListener('load', function () {
                                     geometry: new ol.geom.Point([device.lastInfo[0].longitude, device.lastInfo[0].latitude])
 
                                 })
-
                                 //For each device type is set one syle point.
                                 switch(device.type){
                                     case 1:
@@ -300,10 +301,9 @@ window.addEventListener('load', function () {
 
 
                     });
-
-                    //Compute the average center map and set the map center
-                    self.mapCenter=[longitudeCenter/i,latitudeCenter/i]
-                    self.map.getView().setCenter(self.mapCenter)
+                    //Compute the average center map and set the map center.
+                    /*self.mapCenter=[longitudeCenter/i,latitudeCenter/i]
+                    self.map.getView().setCenter(self.mapCenter)*/
 
 
             },
@@ -326,14 +326,6 @@ window.addEventListener('load', function () {
                 }).then(function(){
                     self.showDetail()
                 })
-
-
-
-
-
-
-
-
             },
             //Show the detail view with all the data from the deviece.
             showDetail:function(){
@@ -366,6 +358,10 @@ window.addEventListener('load', function () {
                                    case 2:
                                    document.getElementById('icon').style.backgroundColor="rgb(243, 123, 11)"
                                    document.getElementById('close').style.color="rgb(243, 123, 11)"
+                                   break;
+                                   default:
+                                   document.getElementById('icon').style.backgroundColor="rgb(0, 140, 255)"
+                                   document.getElementById('close').style.color="rgb(0, 140, 255)"
                                    break;
 
                                }
@@ -429,8 +425,103 @@ window.addEventListener('load', function () {
                 self.map.getView().setZoom(18)
 
 
-            }
+            },
 
+            /**
+             * @author ncarmona
+             * @description Getting translation strings.
+             * @version S3
+             */            
+            getLanguage: function(){
+                let trans_file = '/lang/'+localStorage.language+'/public.json'
+                let self = this
+
+                if(localStorage.language === null){
+                    console.log("Cargando idioma por defecto: cat")
+                    localStorage.language = 'cat'
+                }
+
+                axios.get(trans_file).then(function(trans_string){
+                    self.trans = trans_string.data
+                    console.log("language file: " + trans_file)
+                    console.log("Website language: " + localStorage.language)
+                }).catch( function(error){
+                    console.log(error.message)
+                })                
+            },
+
+            /**
+             * @author ncarmona
+             * @description parse int to name lang.
+             * @version S3
+             */ 
+            int2lang: function(intnum){
+                let lang = 'cat'
+
+                if(intnum == 2) lang = 'es'
+                else if(intnum == 3) lang = 'en'
+
+                return lang
+            },
+
+            /**
+             * @author ncarmona
+             * @description parse lang to int number.
+             * @version S3
+             */ 
+            lang2int: function(lang){
+                let intnum = 1
+
+                if(lang == 'es') intnum = 2
+                else if(lang == 'en') intnum = 3
+
+                return intnum
+            },
+
+            /**
+             * @author ncarmona
+             * @description Change the website language.
+             * @version S3
+             */             
+            toggleLanguage: function(language){
+                console.log("selected language: " + language)
+                localStorage.language = language
+                this.getLanguage()
+                // Change user language in database.
+                if(localStorage.username !== null){
+                    console.log("Language number" + this.lang2int(localStorage.language))
+                    let self = this
+                    console.log(this.base_url_api + 'auth/languaje/' + localStorage.userID)
+                    //A very good london from backend developer, london bestest languaje.
+                    axios.put(this.base_url_api + 'auth/languaje/' + localStorage.userID,
+                    {
+                        languaje: self.lang2int(localStorage.language)
+                    },{
+                        headers: { Authorization: "bearer" + localStorage.userID}
+                    }
+                ).then(function(){
+                        
+                    }).catch(function(error){
+                        console.log(error)
+                    })
+                }
+                location.reload()
+            },
+
+            /**
+             * @author ncarmona
+             * @description Display or hide the language menu on the right side of the header.
+             * @version S3
+             * @todo add transitions. Hide list if user clicks outside the language menu.
+             */               
+            toggleLangMenu: function(){
+                let langlist = document.getElementById("lang-list").style
+
+                if(langlist.display == "block")
+                    langlist.display = "none"
+                else
+                    langlist.display = "block"
+            }
         }
 
 

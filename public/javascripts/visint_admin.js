@@ -3,7 +3,7 @@ window.addEventListener('load', function () {
         el: '#vue',
 
         data: {
-            base_url_api: 'https://ptin2018.herokuapp.com/api/',
+            base_url_api: 'http://localhost:3000/api/',
             debugging: true,
             userInputValue: '',
             passwordInputValue: '',
@@ -21,7 +21,7 @@ window.addEventListener('load', function () {
                 this.userInputValue = document.getElementById("user").value
                 this.passwordInputValue = document.getElementById("password").value
             }
-            if(this.debugging) console.log("Usuario:" + this.username +"\nToken:" + this.token)
+            if(this.debugging) console.log("Usuario:" + this.username +"\nToken:" + this.token+"\nUser language:" + localStorage.language+"\nID:"+localStorage.userID)
         },
         methods: {
             /**
@@ -39,7 +39,9 @@ window.addEventListener('load', function () {
                   .then(function (response) {
                     if(response.data.token != 'undefined'){                        
                         localStorage.username = response.data.data.username
-                        localStorage.token = response.data.token
+                        localStorage.token = response.data.data.token
+                        localStorage.language = self.int2lang(response.data.data.languaje)
+                        localStorage.userID = response.data.data._id
                         window.location.replace("/admin/dashboard.html")
                     }
 
@@ -61,6 +63,34 @@ window.addEventListener('load', function () {
 
             /**
              * @author ncarmona
+             * @description parse int to name lang.
+             * @version S3
+             */ 
+            int2lang: function(intnum){
+                let lang = 'cat'
+
+                if(intnum == 2) lang = 'es'
+                else if(intnum == 3) lang = 'en'
+
+                return lang
+            },
+
+            /**
+             * @author ncarmona
+             * @description parse lang to int number.
+             * @version S3
+             */ 
+            lang2int: function(lang){
+                let intnum = 'cat'
+
+                if(lang == 'es') intnum = 2
+                else if(lang == 'en') intnum = 3
+
+                return intnum
+            },
+
+            /**
+             * @author ncarmona
              * @description Remove token and username from localstorage
              * @version S2.
              */               
@@ -71,6 +101,7 @@ window.addEventListener('load', function () {
                     this.token = null
                     localStorage.token = null
                     localStorage.username = null
+                    localStorage.language = null
                     
                     window.location.replace("../index.html")
                 }
