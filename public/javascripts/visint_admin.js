@@ -4,7 +4,7 @@ window.addEventListener('load', function () {
 
         data: {
             base_url_api: 'http://localhost:3000/api/',
-            debugging: true,
+            debugging: false,
             userInputValue: '',
             passwordInputValue: '',
             token: localStorage.token,

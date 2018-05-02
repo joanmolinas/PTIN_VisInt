@@ -40,7 +40,7 @@ window.addEventListener('load', function () {
             min_length_filter: 3,
 
             trans: [],
-            debug: true
+            debug: false
         },
         mounted: function () {
             this.loadMap()
@@ -58,7 +58,9 @@ window.addEventListener('load', function () {
             getDevices: function () {
                 let self = this
 
-                axios.get(this.base_url_api + 'devices').then(function (response) {
+                axios.get(this.base_url_api + 'devices',{
+                    headers: { Authorization: "bearer" + localStorage.userID}
+                }).then(function (response) {
                     self.devices = response.data
                     self.devices.filter(function(device) {
                         return device.lastInfo != null || device.lastInfo != undefined
