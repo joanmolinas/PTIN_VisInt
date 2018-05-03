@@ -21,11 +21,12 @@ function ensureUserAuthenticated(req, res, next) {
 	let token = req.headers.authorization.split(" ")[1]
 	User.findOne({'token': token})
 	.then(doc => {
+		console.log(doc)
 		let payload = jwt.decode(token, config.SECRET_TOKEN)
 		if (payload.exp <= moment().unix) { res.status(401).send({'message' : 'Invalid token'})}
 	})
 	.catch(e => {
-		res.status(400).send({'message': 'Invalid token'})
+		res.status(400).send({'message': 'Invalidd token'})
 	})
 	next()
 }

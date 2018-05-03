@@ -53,6 +53,7 @@ router.post("/signup", async function(req, res, next) {
     .then(u => {
         let token = service.createToken(u)
         u.token = token
+        u.preferences.language = 1
         u.save()
         .then(u => {
             delete u.password
@@ -67,5 +68,7 @@ router.post("/signup", async function(req, res, next) {
         res.status(400).send({'message': 'Username already exists'})
     })
 })
+
+
 
 module.exports = router

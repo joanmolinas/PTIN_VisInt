@@ -13,7 +13,7 @@
         "port": "27017",
         "user": "",
         "pwd": "",
-        "database": "ptin-dev"
+        "database": "ptindev"
     },
     "language": {
         "default_language": "es",
