@@ -64,7 +64,7 @@
                 <sup class="no-notification">0</sup>
               </a>
               <span>
-                <a href="#" v-bind:title="trans['language_icon']" class="hidden-sm hidden-xs" v-on:click="toggleLangMenu" style="margin-right:15px;">
+                <a href="#" v-bind:title="trans['language_icon']"  v-on:click="toggleLangMenu" style="margin-right:15px;">
                   <i class="fas fa-language"></i>
                   <i class="fas fa-caret-down" style="font-size: 15px;"></i>
                 </a>
@@ -82,8 +82,6 @@
 
                 <a href="#" id="mobilListIcon" class="hidden-lg hidden-md" v-on:click="toggleDeviceList">
                   <i class="fas fa-list-alt"></i>
-
-
                 </a>
                 <div id="deviceMbl-list" class="dropdown-menu">
                   <div class="col">
