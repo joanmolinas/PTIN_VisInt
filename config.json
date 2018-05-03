@@ -1,5 +1,5 @@
 {
-    "environtment": 0,
+    "environtment": 1,
     "SECRET_TOKEN": "GNkhxvfrjE",
     "mongodb_prod": {
         "hostname": "ds231229.mlab.com",

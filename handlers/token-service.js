@@ -26,7 +26,7 @@ function ensureUserAuthenticated(req, res, next) {
 		if (payload.exp <= moment().unix) { res.status(401).send({'message' : 'Invalid token'})}
 	})
 	.catch(e => {
-		res.status(400).send({'message': 'Invalid token'})
+		res.status(400).send({'message': 'Invalidd token'})
 	})
 	next()
 }
