@@ -55,10 +55,20 @@
         <!-- top menu -->
         <div id="header" class="col-md-12">
           <nav>
-            <a href="/" v-bind:title="trans['home_icon']">
+            <span>
+            <a href="#" class="visible-xs visible-sm" v-on:click="toggleDisplayMenu">
+              <i class="fas fa-bars"></i>
+            </a>
+            <div id="responsive-menu">
+              <a href="#"> <i class="fas fa-home icon"></i> Home</a>
+              <a href="#"> <i class="fas fa-bell icon"></i> Notifications <i class="fas fa-caret-down"></i></a>
+              <a href="#"> <i class="fas fa-language icon"></i> Language <i class="fas fa-caret-down"></i></a>
+            </div>
+          </span>
+            <a href="/" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
               <i class="fas fa-home"></i>
             </a>
-            <span class="pull-right" id="settings">
+            <span class="pull-right hidden-xs hidden-sm" id="settings">
               <a href="#" v-bind:title="trans['notifications_icon']">
                 <i class="fas fa-bell"></i>
                 <sup class="no-notification">0</sup>
