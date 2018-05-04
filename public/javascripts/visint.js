@@ -40,7 +40,16 @@ window.addEventListener('load', function () {
             min_length_filter: 3,
             mobillist:false,
             trans: [],
-            debug: false
+            debug: false,
+            //Colors
+            gray:"rgb(125, 134, 134)",
+            orange:"rgb(243, 123, 11,1)",
+            yellow:"rgb(220, 241, 28)",
+            blue:"rgb(0, 140, 255,1)",
+            green:"rgb(7, 112, 7)",
+            lightblue:"rgb(45, 231, 245)"
+
+    
         },
         mounted: function () {
             this.loadMap()
@@ -72,7 +81,10 @@ window.addEventListener('load', function () {
                     });
                 }).catch(function (error) {
                     console.log(error.message)
-                }).then(function(){self.drawDevices()})
+                }).then(function(){
+                    //Draw The devices on the map
+                    self.drawDevices()
+                })
             },
 
             refreshDevices: function() {
@@ -94,7 +106,12 @@ window.addEventListener('load', function () {
                 devices.getElementsByClassName("col-md-6")[1].innerHTML = ''
                 devicesMobile.getElementsByClassName("col")[0].innerHTML = ''
                 devicesMobile.getElementsByClassName("col")[1].innerHTML = ''
-                
+                let source=this.vectorLayer.getSource()
+                let features=source.getFeatures()
+                //Remove all the points in the map
+                features.forEach(function(feature){
+                    source.removeFeature(feature)
+                })
             },
 
             /**
@@ -137,9 +154,14 @@ window.addEventListener('load', function () {
                             });
                         }).catch( function(error){
                             console.log(error.message)
+                        }).then(function(){
+                            //Draw The devices on the map after the filter is done
+                            self.drawDevices()
                         })
                     }, this.queryDelay)
                 }
+                
+              
             },
 
             /**
@@ -178,7 +200,11 @@ window.addEventListener('load', function () {
                     });
                 }).catch( function(error){
                     console.log(error.message)
+                }).then(function(){
+                    //Draw The devices on the map after the filter is done
+                    self.drawDevices()
                 })
+                
             },
 
             /**
@@ -204,6 +230,7 @@ window.addEventListener('load', function () {
             },
 
             loadMap: function () {
+                let self=this
                 //Inicialitzate the vectorial layer empty.
                 this.vectorLayer = new ol.layer.Vector({
                     name: "vector",
@@ -221,7 +248,7 @@ window.addEventListener('load', function () {
                     image:new ol.style.Circle({
                         radius:6,
                         fill: new ol.style.Fill({
-                            color: [0, 140, 255,1]
+                            color: self.blue
                         }),
 
                     })
@@ -231,7 +258,48 @@ window.addEventListener('load', function () {
                     image:new ol.style.Circle({
                         radius:6,
                         fill: new ol.style.Fill({
-                            color: [243, 123, 11,1]
+                            color: self.gray
+                        }),
+
+                    })
+                })
+                
+                this.iconstyle.push(style)
+                style=new ol.style.Style({
+                    image:new ol.style.Circle({
+                        radius:6,
+                        fill: new ol.style.Fill({
+                            color: self.orange
+                        }),
+
+                    })
+                })
+                this.iconstyle.push(style)
+                style=new ol.style.Style({
+                    image:new ol.style.Circle({
+                        radius:6,
+                        fill: new ol.style.Fill({
+                            color: self.green
+                        }),
+
+                    })
+                })
+                this.iconstyle.push(style)
+                style=new ol.style.Style({
+                    image:new ol.style.Circle({
+                        radius:6,
+                        fill: new ol.style.Fill({
+                            color: self.yellow
+                        }),
+
+                    })
+                })
+                this.iconstyle.push(style)
+                style=new ol.style.Style({
+                    image:new ol.style.Circle({
+                        radius:6,
+                        fill: new ol.style.Fill({
+                            color: self.lightblue
                         }),
 
                     })
@@ -256,7 +324,34 @@ window.addEventListener('load', function () {
 
                     })
                 })
+                
+                this.map.on("click",function(evt){
+                    let cord=evt.coordinate
+                    self.detaillonMapDevices(cord)
+                    })
 
+            },
+            //Show the detail view when a point on the map is click
+            detaillonMapDevices:function(coord){
+                let self=this
+                let source = self.vectorLayer.getSource();
+                let features = source.getFeatures();
+                let i=0
+                let find=false
+                while((i<features.length)&&(find==false)){
+                    let geom=features[i].getGeometry()
+                    let pcoord=geom.getCoordinates()
+                    let plat=parseFloat(pcoord[0]).toFixed(4)
+                    let plon=parseFloat(pcoord[1]).toFixed(4)
+                    let lat=parseFloat(coord[0]).toFixed(4)
+                    let lon=parseFloat(coord[1]).toFixed(4)
+                    let offset=0.00000001
+                    if(((plat<=lat+offset)&&(plat>=lat-offset))&&((plon<=lon+offset)&&(plon>=lon-offset))){
+                        this.deviceDetail(features[i].get("name"))
+                        find=true
+                    }
+                    i=i+1
+                } 
             },
             //Make a request of the Devices in BD and draw all devices then have latitude and longitude.
             drawDevices: function () {
@@ -286,9 +381,9 @@ window.addEventListener('load', function () {
                                 let point=new ol.Feature({
                                     name: device._id,
                                     geometry: new ol.geom.Point([device.lastInfo[0].longitude, device.lastInfo[0].latitude])
-
+                                    
                                 })
-                                //For each device type is set one syle point.
+                                //For each device type is set one style point.
                                 switch(device.type){
                                     case 1:
                                         point.setStyle(self.iconstyle[0])
@@ -296,8 +391,22 @@ window.addEventListener('load', function () {
                                     case 2:
                                         point.setStyle(self.iconstyle[1])
                                         break;
+                                    case 3:
+                                        point.setStyle(self.iconstyle[2])
+                                        break;
+                                    case 4:
+                                        
+                                        point.setStyle(self.iconstyle[3])
+                                        break;
+                                    case 5:
+                                        point.setStyle(self.iconstyle[4])
+                                        break;
+                                    case 6:
+                                        point.setStyle(self.iconstyle[4])
+                                        break;
+                                    
                                 }
-
+                                
                                 //point is added
                                 source.addFeature(point)
                          }
@@ -357,16 +466,33 @@ window.addEventListener('load', function () {
                                 //Each type of device have his own icon background color color
                                switch(self.selected_device[k]){
                                    case 1:
-                                   document.getElementById('icon').style.backgroundColor="rgb(0, 140, 255)"
-                                   document.getElementById('close').style.color="rgb(0, 140, 255)"
-                                   break;
-                                   case 2:
-                                   document.getElementById('icon').style.backgroundColor="rgb(243, 123, 11)"
-                                   document.getElementById('close').style.color="rgb(243, 123, 11)"
-                                   break;
+                                        document.getElementById('icon').style.backgroundColor=self.blue
+                                        document.getElementById('close').style.color=self.blue
+                                        break;
+                                    case 2:
+                                        document.getElementById('icon').style.backgroundColor=self.gray
+                                        document.getElementById('close').style.color=self.gray
+                                        break;
+                                    case 3:
+                                        document.getElementById('icon').style.backgroundColor=self.orange
+                                        document.getElementById('close').style.color=self.orange
+                                        break;
+                                    case 4:
+                                        document.getElementById('icon').style.backgroundColor=self.green
+                                        document.getElementById('close').style.color=self.green
+                                        break;
+                                    case 5:
+                                        document.getElementById('icon').style.backgroundColor=self.yellow
+                                        document.getElementById('close').style.color=self.yellow
+                                        break;
+                                    case 6:
+                                        document.getElementById('icon').style.backgroundColor=self.lightblue
+                                        document.getElementById('close').style.color=self.lightblue
+                                        break;
+
                                    default:
-                                   document.getElementById('icon').style.backgroundColor="rgb(0, 140, 255)"
-                                   document.getElementById('close').style.color="rgb(0, 140, 255)"
+                                        document.getElementById('icon').style.backgroundColor="rgb(0, 140, 255)"
+                                        document.getElementById('close').style.color="rgb(0, 140, 255)"
                                    break;
 
                                }
@@ -406,6 +532,7 @@ window.addEventListener('load', function () {
                     }
                 }
                  //The layer device and filter is hide and show the detail layer
+                let mobilevers= document.getElementById("filter").style
                 document.getElementById("devices").style.display = "none"
                 document.getElementById("filter").style.display = "none"
                 document.getElementById("detail").style.display = "inherit"
@@ -421,6 +548,9 @@ window.addEventListener('load', function () {
                     self.mobillist= false
                    
                 }
+                
+                
+                
 
 
             },
@@ -546,6 +676,7 @@ window.addEventListener('load', function () {
                 else
                     langlist.display = "block"
             },
+            //Display or hide a list of devices only in the mobile version
             toggleDeviceList: function(){
                 let devList = document.getElementById("deviceMbl-list").style
 
@@ -557,6 +688,7 @@ window.addEventListener('load', function () {
                  
                 }
             },
+            //Display or hide the filter options only in the mobile version
             toggleFilter: function(){
                 let devFilter = document.getElementById("filterMobile").style
 
