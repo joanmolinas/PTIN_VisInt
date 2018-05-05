@@ -26,6 +26,31 @@ body {
 
     padding-top: 15px;
 
+    #responsive-menu {
+      background-color:white;
+      border: 1px solid #ccc;
+      margin-top: 13px;
+      display: none;
+      width: 200px;
+      position: absolute;
+      z-index: 100;
+
+      a {
+        color: #ccc;
+        font-size: 15px;
+        padding: 10px 5px 10px 5px;
+        display: block;
+        border-bottom: 1px solid #ccc;
+        margin-left: 0px;
+        padding-left: 20px;
+
+        .icon {
+          font-size: 25px;
+          margin-right: 10px;
+        }
+      }
+    }
+
     a {
       color:white;
       font-size: 25px;
@@ -55,22 +80,8 @@ body {
     }
     
     #settings {
-      #mobilFilterIcon{
-        padding-right: 10px;
-      }
-      #deviceMbl-list{
-        display: none;
-        overflow-y:scroll;
-        height: $vh;
-          .device {
-            border: 1px solid #ccc;
-            background-color: whitesmoke;
-            margin: 10px;
-            padding: 5px;
-            
-          }
-        
-      }
+      padding-right: 20px;
+
       #filterMobile {
           display: none;
           background-color: white;
@@ -97,15 +108,16 @@ body {
             }
         
       }
-      }
+}      
+
       #lang-list {
         display: none;
-
+        position: relative;
+        z-index: 100;
         nav {
           margin-top:13px;
           border:1px solid #ccc;
           background-color: white;
-        
 
           a {
             display: block;
@@ -270,7 +282,8 @@ body {
   margin:0;
   padding:0;
   overflow: hidden;
-  //z-index: -1; // Error filterbar.
+  z-index: 0;
+
   #shrink {
     z-index:9999;
     background-color:rgba(0,60,136,.7);
