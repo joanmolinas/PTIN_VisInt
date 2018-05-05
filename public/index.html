@@ -55,73 +55,54 @@
         <!-- top menu -->
         <div id="header" class="col-md-12">
           <nav>
-            <a href="/" v-bind:title="trans['home_icon']">
-              <i class="fas fa-home"></i>
-            </a>
-            <span class="pull-right" id="settings">
-              <a href="#" v-bind:title="trans['notifications_icon']">
-                <i class="fas fa-bell"></i>
-                <sup class="no-notification">0</sup>
+            <span>
+              <a href="#" class="hidden-lg hidden-md" v-on:click="toggleMenu('responsive-menu')">
+                <i class="fas fa-bars"></i>
               </a>
-              <span>
-                <a href="#" v-bind:title="trans['language_icon']"  v-on:click="toggleLangMenu" style="margin-right:15px;">
-                  <i class="fas fa-language"></i>
-                  <i class="fas fa-caret-down" style="font-size: 15px;"></i>
-                </a>
-                <div id="lang-list">
-                  <nav>
-                    <a href="#" title="Mostra la web en català" v-on:click="toggleLanguage('cat')">
-                      <img src="images/catalonia.png" />Català</a>
-                    <a href="#" title="Display the website in english" v-on:click="toggleLanguage('en')">
-                      <img src="images/gb.png">English</a>
-                    <a href="#" class="selected-lang" title="Muestra la web en castellano." v-on:click="toggleLanguage('es')">
-                      <img src="images/es.png" />Español</a>
-                  </nav>
+              <div id="responsive-menu">
+                <a href="#"> <i class="fas fa-home icon"></i> {{trans['home_icon']}}</a>
+                <a href="#"> <i class="fas fa-bell icon"></i> {{trans['notifications_icon']}} <i class="fas fa-caret-down"></i></a>
+                <a href="#"> <i class="fas fa-language icon"></i> {{trans['language_icon']}}</i></a>
+                <a href="#" title="Mostra la web en català" v-on:click="toggleLanguage('cat')">
+                  <img src="images/catalonia.png" />Català</a>
+                <a href="#" title="Display the website in english" v-on:click="toggleLanguage('en')">
+                  <img src="images/gb.png">English</a>
+                <a href="#" class="selected-lang" title="Muestra la web en castellano." v-on:click="toggleLanguage('es')">
+                  <img src="images/es.png" />Español</a>
 
-                </div>
-
-                <a href="#" id="mobilListIcon" class="hidden-lg hidden-md" v-on:click="toggleDeviceList">
-                  <i class="fas fa-list-alt"></i>
+              </div>
+            </span>
+              <a href="/" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
+                <i class="fas fa-home"></i>
+              </a>
+              <span id="settings" class="pull-right">
+                    <a href="#" id="mobilFilterIcon" class="hidden-lg hidden-md" v-on:click="toggleMenu('filterMobile')">
+                        <i class="fas fa-search"></i>
+                      </a>
+                      <a href="#" class="hidden-lg hidden-md" v-on:click="toggleMap">
+                          <i class="fas fa-list-alt" id="displaySidebarMap"></i>
+                        </a>
+                <a href="#" v-bind:title="trans['notifications_icon']" class="hidden-xs hidden-sm">
+                  <i class="fas fa-bell"></i>
+                  <sup class="no-notification">0</sup>
                 </a>
-                <div id="deviceMbl-list" class="dropdown-menu">
-                  <div class="col">
-                    <div class="device" v-for="device in devices_column1" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
-                      <p>
-                        <i class="fas fa-microchip"></i> {{trans['device_name']}}:
-                        <strong>{{ device.name }}</strong>
-                      </p>
-                      <p v-if="device.lastInfo">
-                        <i class="fas fa-arrows-alt-v"></i> {{trans['device_latitude']}}:
-                        <strong>{{ device.lastInfo[0].latitude }}</strong>
-                      </p>
-                      <p v-if="device.lastInfo">
-                        <i class="fas fa-arrows-alt-h"></i> {{trans['device_longitude']}}:
-                        <strong>{{ device.lastInfo[0].longitude }}</strong>
-                      </p>
-                    </div>
+                <span class="hidden-xs hidden-sm">
+                  <a href="#" v-bind:title="trans['language_icon']" v-on:click="toggleMenu('lang-list')" style="margin-right:15px;">
+                    <i class="fas fa-language"></i>
+                    <i class="fas fa-caret-down" style="font-size: 15px;"></i>
+                  </a>
+                  <div id="lang-list">
+                    <nav>
+                      <a href="#" title="Mostra la web en català" v-on:click="toggleLanguage('cat')">
+                        <img src="images/catalonia.png" />Català</a>
+                      <a href="#" title="Display the website in english" v-on:click="toggleLanguage('en')">
+                        <img src="images/gb.png">English</a>
+                      <a href="#" class="selected-lang" title="Muestra la web en castellano." v-on:click="toggleLanguage('es')">
+                        <img src="images/es.png" />Español</a>
+                    </nav>
                   </div>
-                  <div class="col">
-                    <div class="device" v-for="device in devices_column2" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
-                      <p>
-                        <i class="fas fa-microchip"></i> {{trans['device_name']}}:
-                        <strong>{{ device.name }}</strong>
-                      </p>
-                      <p v-if="device.lastInfo">
-                        <i class="fas fa-arrows-alt-v"></i> {{trans['device_latitude']}}:
-                        <strong>{{ device.lastInfo[0].latitude }}</strong>
-                      </p>
-                      <p v-if="device.lastInfo">
-                        <i class="fas fa-arrows-alt-h"></i> {{trans['device_longitude']}}:
-                        <strong>{{ device.lastInfo[0].longitude }}</strong>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-
-                <a href="#" id="mobilFilterIcon" class="hidden-lg hidden-md" v-on:click="toggleFilter">
-                  <i class="fas fa-search"></i>
-                </a>
+                </span>
+              </span>
                 <div id="filterMobile" class="dropdown-menu pull-right">
                   <!-- filter textbox -->
                   <div class="col-md-6 filter-input">
@@ -159,7 +140,7 @@
           <div id="devices">
 
             <!-- header sidebar. Filter devices, show/hide devices -->
-            <div id="filter" class="row">
+            <div id="filter" class="row hidden-xs hidden-sm">
 
               <!-- filter textbox -->
               <div class="col-md-6 filter-input">

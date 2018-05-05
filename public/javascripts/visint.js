@@ -13,12 +13,16 @@ window.addEventListener('load', function () {
             document.getElementsByTagName("body")[0].style.overflow = "hidden"   
             window.scrollTo(0, 0);         
         }
+
+        // Fix mobile resize problems when user resize windows in desktop version.
+        let sidebar = document.getElementById("sidebar").style.display = "block"
+        let content = document.getElementById("content").style.display = "block"
     }
     
     new Vue({
         el: '#vue',
         data: {
-            base_url_api: 'http://localhost:3000/api/',
+            base_url_api: 'https://ptin2018.herokuapp.com/api/',
             devices_column1: [],
             devices_column2: [],
             selected_device: '',
@@ -38,7 +42,7 @@ window.addEventListener('load', function () {
             atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active"],
             atributesTraductionNames:["Latitud","Longitud","Creación","Nombre","Identificador","Modificación","Tipo","Activo",],
             min_length_filter: 3,
-            mobillist:false,
+
             trans: [],
             debug: false,
             //Colors
@@ -67,9 +71,7 @@ window.addEventListener('load', function () {
             getDevices: function () {
                 let self = this
 
-                axios.get(this.base_url_api + 'devices',{
-                    headers: { Authorization: "bearer" + localStorage.userID}
-                }).then(function (response) {
+                axios.get(this.base_url_api + 'devices').then(function (response) {
                     self.devices = response.data
                     self.devices.filter(function(device) {
                         return device.lastInfo != null || device.lastInfo != undefined
@@ -90,7 +92,6 @@ window.addEventListener('load', function () {
             refreshDevices: function() {
                 self.removeDevicesFromList()
                 self.getDevices()
-
             },
 
             /**
@@ -101,17 +102,9 @@ window.addEventListener('load', function () {
              */
             removeDevicesFromList: function () {
                 devices = document.getElementById("devices-list")
-                devicesMobile=document.getElementById("deviceMbl-list")
+
                 devices.getElementsByClassName("col-md-6")[0].innerHTML = ''
                 devices.getElementsByClassName("col-md-6")[1].innerHTML = ''
-                devicesMobile.getElementsByClassName("col")[0].innerHTML = ''
-                devicesMobile.getElementsByClassName("col")[1].innerHTML = ''
-                let source=this.vectorLayer.getSource()
-                let features=source.getFeatures()
-                //Remove all the points in the map
-                features.forEach(function(feature){
-                    source.removeFeature(feature)
-                })
             },
 
             /**
@@ -527,7 +520,7 @@ window.addEventListener('load', function () {
                     //If device have a localitzation the map view is center in the device.
                     if((self.selected_device.lastInfo.latitude)&&(self.selected_device.lastInfo.longitude)){
                        console.log([self.selected_device.lastInfo.longitude, self.selected_device.lastInfo.latitude])
-                        self.map.getView().setCenter([parseFloat(self.selected_device.lastInfo.longitude), parseFloat(self.selected_device.lastInfo.latitude)])
+                        self.map.getView().setCenter([self.selected_device.lastInfo.longitude, self.selected_device.lastInfo.latitude])
                         self.map.getView().setZoom(20)
                     }
                 }
@@ -536,21 +529,6 @@ window.addEventListener('load', function () {
                 document.getElementById("devices").style.display = "none"
                 document.getElementById("filter").style.display = "none"
                 document.getElementById("detail").style.display = "inherit"
-                let devList = document.getElementById("deviceMbl-list").style
-
-                if(devList.display == "block"){
-                   self.mobillist= true
-                   devList.display = "none"
-                   document.getElementById("content").style.display="none"
-                   document.getElementById("mobilListIcon").style.display="none"
-                   document.getElementById("mobilFilterIcon").style.display="none"
-                }else{
-                    self.mobillist= false
-                   
-                }
-                
-                
-                
 
 
             },
@@ -570,15 +548,6 @@ window.addEventListener('load', function () {
                 //The map returns to initial position
                 self.map.getView().setCenter([1.7310788, 41.2220107])
                 self.map.getView().setZoom(18)
-                if(self.mobillist){
-                    let devList = document.getElementById("deviceMbl-list").style
-                    devList.display="block"
-                    document.getElementById("content").style.display="block"
-                    document.getElementById("mobilListIcon").style.display="inherit"
-                    document.getElementById("mobilFilterIcon").style.display="inherit"
-                }
-
-
             },
 
             /**
@@ -590,18 +559,20 @@ window.addEventListener('load', function () {
                 let trans_file = '/lang/'+localStorage.language+'/public.json'
                 let self = this
 
-                if(localStorage.language === null){
-                    console.log("Cargando idioma por defecto: cat")
-                    localStorage.language = 'cat'
-                }
+                console.log(trans_file)
 
-                axios.get(trans_file).then(function(trans_string){
-                    self.trans = trans_string.data
-                    console.log("language file: " + trans_file)
-                    console.log("Website language: " + localStorage.language)
-                }).catch( function(error){
-                    console.log(error.message)
-                })                
+                if(localStorage.language == null){
+                    localStorage.language = 'cat'
+                }else{
+                    axios.get(trans_file).then(function(trans_string){
+                        self.trans = trans_string.data
+                        console.log("language file: " + trans_file)
+                        console.log("Website language: " + localStorage.language)
+                    }).catch( function(error){
+                        console.log(error.message)
+                    })    
+                }
+            
             },
 
             /**
@@ -611,7 +582,7 @@ window.addEventListener('load', function () {
              */ 
             int2lang: function(intnum){
                 let lang = 'cat'
-
+                
                 if(intnum == 2) lang = 'es'
                 else if(intnum == 3) lang = 'en'
 
@@ -638,20 +609,22 @@ window.addEventListener('load', function () {
              * @version S3
              */             
             toggleLanguage: function(language){
-                console.log("selected language: " + language)
+                if(this.debug) console.log("selected language: " + language)
+
                 localStorage.language = language
                 this.getLanguage()
+
                 // Change user language in database.
                 if(localStorage.username !== null){
-                    console.log("Language number" + this.lang2int(localStorage.language))
+
                     let self = this
-                    console.log(this.base_url_api + 'auth/languaje/' + localStorage.userID)
-                    //A very good london from backend developer, london bestest languaje.
-                    axios.put(this.base_url_api + 'auth/languaje/' + localStorage.userID,
-                    {
-                        languaje: self.lang2int(localStorage.language)
+                    if(this.debug) console.log("Cambiando idioma: " + this.base_url_api + 'users/' + localStorage.userID)
+                    console.log(localStorage.token)
+
+                    axios.put(this.base_url_api + 'users/' + localStorage.userID,{
+                        language: self.lang2int(localStorage.language)
                     },{
-                        headers: { Authorization: "bearer" + localStorage.userID}
+                        headers: { Authorization: "bearer " + localStorage.token}
                     }
                 ).then(function(){
                         
@@ -659,47 +632,46 @@ window.addEventListener('load', function () {
                         console.log(error)
                     })
                 }
+
+                //In future version this function will replace string.
                 location.reload()
             },
 
             /**
              * @author ncarmona
-             * @description Display or hide the language menu on the right side of the header.
+             * @description Toggle menus.
              * @version S3
-             * @todo add transitions. Hide list if user clicks outside the language menu.
+             * @todo add transitions. Hide list if user clicks outside the div.
              */               
-            toggleLangMenu: function(){
-                let langlist = document.getElementById("lang-list").style
-
-                if(langlist.display == "block")
-                    langlist.display = "none"
-                else
-                    langlist.display = "block"
+            toggleMenu: function(layer){
+                let langlist = document.getElementById(layer).style
+                langlist.display = langlist.display == "block" ? "none" : "block"
             },
-            //Display or hide a list of devices only in the mobile version
-            toggleDeviceList: function(){
-                let devList = document.getElementById("deviceMbl-list").style
 
-                if(devList.display == "block"){
-                    devList.display = "none"
-                   
-                }else{
-                    devList.display = "block"
-                 
-                }
-            },
-            //Display or hide the filter options only in the mobile version
-            toggleFilter: function(){
-                let devFilter = document.getElementById("filterMobile").style
+            /**
+             * @author ncarmona
+             * @description Toggle map and sidebar.
+             * @version S3
+             * @todo add transitions. Hide list if user clicks outside the div.
+             */               
+            toggleMap: function(){
+                let sidebar = document.getElementById("sidebar").style
+                let content = document.getElementById("content").style
+                let iconToggle = document.getElementById("displaySidebarMap").classList
 
-                if(devFilter.display == "block"){
-                    devFilter.display = "none"
-                  
+                if(sidebar.display == "block"){
+                    sidebar.display = "none"
+                    content.display = "block"   
+                    iconToggle.remove("fa-map")
+                    iconToggle.add("fa-list-alt")                     
                 }else{
-                    devFilter.display = "block"
-                   
+                    sidebar.display = "block"
+                    content.display = "none"   
+                    iconToggle.remove("fa-list-alt")
+                    iconToggle.add("fa-map")                
                 }
             }
+
         }
 
 
