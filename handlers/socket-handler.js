@@ -7,7 +7,6 @@ function connect(http) {
 
     io.on('connection', (socket) => {
         console.log('Webpage connected')
-        console.log(socket)
         // listenAlarm(socket)
     })
 }

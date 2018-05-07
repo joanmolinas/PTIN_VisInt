@@ -33,19 +33,19 @@
   <link rel="stylesheet" href="stylesheets/style.css" />
   <script src="javascripts/visint.js"></script>
 
-  <!-- Socket io 
-  <script src="/socket.io/socket.io.js"></script>
+  <!-- Socket io -->
+<script src="/socket.io/socket.io.js"></script>
+<script>
   var socket = io();
   socket.on('refreshDevicesTable', function() {
       console.log('refresh')
-     
       document.getElementById("inici").click()
      
      $("device").load(location.href+" device>*","");
   })
-</script> 
+</script>
 
-  End socket io -->
+ <!-- End socket io -->
 </head>
 
 <body>
@@ -72,7 +72,7 @@
 
               </div>
             </span>
-              <a href="/" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
+              <a href="/" id="inici" v-on:click="refreshDevices" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
                 <i class="fas fa-home"></i>
               </a>
               <span id="settings" class="pull-right">
