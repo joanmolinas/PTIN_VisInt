@@ -96,6 +96,9 @@ router.post('/', function(req, res, next) {
 })
 
 router.put('/:id', function(req, res, body) {
+    // res.send('no valid')
+    // return
+    
     if (!req.body) {
         res.send({"status": 400})
     }

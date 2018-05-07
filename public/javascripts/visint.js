@@ -373,7 +373,7 @@ window.addEventListener('load', function () {
                                 let source = self.vectorLayer.getSource();
                                 let point=new ol.Feature({
                                     name: device._id,
-                                    geometry: new ol.geom.Point([device.lastInfo[0].longitude, device.lastInfo[0].latitude])
+                                    geometry: new ol.geom.Point([parseFloat(device.lastInfo[0].longitude), parseFloat(device.lastInfo[0].latitude)])
                                     
                                 })
                                 //For each device type is set one style point.
@@ -388,7 +388,6 @@ window.addEventListener('load', function () {
                                         point.setStyle(self.iconstyle[2])
                                         break;
                                     case 4:
-                                        
                                         point.setStyle(self.iconstyle[3])
                                         break;
                                     case 5:
@@ -520,7 +519,7 @@ window.addEventListener('load', function () {
                     //If device have a localitzation the map view is center in the device.
                     if((self.selected_device.lastInfo.latitude)&&(self.selected_device.lastInfo.longitude)){
                        console.log([self.selected_device.lastInfo.longitude, self.selected_device.lastInfo.latitude])
-                        self.map.getView().setCenter([self.selected_device.lastInfo.longitude, self.selected_device.lastInfo.latitude])
+                        self.map.getView().setCenter([parseFloat(self.selected_device.lastInfo.longitude), parseFloat(self.selected_device.lastInfo.latitude)])
                         self.map.getView().setZoom(20)
                     }
                 }
