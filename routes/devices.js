@@ -95,7 +95,7 @@ router.post('/', function(req, res, next) {
     })
 })
 
-router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
+router.put('/:id', function(req, res, body) {
     if (!req.body) {
         res.send({"status": 400})
     }
