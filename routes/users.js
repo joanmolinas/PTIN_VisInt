@@ -15,28 +15,32 @@ router.get('/:id', function(req, res, next) {
     })
 });
 
-// Modify user preferences
-router.put('/:id', service.ensureUserAuthenticated, async function(req, res, next) {
-    let lang = req.body.language
 
-    if (!lang) {
-        res.status(400).send({ 'message': 'ERROR: Language missing' })
+router.put('/:id',function(req, res, next) {
+//Forcem a que passin tots els camps.
+//Depenent com sigui la pantalla al front-end s'hauràn d'afegir condicions si només passan els camps que volen modificar.
+	if (!req.body.username || !req.body.password || !req.body.language) {
+        res.status(400).send({"message": 'ERROR Fields missing'})
         return
     }
 
+    let name = req.body.username;
+    let pass = req.body.password
+	let pref = req.body;
     User.findByIdAndUpdate(req.params.id,{
         $set: {
-            preferences: req.body
+        	username : name,
+        	password : pass,
+            preferences : pref
         }
     }).then(u => {
-        res.status(200).send({'message': 'Preferences changed'})
+        res.status(200).send({'message': 'Information changed'})
     }).catch(e => {
-        res.send({"status": 400})
+          res.status(400).send({"message": 'ERROR Something went wrong'})
     })
-
 })
 
-//Legacy/Deprecated function
+//Legacy/Deprecated function. In use: /auth/signup 
 router.post('/', function(req, res, next) {
     let email = req.body.email
     let password = req.body.password
