@@ -155,4 +155,8 @@ router.get('/delete/:id', function(req, res, next){
   })
 })
 
+router.post('/:id/shutdown', (req, res, next) => {
+    socket.emitShutdown(req.params.id)
+    res.status(200).send({message: 'shutdown sent'})
+})
 module.exports = router

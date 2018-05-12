@@ -3,7 +3,7 @@ from socketIO_client import SocketIO, BaseNamespace
 def show_menu():
     print "==== MENU ===="
     print "1) emit"
-    print "2) wait to receive"
+    print "2) wait 5s to shutdown"
     print "0) exit"
     choice = raw_input("-> ")
 
@@ -25,8 +25,7 @@ menu_choices = {
 }
 
 # Main
-socketIO = SocketIO('localhost', 3000, {'name': 'joan'})
-
+socketIO = SocketIO('localhost', 3000, {"id": "12345"})
 def shutDown(*args):
     print 'shut down received'
 
