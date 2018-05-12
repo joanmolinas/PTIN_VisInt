@@ -47,6 +47,11 @@
   socket.on('shutdown', () => {
     console.log('shutdown received')
   })
+
+  socket.on('pacientLocation', (data) => {
+    console.log('Data received ' + data.location.latitude)
+  })
+  
 </script>
 
  <!-- End socket io -->

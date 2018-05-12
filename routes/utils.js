@@ -1,11 +1,12 @@
 var express = require('express')
 var router = express.Router()
 var request = require('request')
-
+let socket = require("../handlers/socket-handler")
 let config = require('../config.json')
+
 let env = config.environtment
 let baseURL = env == 0 ? config.urls.production : config.urls.development
-console.log(baseURL + '/api/');
+console.log(baseURL + '/api');
 
 
 // Form to add a device
@@ -26,4 +27,10 @@ router.get('/list', function (req, res, next) {
    }
  })
 })
+
+router.post('/emit/doctor/:did/location', (req, res, next) => {
+  socket.emitToDoctor(req.params.did, req.body)
+  res.status(200).send('message sent')
+})
+
 module.exports = router;

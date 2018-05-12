@@ -10,7 +10,6 @@ function connect(http) {
         let dId = socket.handshake.query['id']
         if (dId) { sockets[dId] = socket }
         onDisconnect(socket)
-        console.log(sockets)
     })
 }
 
@@ -33,6 +32,11 @@ function emitShutdown(clientID) {
     if (socket) socket.emit('shutdown')
 }
 
+function emitToDoctor(clientID, message) {
+    let socket = sockets[clientID]
+    if (socket) socket.emit('pacientLocation', message)
+}
+
 function deviceWasUpdated() {
     io.emit('refreshDevicesTable', { for: 'everyone' });
 }
@@ -41,5 +45,6 @@ function deviceWasUpdated() {
 module.exports = {
     connect,
     deviceWasUpdated,
-    emitShutdown
+    emitShutdown,
+    emitToDoctor
 }
