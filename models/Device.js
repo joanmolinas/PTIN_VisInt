@@ -12,7 +12,8 @@ var deviceSchema = new mongoose.Schema({
 	token: String,
 	creationDate: Date,
 	modificationDate: Date,
-	lastInfo: {}
+	lastInfo: {},
+	additionalInfo: {}
 }, { collection: 'devices' });
 
 module.exports = mongoose.model( 'devices' , deviceSchema);
