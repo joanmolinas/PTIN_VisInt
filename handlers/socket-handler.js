@@ -21,10 +21,9 @@ function onDisconnect(socket) {
     })
 }
 
-function listenAlarm(socket) {
-    socket.on('alarm', (type) => {
-        console.log(type)
-    })
+
+function deviceWasUpdated() {
+    io.emit('refreshDevicesTable', { for: 'everyone' });
 }
 
 function emitShutdown(clientID) {
@@ -37,14 +36,15 @@ function emitToDoctor(clientID, message) {
     if (socket) socket.emit('pacientLocation', message)
 }
 
-function deviceWasUpdated() {
-    io.emit('refreshDevicesTable', { for: 'everyone' });
+function emitToPacient(clientID, message) {
+    let socket = sockets[clientID]
+    if (socket) socket.emit('location', message)
 }
-
 
 module.exports = {
     connect,
     deviceWasUpdated,
     emitShutdown,
-    emitToDoctor
+    emitToDoctor,
+    emitToPacient
 }

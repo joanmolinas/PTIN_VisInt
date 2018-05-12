@@ -30,7 +30,12 @@ router.get('/list', function (req, res, next) {
 
 router.post('/emit/doctor/:did/location', (req, res, next) => {
   socket.emitToDoctor(req.params.did, req.body)
-  res.status(200).send('message sent')
+  res.status(200).send({message: 'message sent' })
+})
+
+router.post('/emit/pacient/:pid/location', (req, res, next) => {
+  socket.emitToPacient(req.params.pid, req.body)
+  res.status(200).send({message: 'message sent'})
 })
 
 module.exports = router;

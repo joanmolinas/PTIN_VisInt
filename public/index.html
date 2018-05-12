@@ -51,6 +51,10 @@
   socket.on('pacientLocation', (data) => {
     console.log('Data received ' + data.location.latitude)
   })
+
+    socket.on('location', (data) => {
+    console.log('Data received ' + data.location.latitude)
+  })
   
 </script>
 
