@@ -7,13 +7,18 @@ window.addEventListener('load', function () {
 
         if(window.innerWidth <= 990){
             document.getElementsByTagName("body")[0].style.overflowX = "hidden"
-            document.getElementsByTagName("body")[0].style.overflowX = "scroll"        
+            document.getElementsByTagName("body")[0].style.overflowX = "hidden"        
            
         }else{
             document.getElementsByTagName("body")[0].style.overflow = "hidden"   
             window.scrollTo(0, 0);         
         }
+
+        // Fix mobile resize problems when user resize windows in desktop version.
+        let sidebar = document.getElementById("sidebar").style.display = "block"
+        let content = document.getElementById("content").style.display = "block"
     }
+    
     new Vue({
         el: '#vue',
         data: {
@@ -37,11 +42,24 @@ window.addEventListener('load', function () {
             atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active"],
             atributesTraductionNames:["Latitud","Longitud","Creación","Nombre","Identificador","Modificación","Tipo","Activo",],
             min_length_filter: 3,
-            debug: true
+
+            trans: [],
+            debug: false,
+            //Colors
+            gray:"rgb(125, 134, 134)",
+            orange:"rgb(243, 123, 11,1)",
+            yellow:"rgb(220, 241, 28)",
+            blue:"rgb(0, 140, 255,1)",
+            green:"rgb(7, 112, 7)",
+            lightblue:"rgb(45, 231, 245)"
+
+    
         },
         mounted: function () {
             this.loadMap()
-            return this.getDevices()
+            this.getLanguage()
+            this.getDevices()
+            console.log('Usuario: ' + localStorage.username)
         },
         methods: {
             /**
@@ -51,11 +69,8 @@ window.addEventListener('load', function () {
              * @todo add spinner while
              */
             getDevices: function () {
-
                 let self = this
-                self.devices_column1=[]
-                self.devices_column2=[]
-                console.log("getDevi")
+
                 axios.get(this.base_url_api + 'devices').then(function (response) {
                     self.devices = response.data
                     self.devices.filter(function(device) {
@@ -68,13 +83,15 @@ window.addEventListener('load', function () {
                     });
                 }).catch(function (error) {
                     console.log(error.message)
-                }).then(function(){self.drawDevices()})
+                }).then(function(){
+                    //Draw The devices on the map
+                    self.drawDevices()
+                })
             },
 
             refreshDevices: function() {
                 self.removeDevicesFromList()
                 self.getDevices()
-
             },
 
             /**
@@ -130,9 +147,14 @@ window.addEventListener('load', function () {
                             });
                         }).catch( function(error){
                             console.log(error.message)
+                        }).then(function(){
+                            //Draw The devices on the map after the filter is done
+                            self.drawDevices()
                         })
                     }, this.queryDelay)
                 }
+                
+              
             },
 
             /**
@@ -171,7 +193,11 @@ window.addEventListener('load', function () {
                     });
                 }).catch( function(error){
                     console.log(error.message)
+                }).then(function(){
+                    //Draw The devices on the map after the filter is done
+                    self.drawDevices()
                 })
+                
             },
 
             /**
@@ -197,6 +223,7 @@ window.addEventListener('load', function () {
             },
 
             loadMap: function () {
+                let self=this
                 //Inicialitzate the vectorial layer empty.
                 this.vectorLayer = new ol.layer.Vector({
                     name: "vector",
@@ -214,7 +241,7 @@ window.addEventListener('load', function () {
                     image:new ol.style.Circle({
                         radius:6,
                         fill: new ol.style.Fill({
-                            color: [0, 140, 255,1]
+                            color: self.blue
                         }),
 
                     })
@@ -224,7 +251,48 @@ window.addEventListener('load', function () {
                     image:new ol.style.Circle({
                         radius:6,
                         fill: new ol.style.Fill({
-                            color: [243, 123, 11,1]
+                            color: self.gray
+                        }),
+
+                    })
+                })
+                
+                this.iconstyle.push(style)
+                style=new ol.style.Style({
+                    image:new ol.style.Circle({
+                        radius:6,
+                        fill: new ol.style.Fill({
+                            color: self.orange
+                        }),
+
+                    })
+                })
+                this.iconstyle.push(style)
+                style=new ol.style.Style({
+                    image:new ol.style.Circle({
+                        radius:6,
+                        fill: new ol.style.Fill({
+                            color: self.green
+                        }),
+
+                    })
+                })
+                this.iconstyle.push(style)
+                style=new ol.style.Style({
+                    image:new ol.style.Circle({
+                        radius:6,
+                        fill: new ol.style.Fill({
+                            color: self.yellow
+                        }),
+
+                    })
+                })
+                this.iconstyle.push(style)
+                style=new ol.style.Style({
+                    image:new ol.style.Circle({
+                        radius:6,
+                        fill: new ol.style.Fill({
+                            color: self.lightblue
                         }),
 
                     })
@@ -249,7 +317,34 @@ window.addEventListener('load', function () {
 
                     })
                 })
+                
+                this.map.on("click",function(evt){
+                    let cord=evt.coordinate
+                    self.detaillonMapDevices(cord)
+                    })
 
+            },
+            //Show the detail view when a point on the map is click
+            detaillonMapDevices:function(coord){
+                let self=this
+                let source = self.vectorLayer.getSource();
+                let features = source.getFeatures();
+                let i=0
+                let find=false
+                while((i<features.length)&&(find==false)){
+                    let geom=features[i].getGeometry()
+                    let pcoord=geom.getCoordinates()
+                    let plat=parseFloat(pcoord[0]).toFixed(4)
+                    let plon=parseFloat(pcoord[1]).toFixed(4)
+                    let lat=parseFloat(coord[0]).toFixed(4)
+                    let lon=parseFloat(coord[1]).toFixed(4)
+                    let offset=0.00000001
+                    if(((plat<=lat+offset)&&(plat>=lat-offset))&&((plon<=lon+offset)&&(plon>=lon-offset))){
+                        this.deviceDetail(features[i].get("name"))
+                        find=true
+                    }
+                    i=i+1
+                } 
             },
             //Make a request of the Devices in BD and draw all devices then have latitude and longitude.
             drawDevices: function () {
@@ -257,15 +352,15 @@ window.addEventListener('load', function () {
 
 
                     //Defining variables for compute the average center
-                    let i=0
+                   /* let i=0
                     let latitudeCenter=0
-                    let longitudeCenter=0
+                    let longitudeCenter=0*/
                     self.devices.forEach(function (device) {
 
                         if (device.lastInfo) {
                             if((device.lastInfo[0].latitude)&&(device.lastInfo[0].longitude)){
                                 //Compute a sum of latituds and a sum of longituds only if the device values are not very diferents from the map center
-                                if((device.lastInfo[0].latitude<self.mapCenter[1]+0.1)&&(device.lastInfo[0].latitude>self.mapCenter[1]-0.1)){
+                                /*if((device.lastInfo[0].latitude<self.mapCenter[1]+0.1)&&(device.lastInfo[0].latitude>self.mapCenter[1]-0.1)){
 
                                     if((device.lastInfo[0].longitude<self.mapCenter[0]+0.1)&&(device.lastInfo[0].longitude>self.mapCenter[0]-0.1)){
                                         latitudeCenter=latitudeCenter+device.lastInfo[0].latitude
@@ -273,16 +368,15 @@ window.addEventListener('load', function () {
                                         i=i+1
                                     }
 
-                                }
+                                }*/
 
                                 let source = self.vectorLayer.getSource();
                                 let point=new ol.Feature({
                                     name: device._id,
                                     geometry: new ol.geom.Point([device.lastInfo[0].longitude, device.lastInfo[0].latitude])
-
+                                    
                                 })
-
-                                //For each device type is set one syle point.
+                                //For each device type is set one style point.
                                 switch(device.type){
                                     case 1:
                                         point.setStyle(self.iconstyle[0])
@@ -290,8 +384,22 @@ window.addEventListener('load', function () {
                                     case 2:
                                         point.setStyle(self.iconstyle[1])
                                         break;
+                                    case 3:
+                                        point.setStyle(self.iconstyle[2])
+                                        break;
+                                    case 4:
+                                        
+                                        point.setStyle(self.iconstyle[3])
+                                        break;
+                                    case 5:
+                                        point.setStyle(self.iconstyle[4])
+                                        break;
+                                    case 6:
+                                        point.setStyle(self.iconstyle[4])
+                                        break;
+                                    
                                 }
-
+                                
                                 //point is added
                                 source.addFeature(point)
                          }
@@ -300,10 +408,9 @@ window.addEventListener('load', function () {
 
 
                     });
-
-                    //Compute the average center map and set the map center
-                    self.mapCenter=[longitudeCenter/i,latitudeCenter/i]
-                    self.map.getView().setCenter(self.mapCenter)
+                    //Compute the average center map and set the map center.
+                    /*self.mapCenter=[longitudeCenter/i,latitudeCenter/i]
+                    self.map.getView().setCenter(self.mapCenter)*/
 
 
             },
@@ -326,14 +433,6 @@ window.addEventListener('load', function () {
                 }).then(function(){
                     self.showDetail()
                 })
-
-
-
-
-
-
-
-
             },
             //Show the detail view with all the data from the deviece.
             showDetail:function(){
@@ -360,12 +459,33 @@ window.addEventListener('load', function () {
                                 //Each type of device have his own icon background color color
                                switch(self.selected_device[k]){
                                    case 1:
-                                   document.getElementById('icon').style.backgroundColor="rgb(0, 140, 255)"
-                                   document.getElementById('close').style.color="rgb(0, 140, 255)"
-                                   break;
-                                   case 2:
-                                   document.getElementById('icon').style.backgroundColor="rgb(243, 123, 11)"
-                                   document.getElementById('close').style.color="rgb(243, 123, 11)"
+                                        document.getElementById('icon').style.backgroundColor=self.blue
+                                        document.getElementById('close').style.color=self.blue
+                                        break;
+                                    case 2:
+                                        document.getElementById('icon').style.backgroundColor=self.gray
+                                        document.getElementById('close').style.color=self.gray
+                                        break;
+                                    case 3:
+                                        document.getElementById('icon').style.backgroundColor=self.orange
+                                        document.getElementById('close').style.color=self.orange
+                                        break;
+                                    case 4:
+                                        document.getElementById('icon').style.backgroundColor=self.green
+                                        document.getElementById('close').style.color=self.green
+                                        break;
+                                    case 5:
+                                        document.getElementById('icon').style.backgroundColor=self.yellow
+                                        document.getElementById('close').style.color=self.yellow
+                                        break;
+                                    case 6:
+                                        document.getElementById('icon').style.backgroundColor=self.lightblue
+                                        document.getElementById('close').style.color=self.lightblue
+                                        break;
+
+                                   default:
+                                        document.getElementById('icon').style.backgroundColor="rgb(0, 140, 255)"
+                                        document.getElementById('close').style.color="rgb(0, 140, 255)"
                                    break;
 
                                }
@@ -405,6 +525,7 @@ window.addEventListener('load', function () {
                     }
                 }
                  //The layer device and filter is hide and show the detail layer
+                let mobilevers= document.getElementById("filter").style
                 document.getElementById("devices").style.display = "none"
                 document.getElementById("filter").style.display = "none"
                 document.getElementById("detail").style.display = "inherit"
@@ -427,8 +548,128 @@ window.addEventListener('load', function () {
                 //The map returns to initial position
                 self.map.getView().setCenter([1.7310788, 41.2220107])
                 self.map.getView().setZoom(18)
+            },
 
+            /**
+             * @author ncarmona
+             * @description Getting translation strings.
+             * @version S3
+             */            
+            getLanguage: function(){
+                let trans_file = '/lang/'+localStorage.language+'/public.json'
+                let self = this
 
+                console.log(trans_file)
+
+                if(localStorage.language == null){
+                    localStorage.language = 'cat'
+                }else{
+                    axios.get(trans_file).then(function(trans_string){
+                        self.trans = trans_string.data
+                        console.log("language file: " + trans_file)
+                        console.log("Website language: " + localStorage.language)
+                    }).catch( function(error){
+                        console.log(error.message)
+                    })    
+                }
+            
+            },
+
+            /**
+             * @author ncarmona
+             * @description parse int to name lang.
+             * @version S3
+             */ 
+            int2lang: function(intnum){
+                let lang = 'cat'
+                
+                if(intnum == 2) lang = 'es'
+                else if(intnum == 3) lang = 'en'
+
+                return lang
+            },
+
+            /**
+             * @author ncarmona
+             * @description parse lang to int number.
+             * @version S3
+             */ 
+            lang2int: function(lang){
+                let intnum = 1
+
+                if(lang == 'es') intnum = 2
+                else if(lang == 'en') intnum = 3
+
+                return intnum
+            },
+
+            /**
+             * @author ncarmona
+             * @description Change the website language.
+             * @version S3
+             */             
+            toggleLanguage: function(language){
+                if(this.debug) console.log("selected language: " + language)
+
+                localStorage.language = language
+                this.getLanguage()
+
+                // Change user language in database.
+                if(localStorage.username !== null){
+
+                    let self = this
+                    if(this.debug) console.log("Cambiando idioma: " + this.base_url_api + 'users/' + localStorage.userID)
+                    console.log(localStorage.token)
+
+                    axios.put(this.base_url_api + 'users/' + localStorage.userID,{
+                        language: self.lang2int(localStorage.language)
+                    },{
+                        headers: { Authorization: "bearer " + localStorage.token}
+                    }
+                ).then(function(){
+                        
+                    }).catch(function(error){
+                        console.log(error)
+                    })
+                }
+
+                //In future version this function will replace string.
+                location.reload()
+            },
+
+            /**
+             * @author ncarmona
+             * @description Toggle menus.
+             * @version S3
+             * @todo add transitions. Hide list if user clicks outside the div.
+             */               
+            toggleMenu: function(layer){
+                let langlist = document.getElementById(layer).style
+                langlist.display = langlist.display == "block" ? "none" : "block"
+            },
+
+            /**
+             * @author ncarmona
+             * @description Toggle map and sidebar.
+             * @version S3
+             * @todo add transitions. Hide list if user clicks outside the div.
+             */               
+            toggleMap: function(){
+                let sidebar = document.getElementById("sidebar").style
+                let content = document.getElementById("content").style
+                let iconToggle = document.getElementById("displaySidebarMap").classList
+
+                if(sidebar.display == "block"){
+                    sidebar.display = "none"
+                    content.display = "block"   
+                    iconToggle.remove("fa-map")
+                    iconToggle.add("fa-list-alt")                     
+                }else{
+                    sidebar.display = "block"
+                    content.display = "none"   
+                    iconToggle.remove("fa-list-alt")
+                    iconToggle.add("fa-map")                
+                }
             }
 
         }

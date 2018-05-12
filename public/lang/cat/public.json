@@ -1,0 +1,24 @@
+{
+    "__meta": {
+        "title":"VisInt - Inicio"
+    },
+    
+    "home_icon":"Inici",
+    "notifications_icon":"Notificions.",
+    "language_icon":"Canviar idioma.",
+    "filter_device": "Filtrar dispositiu ...",
+    "filter_device_by_type": "Tots els dispositius",
+    "device_name": "Nom",
+    "device_latitude": "Latitud",
+    "device_longitude": "Longitud",
+    "creation_date": "Data de creació",
+    "modified_date": "Data de modificació",
+    "patient": "Pacient",
+    "doctor": "Doctor",
+    "ambulance": "Ambulancia",
+    "smoke": "Sensor de fum",
+    "weather": "Sensor de ",
+    "air_quality": "Sensor de qualitat de l'aire",
+    "information": "Informació",
+    "sensors": "Sensors"
+}

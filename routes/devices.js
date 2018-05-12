@@ -16,7 +16,7 @@ router.get('/:id', function(req, res, next){
     }
 
     Promise.all([
-        Device.findById(req.params.id, "-token").select(filter),
+        Device.findById(req.params.id).select(filter),
         DeviceInformation.findOne({'id_device': req.params.id}, {'info': {'$slice': -1}})
     ]).then(([device, information]) => {
         if (information) { device.lastInfo = information.info[0] }
@@ -42,6 +42,7 @@ router.get('/', function(req, res, next){
     }
     let response = []
 
+    // let foo = Device.find(query).sort({modificationDate: -1}).limit(10).select(filter)∫
     let prom = Device.find(query).sort({modificationDate: -1}).limit(size).select(filter)
     .then(doc => {
         let count = 0
@@ -73,7 +74,7 @@ router.post('/', function(req, res, next) {
     let type = req.body.type
 
     if (!name || !type) {
-        res.send({'statuss': 400})
+        res.send({'status': 400})
         return
     }
 
@@ -85,12 +86,9 @@ router.post('/', function(req, res, next) {
         modificationDate: modificationDate
     })
 
-    let token = service.createToken(device)
-    device.token = token
-
     device.save()
     .then(device => {
-        res.send({"status": 201, "id": device._id, "token": device.token})
+        res.send({"status": 201, "id": device._id})
         socket.deviceWasUpdated()
     }).catch(e => {
         res.send({"status": 400})
