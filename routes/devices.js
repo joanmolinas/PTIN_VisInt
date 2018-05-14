@@ -74,8 +74,8 @@ router.post('/', function(req, res, next) {
     let type = req.body.type
 
     if (!name || !type) {
-        res.send({'status': 400})
-        return
+        res.status(400).send({"message": 'ERROR Fields missing'})
+    	return
     }
 
     let device = new Device({
@@ -83,21 +83,25 @@ router.post('/', function(req, res, next) {
         active: true,
         type: type,
         creationDate: creationDate,
-        modificationDate: modificationDate
+        modificationDate: modificationDate,
+        deleted: false,
+        enabled: false
     })
-
     device.save()
     .then(device => {
-        res.send({"status": 201, "id": device._id})
+    	let tok = service.createToken(device)
+    	device.token = tok
+        res.send({"status": 201, "id": device._id, "token": device.token})
         socket.deviceWasUpdated()
     }).catch(e => {
         res.send({"status": 400})
     })
 })
 
-router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
+router.put('/:id/info', service.ensureDeviceAuthenticated, function(req, res, body) {
     if (!req.body) {
-        res.send({"status": 400})
+    	res.status(400).send({"message": 'ERROR Fields missing'})
+    	return
     }
 
     let modificationDate = new Date()
@@ -109,6 +113,10 @@ router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
         }
     })
     .then(device => {
+    	if (!device.enabled){
+    		res.status(400).send({"message": 'Device is not enabled'})
+    		return
+    	}
         DeviceInformation.findOneAndUpdate({'id_device': device._id}, {
             $push: {
                 info: req.body
@@ -142,7 +150,31 @@ router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
     })
 })
 
-router.get('/delete/:id', function(req, res, next){
+router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
+
+    if (!req.body ) {
+        res.status(400).send({"message": 'ERROR Fields missing'})
+        return
+    }
+
+    Device.findByIdAndUpdate(req.params.id,{
+        $set: {
+        	modificationDate: new Date(),
+            enabled: req.body.enabled,
+            deleted: req.body.deleted
+        }
+    })
+    .then(doc => {
+    	socket.deviceWasUpdated()
+    	res.status(200).send({"message": 'OK: Device Changed '})
+    })
+    .catch(e => {
+    	res.status(400).send({"message": 'ERROR Something went wrong'})
+    	return
+  })
+})
+
+router.get('/:id/delete', function(req, res, next){
   Device.findByIdAndRemove(req.params.id)
   .then(doc => {
       res.send({'status': 200})

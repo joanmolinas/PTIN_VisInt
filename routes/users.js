@@ -17,7 +17,7 @@ router.get('/:id', function(req, res, next) {
 });
 
 
-router.put('/:id', async function(req, res, next) {
+router.put('/:id', service.ensureUserAuthenticated, async function(req, res, next) {
 	if (!req.body.username || !req.body.password || !req.body.language) {
         res.status(400).send({"message": 'ERROR Fields missing'})
         return
@@ -29,7 +29,7 @@ router.put('/:id', async function(req, res, next) {
 	let pref = req.body;
     User.findByIdAndUpdate(req.params.id,{
         $set: {
-        	//set: req.body // Need test (/auth/signup not working)
+        	//set: req.body 
         	username : name,
         	password : hashPassword,
             preferences : pref

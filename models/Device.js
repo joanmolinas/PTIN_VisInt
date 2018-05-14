@@ -3,6 +3,8 @@ let mongoose = require('mongoose')
 var deviceSchema = new mongoose.Schema({
 	name: {type:String, required:true},
 	active: { type:Boolean, required:true },
+	enabled: Boolean,
+	deleted: Boolean,
 	type: {
 		type: Number,
 		required: true,
