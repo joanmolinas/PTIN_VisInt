@@ -4,6 +4,8 @@ var mongoosePaginate = require('mongoose-paginate');
 var deviceSchema = new mongoose.Schema({
 	name: {type:String, required:true},
 	active: { type:Boolean, required:true },
+	enabled: Boolean,
+	deleted: Boolean,
 	type: {
 		type: Number,
 		required: true,
@@ -13,7 +15,8 @@ var deviceSchema = new mongoose.Schema({
 	token: String,
 	creationDate: Date,
 	modificationDate: Date,
-	lastInfo: {}
+	lastInfo: {},
+	additionalInfo: {}
 }, { collection: 'devices' });
 deviceSchema.plugin(mongoosePaginate);
 
