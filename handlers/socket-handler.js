@@ -25,28 +25,28 @@ function onDisconnect(socket) {
     })
 }
 
-// nil
+// listen and receive fire notification
 function fire(socket) {
     socket.on('fire', () => {
         console.log('Fire notification received')
     })
 }
 
-// nil
+// listen and receive heart attack notification
 function heart_attack(socket) {
     socket.on('heart_attack', () => {
 	console.log('Heart atack notification received')
     })
 }
 
-// nil
+// listen and receive high temperature notification
 function high_temp(socket) {
     socket.on('high_temp', () => {
 	console.log('High temperature notification received')
     })
 }
 
-// nil
+// listen and receive low temperature notification
 function low_temp(socket) {
     socket.on('low_temp', () => {
 	console.log('Low temperature notification received')
