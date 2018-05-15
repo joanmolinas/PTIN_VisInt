@@ -10,17 +10,24 @@ function connect(http) {
         let dId = socket.handshake.query['id']
         if (dId) { sockets[dId] = socket }
         onDisconnect(socket)
+        alarm(socket)
     })
 }
 
 function onDisconnect(socket) {
     socket.on('disconnect', () => {
+        console.log("disconnect")
         console.log(socket.id)
         delete sockets[socket.id]
         console.log(sockets)
     })
 }
 
+function alarm(socket) {
+    socket.on('alarm', () => {
+        console.log("He rebut una alarma")
+    })
+}
 
 function deviceWasUpdated() {
     io.emit('refreshDevicesTable', { for: 'everyone' });

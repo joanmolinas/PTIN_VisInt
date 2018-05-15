@@ -143,14 +143,9 @@ You can filter by the following parameters:
 ### Response
 **OK**
 > Returns an array of devices that complains filter, all devices otherwise.
-```json
+```javascript
 [
- {
-
- },
- {
-
- }
+    // Array of devices
 ]
 ```
 
@@ -173,7 +168,6 @@ GET: /devices/:id
 POST: /devices
 ```
 > Device types are valid in a range of [1-6].
- ESCRIURE AQUI A QUIN TIPUS DE DISPOSITIU CORRESPON CADA TYPE: 1-->Pacient, etc
  
 ### Request
 ```json
@@ -192,7 +186,8 @@ POST: /devices
   "token": "UIREWNGFLEjuirnewfwknfin8264627HJBFJWhwbfjwbjfbwjbeIRWHBFIW88Y74HW8YF4B3899"
 }
 ```
-> You must save the token to update device info with PUT request
+
+> When a devices is created, a token is returned as a parameter on the response. You need to store this token on your device if you want to update device data because update needs a token on the header.
 
 **ERROR**
 ```json
@@ -208,9 +203,17 @@ PUT: /devices
 
 ### Request
 
-You can add or change any parameter that you need.
-- YOU NEED THE DEVICE TOKEN to update info, you can get the device token by creating it with POST request.
-- Include the device token in the HEADER FIELD to verify authentication.
+> You are able to add or update any field that you need.
+> To update the device information you must need to pass a token as a parameter on the request. This paramater needs to be inside the headers dictionary in the following format.
+
+**Example python**
+
+```python
+    # Requests is a http framework
+    requests.get('https://ptin2018.herokuapp.com/api/devices/:id', headers={'Authorization': 'Bearer my_awesome_token'})
+
+    # Since this moment request will provide a token inside request headers
+```
 
 ```json
 {
@@ -253,3 +256,65 @@ GET: /devices/delete/:id
   "status": 400
 }
 ```
+
+## Sockets
+
+Sockets are a end to end connections allowing multiple devices send notifications to backend, also allows backend send messages to devices.
+
+## How to connect to backend?
+Backend works with socket.io as a service, this means every client could connect using a simple socket client library.
+
+> End point is where you want to send/receive messages. A endpoint is an event associated to an action.
+
+**Connect to socket**
+Connection is built on top of http connection, to connect a client, you must need to put the following url to a client socket.
+
+> URL: https://ptin2018.herokuapp.com
+
+If you want to receive messages to a device, you must provide your device id as a dictionary when connection is open. 
+
+```javascript
+{ query: "id=my_fancy_id" }
+```
+
+**Example with javascript**
+```javascript
+    // io is a client library from socket.io
+    io.connect("http://localhost:3000", { query: "id=1234" });
+    
+```
+
+
+Backend is listening forever to a client sockets connection on this endpoint. Once you have been connect, you can send notifications and receive messages.
+You don't need any port or similar to connect, just using the url. We encourage you to use a socket.io python library to connect with backend service. This kind of libraries are build on top of socket services and will handle connections and errors.
+
+### Send notifications to backend
+This section will explain how to send notifications to backend from the devices 
+
+### Receive messages from the backend
+
+This section will explain how to receive messages from the backend. Message is the action to receive data via socket from backend. For example if I want to receive shutdown notifications, I will need to know how to handle shutdown endpoint. 
+
+__Types of notifications__
+
+| Notifications | End point         | Parameters    | Type of parameters|
+| :-----------: | :---------------: | :-----------: | :---------------: |
+| Dev.updated   | refreshDevices    | NO            | -                 |
+| Shutdown      | shutdown          | NO            | -                 |
+| Loc. doctor   | locationToDoctor  | YES           | dictionary        |
+| Loc. pacient  | locationToPacient | YES           | dictionary        |  
+
+```javascript
+    
+    var socket = io.connect('http://localhost:3000', { query: "id=1234" });
+    socket.on('shutdown', () => {
+        // This event handle an event from shutdown endpoint received from the backend. That means every time the backend will send a shutdown event to me or to everyone, this block of code will be fired and executed properly.
+        console.log('shutdown received')
+    })
+
+    // To receive other information, you just need to handle desired functions to handle.
+```
+
+**This party tools to test it**
+
+[UI tool to test it](http://amritb.github.io/socketio-client-tool/)
