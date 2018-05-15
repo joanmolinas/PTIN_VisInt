@@ -7,6 +7,7 @@ var request = require('request')
 var url = require('url');
 let user = require('../models/User')
 let device = require('../models/Device')
+let notification = require('../models/Notification')
 
 var router = express.Router()
 

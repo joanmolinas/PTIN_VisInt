@@ -32,159 +32,246 @@
   <!-- visint scripts -->
   <link rel="stylesheet" href="stylesheets/style.css" />
   <script src="javascripts/visint.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
   <!-- Socket io -->
   <script src="/socket.io/socket.io.js"></script>
-  <!-- REMOVE WHEN PAGE RESFRESH WORKS CORRECTLY.-->
-<script>
-  var socket = io();
+  <script>
+  var socket = io.connect('http://localhost:3000', { query: "id=1234" });
   socket.on('refreshDevicesTable', function() {
       console.log('refresh')
-     
       document.getElementById("inici").click()
      
      $("device").load(location.href+" device>*","");
   })
-</script> 
 
-  <!-- End socket io -->
+  socket.on('shutdown', () => {
+    console.log('shutdown received')
+  })
+
+  socket.on('pacientLocation', (data) => {
+    console.log('Data received ' + data.location.latitude)
+  })
+
+    socket.on('location', (data) => {
+    console.log('Data received ' + data.location.latitude)
+  })
+  
+</script>
+
+ <!-- End socket io -->
 </head>
 
 <body>
   <div id="vue">
-  <div class="container-fluid" id="body-content">
-    <div class="row" style="padding:0;border:0;">
-      <!-- top menu -->
-      <div id="header" class="col-md-12">
-        <nav>
-          <a id="inici" v-on=click:"getDevices()" href="#" title="Inicio">
-            <i class="fas fa-home"></i>
-          </a>
-          <span class="pull-right" id="settings">
-            <a href="#" title="Notificaciones">
-              <i class="fas fa-bell"></i>
-              <sup class="no-notification">0</sup>
-            </a>
-            <a href="#" title="Idioma">
-              <i class="fas fa-language"></i>
-            </a>
-          </span>
-        </nav>
-      </div>
-      <!-- sidebar -->
-      <div id="sidebar" class="col-md-6">
-        <div id="devices">
-
-          <!-- header sidebar. Filter devices, show/hide devices -->
-          <div id="filter" class="row" style="padding-left:15px;">
-
-            <!-- filter textbox -->
-            <div class="col-md-6 filter-input">
-              <input type="text" v-on:keyup="filterByText" v-model="filter_text" placeholder="Filtrar dispositivos ..." />
-              <i class="fas fa-search pull-right filter-search-icon"></i>
-            </div>
-            <div>
-              <select id="type" v-model="device_type" v-on:change="filterByType" v-on:keyup="filterByType" class="col-md-5 filter-input">
-                <option value="">Todos los dispositivos</option>
-                <option value="1">Dispositivo</option>
-                <option value="2">Paciente</option>
-              </select>
-              <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
-                <i class="fas fa-angle-double-left"></i>
+    <div class="container-fluid" id="body-content">
+      <div class="row" style="padding:0;border:0;">
+        <!-- top menu -->
+        <div id="header" class="col-md-12">
+          <nav>
+            <span>
+              <a href="#" class="hidden-lg hidden-md" v-on:click="toggleMenu('responsive-menu')">
+                <i class="fas fa-bars"></i>
               </a>
-            </div>
-          </div>
+              <div id="responsive-menu">
+                <a href="#"> <i class="fas fa-home icon"></i> {{trans['home_icon']}}</a>
+                <a href="#"> <i class="fas fa-bell icon"></i> {{trans['notifications_icon']}} <i class="fas fa-caret-down"></i></a>
+                <a href="#"> <i class="fas fa-language icon"></i> {{trans['language_icon']}}</i></a>
+                <a href="#" title="Mostra la web en català" v-on:click="toggleLanguage('cat')">
+                  <img src="images/catalonia.png" />Català</a>
+                <a href="#" title="Display the website in english" v-on:click="toggleLanguage('en')">
+                  <img src="images/gb.png">English</a>
+                <a href="#" class="selected-lang" title="Muestra la web en castellano." v-on:click="toggleLanguage('es')">
+                  <img src="images/es.png" />Español</a>
 
-          <div id="devices-list" >
-            <div class="row">
-              <div class="col-md-6">
-                <div  class="device" v-for="device in devices_column1" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
-                  <p>
-                    <i class="fas fa-microchip"></i> Nombre:
-                    <strong>{{ device.name }}</strong>
-                  </p>
-                  <p v-if="device.lastInfo">
-                    <i class="fas fa-arrows-alt-v"></i> Latitud:
-                    <strong>{{ device.lastInfo[0].latitude }}</strong>
-                  </p>
-                  <p v-if="device.lastInfo">
-                    <i class="fas fa-arrows-alt-h"></i> Longitud:
-                     <strong>{{ device.lastInfo[0].longitude }}</strong> 
-                  </p>
+              </div>
+            </span>
+              <a href="/" id="inici" v-on:click="refreshDevices" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
+                <i class="fas fa-home"></i>
+              </a>
+              <span id="settings" class="pull-right">
+                    <a href="#" id="mobilFilterIcon" class="hidden-lg hidden-md" v-on:click="toggleMenu('filterMobile')">
+                        <i class="fas fa-search"></i>
+                      </a>
+                      <a href="#" class="hidden-lg hidden-md" v-on:click="toggleMap">
+                          <i class="fas fa-list-alt" id="displaySidebarMap"></i>
+                        </a>
+                <a href="#" v-bind:title="trans['notifications_icon']" class="hidden-xs hidden-sm">
+                  <i class="fas fa-bell"></i>
+                  <sup class="no-notification">0</sup>
+                </a>
+                <span class="hidden-xs hidden-sm">
+                  <a href="#" v-bind:title="trans['language_icon']" v-on:click="toggleMenu('lang-list')" style="margin-right:15px;">
+                    <i class="fas fa-language"></i>
+                    <i class="fas fa-caret-down" style="font-size: 15px;"></i>
+                  </a>
+                  <div id="lang-list">
+                    <nav>
+                      <a href="#" title="Mostra la web en català" v-on:click="toggleLanguage('cat')">
+                        <img src="images/catalonia.png" />Català</a>
+                      <a href="#" title="Display the website in english" v-on:click="toggleLanguage('en')">
+                        <img src="images/gb.png">English</a>
+                      <a href="#" class="selected-lang" title="Muestra la web en castellano." v-on:click="toggleLanguage('es')">
+                        <img src="images/es.png" />Español</a>
+                    </nav>
+                  </div>
+                </span>
+              </span>
+                <div id="filterMobile" class="dropdown-menu pull-right">
+                  <!-- filter textbox -->
+                  <div class="col-md-6 filter-input">
+                    <input type="text" v-on:keyup="filterByText" v-model="filter_text" v-bind:placeholder="trans['filter_device']" />
+                    <i class="fas fa-search pull-right filter-search-icon"></i>
+                  </div>
+                  <div>
+                    <select id="type" v-model="device_type" v-on:change="filterByType" v-on:keyup="filterByType" class="col-md-5 filter-input">
+                      <option value="">{{trans['filter_device_by_type']}}</option>
+                      <option value="1">{{trans['doctor']}}</option>
+                      <option value="2">{{trans['ambulance']}}</option>
+                      <option value="3">{{trans['smoke']}}</option>
+                      <option value="4">{{trans['weather']}}</option>
+                      <option value="4">{{trans['air_quality']}}</option>
+                    </select>
+                    <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
+                      <i class="fas fa-angle-double-left"></i>
+                    </a>
+                  </div>
+                </div>
+
+              </span>
+            </span>
+          </nav>
+        </div>
+
+        <!-- Display map -->
+        <div id="content" class="col-md-6 col-md-push-6">
+          <div id="shrink" v-on:click="shrinkMap" style="cursor: pointer;">
+            <i class="fas fa-angle-double-right "></i>
+          </div>
+        </div>
+        <!-- sidebar -->
+        <div id="sidebar" class="col-md-6 col-md-pull-6">
+          <div id="devices">
+
+            <!-- header sidebar. Filter devices, show/hide devices -->
+            <div id="filter" class="row hidden-xs hidden-sm">
+
+              <!-- filter textbox -->
+              <div class="col-md-6 filter-input">
+                <input type="text" v-on:keyup="filterByText" v-model="filter_text" v-bind:placeholder="trans['filter_device']" />
+                <i class="fas fa-search pull-right filter-search-icon"></i>
+              </div>
+              <div>
+                <select id="type" v-model="device_type" v-on:change="filterByType" v-on:keyup="filterByType" class="col-md-5 filter-input">
+                  <option value="">{{trans['filter_device_by_type']}}</option>
+                  <option value="1">{{trans['doctor']}}</option>
+                  <option value="2">{{trans['ambulance']}}</option>
+                  <option value="3">{{trans['smoke']}}</option>
+                  <option value="4">{{trans['weather']}}</option>
+                  <option value="4">{{trans['air_quality']}}</option>
+                </select>
+                <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
+                  <i class="fas fa-angle-double-left"></i>
+                </a>
+              </div>
+            </div>
+
+            <div id="devices-list">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="device" v-for="device in devices_column1" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
+                    <p>
+                      <i class="fas fa-microchip"></i> {{trans['device_name']}}:
+                      <strong>{{ device.name }}</strong>
+                    </p>
+                    <p v-if="device.lastInfo">
+                      <i class="fas fa-arrows-alt-v"></i> {{trans['device_latitude']}}:
+                      <strong>{{ device.lastInfo[0].latitude }}</strong>
+                    </p>
+                    <p v-if="device.lastInfo">
+                      <i class="fas fa-arrows-alt-h"></i> {{trans['device_longitude']}}:
+                      <strong>{{ device.lastInfo[0].longitude }}</strong>
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="device" v-for="device in devices_column2" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
+                    <p>
+                      <i class="fas fa-microchip"></i> {{trans['device_name']}}:
+                      <strong>{{ device.name }}</strong>
+                    </p>
+                    <p>
+                      <i class="fas fa-arrows-alt-v"></i> {{trans['device_latitude']}}:
+                      <strong>{{ device.lastInfo[0].latitude }}</strong>
+                    </p>
+                    <p>
+                      <i class="fas fa-arrows-alt-h"></i> {{trans['device_longitude']}}:
+                      <strong>{{ device.lastInfo[0].longitude }}</strong>
+                    </p>
+                  </div>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="device" v-for="device in devices_column2" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
-                  <p>
-                    <i class="fas fa-microchip"></i> Nombre:
-                    <strong>{{ device.name }}</strong>
-                  </p>
-                  <p>
-                    <i class="fas fa-arrows-alt-v"></i> Latitud:
-                     <strong>{{ device.lastInfo[0].latitude }}</strong>
-                  </p>
-                  <p>
-                    <i class="fas fa-arrows-alt-h"></i> Longitud:
-                     <strong>{{ device.lastInfo[0].longitude }}</strong> 
-                  </p>
-                </div>
+            </div>
+
+          </div>
+          <div id="detail">
+            <div id="close" v-on:click="closeDetail" style="cursor: pointer;" class="row blocs">
+              <i class="fas fa-times"></i>
+            </div>
+            <div class=" row blocs">
+              <div v-if="selected_device.type==1" id="icon" class="img-circle center-block ">
+                <i class="fas fa-user-md  iconPicture"></i>
+              </div>
+              <div v-if="selected_device.type==2" id="icon" class="img-circle center-block ">
+                <i class="fas fa-ambulance  iconPicture"></i>
+              </div>
+              <div v-if="selected_device.type==3" id="icon" class="img-circle center-block ">
+                <i class="fas fa-fire  iconPicture"></i>
+              </div>
+              <div v-if="selected_device.type==4" id="icon" class="img-circle center-block ">
+                <i class="fas fa-user  iconPicture"></i>
+              </div>
+              <div v-if="selected_device.type==5" id="icon" class="img-circle center-block ">
+                <i class="fas fa-sun  iconPicture"></i>
+              </div>
+              <div v-if="selected_device.type==6" id="icon" class="img-circle center-block ">
+                <i class="fas fa-cloud  iconPicture"></i>
               </div>
             </div>
-          </div>
+            <div class="row blocs">
+              <div class="separators">—— {{trans['information']}} ——</div>
+            </div>
+            <div class="row blocinfo">
 
+
+              <div class="info row" v-for="deviceInf in deviceAtributes">
+                <div class="field col-md-6">{{ deviceInf[0] }}</div>
+                <div class="fieldInfo col-md-6">{{ deviceInf[1] }}</div>
+              </div>
+
+            </div>
+
+            <div class="row blocs">
+              <div class=" separators">—— {{trans['sensors']}} ——</div>
+            </div>
+
+            <div class="row  blocinfo">
+
+              <div class=" info row" v-for="deviceInf in deviceSensors">
+                <div class="field col-md-6">{{ deviceInf[0] }}</div>
+                <div class="fieldInfo col-md-6">{{ deviceInf[1] }}</div>
+              </div>
+
+
+            </div>
+            <div class="row blocs">
+              <div class="separators"></div>
+            </div>
+
+          </div>
         </div>
-        <div id="detail">
-          <div id="close" v-on:click="closeDetail" style="cursor: pointer;" class="row blocs">
-            <i class="fas fa-times" ></i>
-          </div>
-          <div  class=" row blocs">
-            <div v-if="selected_device.type==1" id="icon" class="img-circle center-block " >
-              <i class="fas fa-user-md  iconPicture"></i>
-            </div>
-            <div v-if="selected_device.type==2" id="icon" class="img-circle center-block " >
-              <i class="fas fa-ambulance  iconPicture"></i>
-            </div>
-          </div>
-          <div class="row blocs">
-            <div class="separators">—— Información ——</div>
-          </div>
-          <div class="row blocinfo">
-
-
-            <div class="info row" v-for="deviceInf in deviceAtributes">
-              <div class="field col-md-6">{{ deviceInf[0] }}</div>
-              <div class="fieldInfo col-md-6">{{ deviceInf[1] }}</div>
-            </div>
-
-          </div>
-
-          <div class="row blocs">
-            <div class=" separators">—— Sensores ——</div>
-          </div>
-
-          <div class="row  blocinfo">
-
-            <div class=" info row" v-for="deviceInf in deviceSensors">
-              <div class="field col-md-6">{{ deviceInf[0] }}</div>
-              <div class="fieldInfo col-md-6">{{ deviceInf[1] }}</div>
-            </div>
-
-
-          </div>
-          <div class="row blocs">
-            <div class="separators"></div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Display map -->
-      <div id="content" class="col-md-6">
-        <div id="shrink" v-on:click="shrinkMap" style="cursor: pointer;"><i class="fas fa-angle-double-right "></i></div>
       </div>
     </div>
   </div>
-</div>
 </body>
 
 </html>

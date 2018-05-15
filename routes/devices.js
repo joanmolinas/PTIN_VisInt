@@ -28,8 +28,11 @@ router.get('/:id', function(req, res, next){
 
 router.get('/', function(req, res, next){
     let query = url.parse(req.url, true).query
-    let size = parseInt(query.size || 20)
+    let size = parseInt(query.size || 3)
+    let page = parseInt(query.page || 1)
     delete query.size
+    delete query.page
+
     if (query.name) {
         let regexp = new RegExp("^"+ query.name, "i");
         query.name = regexp
@@ -42,11 +45,13 @@ router.get('/', function(req, res, next){
     }
     let response = []
 
-    // let foo = Device.find(query).sort({modificationDate: -1}).limit(10).select(filter)∫
-    let prom = Device.find(query).sort({modificationDate: -1}).limit(size).select(filter)
-    .then(doc => {
+    // let prom = Device.find(query).sort({modificationDate: -1}).limit(size).select(filter)
+    let prom = Device.paginate(query, {page: page, limit: size, sort: { modificationDate: -1}, select: filter})
+    .then(docs => {
+        let doc = docs.docs
+        console.log(docs)
         let count = 0
-        if (doc.length == 0) { res.send([]) }
+        if (doc.length == 0) { res.statis(200).send([]) }
 
         doc.forEach(u => {
             DeviceInformation.findOne({'id_device': u._id}, {'info': {'$slice': -1}})
@@ -55,7 +60,7 @@ router.get('/', function(req, res, next){
                 response.push(u)
 
                 // TODO: Improve this shit, wait to finish all promises
-                if (++count == doc.length) res.send(response)
+                if (++count == doc.length) res.status(200).send(response)
             })
             .catch(e => {
                 console.log(e)
@@ -63,7 +68,8 @@ router.get('/', function(req, res, next){
         })
     })
     .catch(e => {
-      res.send({"status": "400"})
+        console.log(e)
+        res.send({"status": "400"})
   })
 })
 
@@ -72,12 +78,12 @@ router.post('/', function(req, res, next) {
     let creationDate = new Date()
     let modificationDate = new Date()
     let type = req.body.type
-    
+
     if (!name || !type) {
-        res.send({'statuss': 400})
+        res.send({'status': 400})
         return
     }
-    
+
     let device = new Device({
         name: name,
         active: true,
@@ -86,19 +92,19 @@ router.post('/', function(req, res, next) {
         modificationDate: modificationDate
     })
 
-    let token = service.createToken(device)
-    device.token = token
-
     device.save()
     .then(device => {
-        res.send({"status": 201, "id": device._id, "token": device.token})
+        res.send({"status": 201, "id": device._id})
         socket.deviceWasUpdated()
     }).catch(e => {
         res.send({"status": 400})
     })
 })
 
-router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
+router.put('/:id', function(req, res, body) {
+    // res.send('no valid')
+    // return
+    
     if (!req.body) {
         res.send({"status": 400})
     }
@@ -155,4 +161,8 @@ router.get('/delete/:id', function(req, res, next){
   })
 })
 
+router.post('/:id/shutdown', (req, res, next) => {
+    socket.emitShutdown(req.params.id)
+    res.status(200).send({message: 'shutdown sent'})
+})
 module.exports = router

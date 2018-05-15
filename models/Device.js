@@ -1,4 +1,5 @@
 let mongoose = require('mongoose')
+var mongoosePaginate = require('mongoose-paginate');
 
 var deviceSchema = new mongoose.Schema({
 	name: {type:String, required:true},
@@ -14,5 +15,6 @@ var deviceSchema = new mongoose.Schema({
 	modificationDate: Date,
 	lastInfo: {}
 }, { collection: 'devices' });
+deviceSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model( 'devices' , deviceSchema);

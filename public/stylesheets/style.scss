@@ -24,10 +24,36 @@ body {
 
     padding-top: 15px;
 
+    #responsive-menu {
+      background-color:white;
+      border: 1px solid #ccc;
+      margin-top: 13px;
+      display: none;
+      width: 200px;
+      position: absolute;
+      z-index: 100;
+
+      a {
+        color: #ccc;
+        font-size: 15px;
+        padding: 10px 5px 10px 5px;
+        display: block;
+        border-bottom: 1px solid #ccc;
+        margin-left: 0px;
+        padding-left: 20px;
+
+        .icon {
+          font-size: 25px;
+          margin-right: 10px;
+        }
+      }
+    }
+
     a {
       color:white;
       font-size: 25px;
       margin-left: 20px;
+      text-decoration: none;
 
       sup {
         font-size: small;
@@ -50,9 +76,73 @@ body {
         font-weight: bolder;
       }
     }
-
+    
     #settings {
-      margin-right: 20px;
+      padding-right: 20px;
+
+      #filterMobile {
+          display: none;
+          background-color: white;
+          border-bottom: 1px solid #ccc;
+          padding: 3%;
+          .filter-input {
+            border-radius: 10px;
+            padding-left: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-right: 15px;
+            margin-right: 10px;
+            border: 1px solid $sidebar-menu-color;
+            background-color: white;
+            
+            input {
+              width: 90%;
+              border:0;
+            }
+    
+            .filter-search-icon {
+              font-size:20px;
+              color: $sidebar-menu-color;
+            }
+        
+      }
+}      
+
+      #lang-list {
+        display: none;
+        position: relative;
+        z-index: 100;
+        nav {
+          margin-top:13px;
+          border:1px solid #ccc;
+          background-color: white;
+
+          a {
+            display: block;
+            font-size: 15px;
+            color: #ccc;
+            border-bottom: 1px solid #ccc;
+            margin-left: 0;
+            padding-bottom: 5px;
+            padding-top: 5px;
+            
+            img {
+             margin-right:8px; 
+             margin-left:8px;
+            }
+
+          }
+          a:hover {
+            background-color: #ccc;
+            color: white;
+          }
+
+          .selected-lang {
+            font-weight:bolder;
+          }
+
+        }
+      }
     }
   }
 }
@@ -71,7 +161,7 @@ body {
     #filter {
       padding-top:10px;
       padding-bottom: 10px;
-      padding-right: 10px;
+      padding-right: 15px;
       background-color: white;
       border-bottom: 1px solid #ccc;
       
@@ -162,8 +252,6 @@ body {
           border:1px solid #ccc;
         }
         
-        
-      
         .field{
          padding: 3%;
          font-size: large;
@@ -192,6 +280,7 @@ body {
   margin:0;
   padding:0;
   overflow: hidden;
+  z-index: 0;
 
   #shrink {
     z-index:9999;
@@ -211,6 +300,8 @@ body {
     display: none;
     opacity: 30%;
     border-radius: 2px;
+    
+  
   }
 }
 

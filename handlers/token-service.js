@@ -15,36 +15,39 @@ function createToken(user){
 }
 
 function ensureUserAuthenticated(req, res, next) {
-	
+
 	if (!req.headers.authorization) { res.status(401).send({'message': 'Provide a token'})}
 
 	let token = req.headers.authorization.split(" ")[1]
 	User.findOne({'token': token})
 	.then(doc => {
-		console.log(doc)
 		let payload = jwt.decode(token, config.SECRET_TOKEN)
-		if (payload.exp <= moment().unix) { res.status(401).send({'message' : 'Invalid token'})}
+		if (!doc || payload.exp <= moment().unix()) { 
+			return res.status(401).send({'message' : doc})
+		}
+		next()
 	})
 	.catch(e => {
-		res.status(400).send({'message': 'Invalid token'})
+		return res.status(400).send({'message': e})
 	})
-	next()
 }
 
 function ensureDeviceAuthenticated(req, res, next) {
-	
 	if (!req.headers.authorization) { res.status(401).send({'message': 'Provide a token'})}
 
 	let token = req.headers.authorization.split(" ")[1]
 	Device.findOne({'token': token})
 	.then(doc => {
 		let payload = jwt.decode(token, config.SECRET_TOKEN)
-		if (payload.exp <= moment().unix) { res.status(401).send({'message' : 'Invalid token'})}
+		console.log(doc)
+		if (!doc || payload.exp <= moment().unix()) { 
+			return res.status(401).send({'message' : 'Invalid token'})
+		}
+		next()
 	})
 	.catch(e => {
-		res.status(400).send({'message': 'Invalid token'})
+		return res.status(400).send({'message': 'Invalid token'})
 	})
-	next()
 }
 
 module.exports = {
