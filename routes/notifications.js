@@ -8,40 +8,22 @@ service = require("../handlers/token-service")
 Notification = require('../models/Notification')
 require("mongoose").Promise = require("bluebird");
 
-router.get('/:id_patient', function(req, res, next) {
-    Notification.findById(req.params.id_patient)
-    .then(doc => {
-        res.send(doc)
-    })
-    .catch(e => {
-        res.send({"status": "400"})
-    })
-});
 
 router.get('/', function(req, res, next){
-    //res.send('hola')
-    let query = url.parse(req.url, true).query
-    let dict = {}
-    let filter = ''
-    /*if (query.fields) {
-        let arr = query.fields.replace("[",'').replace("]",'').split(',')
-        filter = arr.join('')
-    }*/
+    Notification.find({}, function(err, notification) {
+    	var notificationMap = {};
+	
+	notification.forEach(function(notification) {
+		notificationMap[notification._id] = notification;
+	});
+	
+	res.send(notificationMap);
 
+	});
+		  
+});
 
-
-    /*Promise.all([
-        Notification.findById(req.params.id_patient).select(filter),
-        //DeviceInformation.findOne({'id_device': req.params.id}, {'info': {'$slice': -1}})
-    ]).then(([notification, information]) => {
-        //if (information) { device.lastInfo = information.info[0] }
-        res.send(notification)
-    }).catch(e => {
-        console.log(e);
-    }) */
-})
-
-router.post('/send_notifications', function(req, res, next) {
+router.post('/', function(req, res, next) {
 
     let type = req.body.type
     let date = new Date()
@@ -54,36 +36,36 @@ router.post('/send_notifications', function(req, res, next) {
     }
 
     let notification = new Notification({
-        id_patient: id_patient,
-        type: type,
-        date: date,
+	date: date,
+        notification_seen: false
     })
+
+    notification.id_patient = req.body.id_patient
+    notification.type = req.body.type
 
     notification.save()
     .then(notification => {
-        res.send({"status": 201, "id_patient": notification.id_patient})
+        res.status(200).send({'id': notification._id,'id_patient': notification.id_patient})
         //socket.notificationWasUpdated()
     }).catch(e => {
-        res.send({"status": 400})
+        res.status(400).send("Error")
+	return
     })
 })
 
-router.put('/:id_patient', async function(req, res, next) {
-    let notification_seen = req.body.notification_seen
+router.put('/:id', function(req, res, next) {
 
-    if (!notification_seen) {
-        res.status(400).send({ 'message': 'ERROR: Notification seen missing' })
-        return
+    Notification.findByIdAndUpdate(req.params.id,{
+
+    $set: {
+	notification_seen : true
     }
-
-    Notification.findByIdAndUpdate(req.params.id_patient,{
-        $set: {
-            preferences: req.body
-        }
+    
     }).then(u => {
-        res.status(200).send({'message': 'Notification status changed'})
+        res.status(200).send({'message': 'Notification readed'})
     }).catch(e => {
         res.send({"status": 400})
+	return
     })
 
 })
