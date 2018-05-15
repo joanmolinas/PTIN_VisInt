@@ -7,6 +7,12 @@ socket = require("../handlers/socket-handler")
 service = require("../handlers/token-service")
 
 router.get('/:id', function(req, res, next){
+    
+    if(req.params.id == 'count') { 
+        next()
+        return
+    }
+
     let query = url.parse(req.url, true).query
     let dict = {}
     let filter = ''
@@ -14,7 +20,8 @@ router.get('/:id', function(req, res, next){
         let arr = query.fields.replace("[",'').replace("]",'').split(',') //TODO: Improve it, this is a shit
         filter = arr.join('')
     }
-
+    
+    return 
     Promise.all([
         Device.findById(req.params.id).select(filter),
         DeviceInformation.findOne({'id_device': req.params.id}, {'info': {'$slice': -1}})
@@ -26,9 +33,21 @@ router.get('/:id', function(req, res, next){
     })
 })
 
+router.get('/count', (req, res, next) => {
+    let size = req.query.size || 20
+    console.log(size)
+    Device.find().count()
+    .then(doc => {
+        res.status(200).send({count: Math.round(doc/size)})
+    })
+    .catch(e => {
+        res.status(500).send('Internal server errorxw')
+    })
+})
+
 router.get('/', function(req, res, next){
     let query = url.parse(req.url, true).query
-    let size = parseInt(query.size || 3)
+    let size = parseInt(query.size || 20)
     let page = parseInt(query.page || 1)
     delete query.size
     delete query.page
@@ -45,7 +64,6 @@ router.get('/', function(req, res, next){
     }
     let response = []
 
-    // let prom = Device.find(query).sort({modificationDate: -1}).limit(size).select(filter)
     let prom = Device.paginate(query, {page: page, limit: size, sort: { modificationDate: -1}, select: filter})
     .then(docs => {
         let doc = docs.docs
