@@ -1,4 +1,4 @@
-# VisualitzaciÛ i interacciÛ
+# Visualitzaci√≥ i interacci√≥
 
 **API Endpoint**
 
@@ -30,26 +30,18 @@ POST: /auth/signin
 ```json
 {
 	"data": {
-        
 	  "preferences": {
-
             "language": 1
-
         },
-
         "_id": "5ae9d5be797d51120ee1a059",
-
         "username": "my_new_user",
         "password": 
 "$2b$10$BXJjxJdDs8P6LchLm9xNrOlH2Xtb8GNhiTOZqTIWIJ3r4fsWFyxYm",
-
         "__v": 0,
-
         "token":
 "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YWU5ZDViZTc5N2Q1MTE
 yMGVlMWEwNTkiLCJpYXQiOjE1MjUyNzQwNDcsImV4cCI6MTUzMDQ1ODA0N
 30.GA6rN_DiN7LJPeZwh0GjsNjgxT3Pt1nnZueySrSU4p4"
-
     }
 }
 ```
@@ -81,26 +73,16 @@ POST: /auth/signup
 ```json
 {
 	"data": {
-        
 	  "preferences": {
-
             "language": 1
-
         },
-
         "_id": "5ae9d5be797d51120ee1a059",
-
         "username": "my_new_user",
         "password": 
 "$2b$10$BXJjxJdDs8P6LchLm9xNrOlH2Xtb8GNhiTOZqTIWIJ3r4fsWFyxYm",
-
         "__v": 0,
-
         "token":
-"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YWU5ZDViZTc5N2Q1MTE
-yMGVlMWEwNTkiLCJpYXQiOjE1MjUyNzQwNDcsImV4cCI6MTUzMDQ1ODA0N
-30.GA6rN_DiN7LJPeZwh0GjsNjgxT3Pt1nnZueySrSU4p4"
-
+"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YWU5ZDViZTc5N2Q1MTEyMGVlMWEwNTkiLCJpYXQiOjE1MjUyNzQwNDcsImV4cCI6MTUzMDQ1ODA0N30.GA6rN_DiN7LJPeZwh0GjsNjgxT3Pt1nnZueySrSU4p4"
     }
 }
 ```
@@ -127,7 +109,7 @@ You must provide a valid token at the window "Authorithation" in Postman
 }
 ```
 
-Note: language = 1 = catal‡
+Note: language = 1 = catal√†
       language = 2 = castellano
       language = 3 = english
       language by default is 1
@@ -136,18 +118,14 @@ Note: language = 1 = catal‡
 **OK**
 ```json
 {
-    
 	"message": "Preferences changed"
-
 }
 ```
 
 **ERROR**
 ```json
 {
-    
 	"message": "Invalid language"
-
 }
 ```
 
