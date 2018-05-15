@@ -22,7 +22,7 @@ window.addEventListener('load', function () {
     new Vue({
         el: '#vue',
         data: {
-            base_url_api: 'https://ptin2018.herokuapp.com/api/',
+            base_url_api: /*'https://ptin2018.herokuapp.com/api/',*/ 'http://localhost:3000/api/',
             devices_column1: [],
             devices_column2: [],
             selected_device: '',
@@ -39,11 +39,12 @@ window.addEventListener('load', function () {
             deviceInfo:[],
             deviceAtributes:[],
             deviceSensors:[],
-            atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active"],
-            atributesTraductionNames:["Latitud","Longitud","Creación","Nombre","Identificador","Modificación","Tipo","Activo",],
+            
             min_length_filter: 3,
 
             trans: [],
+            atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active"],
+            atributesTraductionNames:[],
             debug: false,
             //Colors
             gray:"rgb(125, 134, 134)",
@@ -51,7 +52,9 @@ window.addEventListener('load', function () {
             yellow:"rgb(220, 241, 28)",
             blue:"rgb(0, 140, 255,1)",
             green:"rgb(7, 112, 7)",
-            lightblue:"rgb(45, 231, 245)"
+            lightblue:"rgb(45, 231, 245)",
+            notifications:["1","2","3","4","5"],
+            page:1
 
     
         },
@@ -70,8 +73,8 @@ window.addEventListener('load', function () {
              */
             getDevices: function () {
                 let self = this
-
-                axios.get(this.base_url_api + 'devices').then(function (response) {
+               
+                axios.get(this.base_url_api + 'devices?page='+self.page+'&size=14').then(function (response) {
                     self.devices = response.data
                     self.devices.filter(function(device) {
                         return device.lastInfo != null || device.lastInfo != undefined
@@ -102,9 +105,13 @@ window.addEventListener('load', function () {
              */
             removeDevicesFromList: function () {
                 devices = document.getElementById("devices-list")
-
+                this.page=1
+                let source = this.vectorLayer.getSource();
+                source.clear()              
+                
                 devices.getElementsByClassName("col-md-6")[0].innerHTML = ''
                 devices.getElementsByClassName("col-md-6")[1].innerHTML = ''
+               
             },
 
             /**
@@ -123,7 +130,7 @@ window.addEventListener('load', function () {
                     let self = this
                     setTimeout(function(){
                         let query = self.base_url_api + 'devices/?'
-
+                        
                         if(self.filter_text.length >= self.min_length_filter){
                             query += 'name=' + self.filter_text
                         }
@@ -131,7 +138,7 @@ window.addEventListener('load', function () {
                             query += '&type=' + self.device_type
 
                         if(self.debug) console.log(query)
-
+                        
                         axios.get(query).then(function(response){
                             self.removeDevicesFromList()
                             self.devices = response.data
@@ -350,12 +357,12 @@ window.addEventListener('load', function () {
             drawDevices: function () {
                 let self = this
 
-
+                let devices=self.devices_column1.concat(self.devices_column2)
                     //Defining variables for compute the average center
                    /* let i=0
                     let latitudeCenter=0
                     let longitudeCenter=0*/
-                    self.devices.forEach(function (device) {
+                    devices.forEach(function (device) {
 
                         if (device.lastInfo) {
                             if((device.lastInfo[0].latitude)&&(device.lastInfo[0].longitude)){
@@ -490,6 +497,7 @@ window.addEventListener('load', function () {
                                }
                             }
                             self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                            
                             self.deviceInfo.push(self.selected_device[k])
                             self.deviceAtributes.push(self.deviceInfo)
                             self.deviceInfo=[]
@@ -498,7 +506,7 @@ window.addEventListener('load', function () {
                     }
 
                 })
-
+                
                 if(self.selected_device.lastInfo){
                     //Get array with the keys of diferent Sensors parameters
                     let keysSensors=Object.keys(self.selected_device.lastInfo)
@@ -567,11 +575,13 @@ window.addEventListener('load', function () {
                         self.trans = trans_string.data
                         console.log("language file: " + trans_file)
                         console.log("Website language: " + localStorage.language)
+                        self.atributesTraductionNames=[self.trans["latitude"],self.trans["longitude"],self.trans["creationDate"],self.trans["name"],self.trans["_id"],self.trans["modificationDate"],self.trans["type"],self.trans["active"]]
+                        
                     }).catch( function(error){
                         console.log(error.message)
-                    })    
+                    })  
                 }
-            
+               
             },
 
             /**
@@ -646,6 +656,16 @@ window.addEventListener('load', function () {
                 let langlist = document.getElementById(layer).style
                 langlist.display = langlist.display == "block" ? "none" : "block"
             },
+            toggleNotifies: function(){
+                let notify = document.getElementById("notifications").style
+                
+                if(notify.display ==="none"){
+                    notify.display="block"
+                }else{
+                    notify.display="none"
+                }
+               
+            },
 
             /**
              * @author ncarmona
@@ -669,6 +689,33 @@ window.addEventListener('load', function () {
                     iconToggle.remove("fa-list-alt")
                     iconToggle.add("fa-map")                
                 }
+            },
+            newDevicePage:function(){
+                let devicelist = document.getElementById("devices-list")
+                
+                if(devicelist.scrollHeight-devicelist.scrollTop===devicelist.clientHeight){
+                    this.page=this.page+1
+                    if((this.devices_column1.length+this.devices_column2.length)>=10){
+                        while((this.devices_column1.length+this.devices_column2.length)>=10){
+                            this.devices_column1.pop(0)
+                            this.devices_column2.pop(0)
+                        }
+                    }
+                   
+                    devices = document.getElementById("devices-list")
+                    let source = this.vectorLayer.getSource();
+                    source.clear()              
+                    
+                    devices.getElementsByClassName("col-md-6")[0].innerHTML = ''
+                    devices.getElementsByClassName("col-md-6")[1].innerHTML = ''
+                    this.getDevices()
+                    console.log(this.devices_column1.length+this.devices_column2.length)
+                }
+            },
+            selectNotify:function(){
+                 document.getElementById("circleView").style.backgroundColor="rgb(255,255,255)"
+                document.getElementById("circleView").style.color="rgb(45, 138, 245)"
+                
             }
 
         }

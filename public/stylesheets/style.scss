@@ -107,7 +107,31 @@ body {
         
       }
 }      
-
+      #notifications{
+        display: none;
+       
+          
+        #notification{
+            border:1px solid #ccc;
+            background-color: white;
+            font-size: 15px;
+            color: #ccc;
+            border-bottom: 1px solid #ccc;
+            margin:3px;
+            text-align: center;
+          }
+          
+           
+            #circleView{
+              
+              margin-top:2px;
+              background-color:red;
+              color:red;
+            
+          }
+         
+        
+      }
       #lang-list {
         display: none;
         position: relative;

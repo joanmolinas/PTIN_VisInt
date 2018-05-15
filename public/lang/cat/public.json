@@ -20,5 +20,14 @@
     "weather": "Sensor de ",
     "air_quality": "Sensor de qualitat de l'aire",
     "information": "Informació",
-    "sensors": "Sensors"
+    "sensors": "Sensors",
+    "latitude":"Latitud",
+    "longitude":"Longitud",
+    "creationDate":"Creació",
+    "name":"Nom",
+    "_id":"Identificador",
+    "modificationDate":"Modificació",
+    "type":"Tipus",
+    "active":"Actiu"
+           
 }
