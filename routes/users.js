@@ -16,6 +16,21 @@ router.get('/:id', function(req, res, next) {
     })
 });
 
+//Get all users
+router.get('/', function(req, res, next) {
+    try{
+    User.find({}, function(err, users) {
+        var userMap = {};
+
+        users.forEach(function(user) {
+            userMap[user._id] = user;
+        });
+        res.status(200).send(userMap);
+    });
+    }catch(err){
+        cres.status(500).send({"message": 'ERROR Something went wrong', err})
+    }
+});
 
 router.put('/:id', service.ensureUserAuthenticated, async function(req, res, next) {
 	if (!req.body.username || !req.body.password || !req.body.language) {
