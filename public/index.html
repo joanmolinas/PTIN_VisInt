@@ -36,7 +36,7 @@
   <!-- Socket io -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
-  var socket = io.connect('http://localhost:3000', { query: "id=1234" });
+  var socket = io.connect('https://ptin2018.herokuapp.com', { query: "id=1234" });
   socket.on('refreshDevicesTable', function() {
       console.log('refresh')
       document.getElementById("inici").click()
