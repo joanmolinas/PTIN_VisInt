@@ -4,30 +4,54 @@ let sockets = {}
 
 function connect(http) {
     io = require('socket.io')(http);
-
+       
     io.on('connection', (socket) => {
-        console.log('Webpage connected')
-        console.log(socket)
-        // listenAlarm(socket)
+        console.log('Device connected')
+        let dId = socket.handshake.query['id']
+        if (dId) { sockets[dId] = socket }
+        onDisconnect(socket)
+        alarm(socket)
     })
 }
 
-function listenAlarm(socket) {
-    socket.on('alarm', (type) => {
-        console.log(type)
+function onDisconnect(socket) {
+    socket.on('disconnect', () => {
+        console.log("disconnect")
+        console.log(socket.id)
+        delete sockets[socket.id]
+        console.log(sockets)
     })
 }
 
-function emitShutdown(clientID) {
-    // io.emit("shutdown", )
+function alarm(socket) {
+    socket.on('alarm', () => {
+        console.log("He rebut una alarma")
+    })
 }
 
 function deviceWasUpdated() {
     io.emit('refreshDevicesTable', { for: 'everyone' });
 }
 
+function emitShutdown(clientID) {
+    let socket = sockets[clientID]
+    if (socket) socket.emit('shutdown')
+}
+
+function emitToDoctor(clientID, message) {
+    let socket = sockets[clientID]
+    if (socket) socket.emit('pacientLocation', message)
+}
+
+function emitToPacient(clientID, message) {
+    let socket = sockets[clientID]
+    if (socket) socket.emit('location', message)
+}
+
 module.exports = {
     connect,
     deviceWasUpdated,
-    emitShutdown
+    emitShutdown,
+    emitToDoctor,
+    emitToPacient
 }

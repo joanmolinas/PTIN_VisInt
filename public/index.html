@@ -33,19 +33,32 @@
   <link rel="stylesheet" href="stylesheets/style.css" />
   <script src="javascripts/visint.js"></script>
 
-  <!-- Socket io 
+  <!-- Socket io -->
   <script src="/socket.io/socket.io.js"></script>
-  var socket = io();
+  <script>
+  var socket = io.connect('http://localhost:3000', { query: "id=1234" });
   socket.on('refreshDevicesTable', function() {
       console.log('refresh')
-     
       document.getElementById("inici").click()
      
      $("device").load(location.href+" device>*","");
   })
-</script> 
 
-  End socket io -->
+  socket.on('shutdown', () => {
+    console.log('shutdown received')
+  })
+
+  socket.on('pacientLocation', (data) => {
+    console.log('Data received ' + data.location.latitude)
+  })
+
+    socket.on('location', (data) => {
+    console.log('Data received ' + data.location.latitude)
+  })
+  
+</script>
+
+ <!-- End socket io -->
 </head>
 
 <body>
@@ -60,9 +73,15 @@
                 <i class="fas fa-bars"></i>
               </a>
               <div id="responsive-menu">
-                <a href="#"> <i class="fas fa-home icon"></i> {{trans['home_icon']}}</a>
-                <a href="#"> <i class="fas fa-bell icon"></i> {{trans['notifications_icon']}} <i class="fas fa-caret-down"></i></a>
-                <a href="#"> <i class="fas fa-language icon"></i> {{trans['language_icon']}}</i></a>
+                <a href="#">
+                  <i class="fas fa-home icon"></i> {{trans['home_icon']}}</a>
+                <a href="#">
+                  <i class="fas fa-bell icon"></i> {{trans['notifications_icon']}}
+                  <i class="fas fa-caret-down"></i>
+                </a>
+                <a href="#">
+                  <i class="fas fa-language icon"></i> {{trans['language_icon']}}</i>
+                </a>
                 <a href="#" title="Mostra la web en català" v-on:click="toggleLanguage('cat')">
                   <img src="images/catalonia.png" />Català</a>
                 <a href="#" title="Display the website in english" v-on:click="toggleLanguage('en')">
@@ -72,59 +91,100 @@
 
               </div>
             </span>
-              <a href="/" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
-                <i class="fas fa-home"></i>
+            <a href="/" v-on:click="refreshDevices" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
+              <i class="fas fa-home"></i>
+            </a>
+            <span id="settings" class="pull-right">
+              <a href="#" id="mobilFilterIcon" class="hidden-lg hidden-md" v-on:click="toggleMenu('filterMobile')">
+                <i class="fas fa-search"></i>
               </a>
-              <span id="settings" class="pull-right">
-                    <a href="#" id="mobilFilterIcon" class="hidden-lg hidden-md" v-on:click="toggleMenu('filterMobile')">
-                        <i class="fas fa-search"></i>
-                      </a>
-                      <a href="#" class="hidden-lg hidden-md" v-on:click="toggleMap">
-                          <i class="fas fa-list-alt" id="displaySidebarMap"></i>
-                        </a>
-                <a href="#" v-bind:title="trans['notifications_icon']" class="hidden-xs hidden-sm">
+              <a href="#" class="hidden-lg hidden-md" v-on:click="toggleMap">
+                <i class="fas fa-list-alt" id="displaySidebarMap"></i>
+              </a>
+              <span class="hidden-xs hidden-sm dropdown">
+                <a href="#" v-bind:title="trans['notifications_icon']" v-on:click="toggleNotifies" class="dropdown-toggle" data-toggle="dropdown">
                   <i class="fas fa-bell"></i>
                   <sup class="no-notification">0</sup>
-                </a>
-                <span class="hidden-xs hidden-sm">
-                  <a href="#" v-bind:title="trans['language_icon']" v-on:click="toggleMenu('lang-list')" style="margin-right:15px;">
-                    <i class="fas fa-language"></i>
-                    <i class="fas fa-caret-down" style="font-size: 15px;"></i>
-                  </a>
-                  <div id="lang-list">
-                    <nav>
-                      <a href="#" title="Mostra la web en català" v-on:click="toggleLanguage('cat')">
-                        <img src="images/catalonia.png" />Català</a>
-                      <a href="#" title="Display the website in english" v-on:click="toggleLanguage('en')">
-                        <img src="images/gb.png">English</a>
-                      <a href="#" class="selected-lang" title="Muestra la web en castellano." v-on:click="toggleLanguage('es')">
-                        <img src="images/es.png" />Español</a>
-                    </nav>
-                  </div>
-                </span>
-              </span>
-                <div id="filterMobile" class="dropdown-menu pull-right">
-                  <!-- filter textbox -->
-                  <div class="col-md-6 filter-input">
-                    <input type="text" v-on:keyup="filterByText" v-model="filter_text" v-bind:placeholder="trans['filter_device']" />
-                    <i class="fas fa-search pull-right filter-search-icon"></i>
-                  </div>
-                  <div>
-                    <select id="type" v-model="device_type" v-on:change="filterByType" v-on:keyup="filterByType" class="col-md-5 filter-input">
-                      <option value="">{{trans['filter_device_by_type']}}</option>
-                      <option value="1">{{trans['doctor']}}</option>
-                      <option value="2">{{trans['ambulance']}}</option>
-                      <option value="3">{{trans['smoke']}}</option>
-                      <option value="4">{{trans['weather']}}</option>
-                      <option value="4">{{trans['air_quality']}}</option>
-                    </select>
-                    <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
-                      <i class="fas fa-angle-double-left"></i>
-                    </a>
-                  </div>
-                </div>
 
+                </a>
+                <div id="notifications" class="dropdown-menu">
+
+                  <div id="notification" class="row" v-for="notify in notifications" v-on:click="selectNotify">
+                    <div class="col-xs-1 ">
+                      <span class="row"></span>
+                      <i id="circleView" class="row fas fa-dot-circle img-circle  center-bloc"></i>
+                      <span class="row"></span>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="row">
+                        <div class="col-xs-2">
+                            tip
+                        </div>
+                        <div class="col-xs-2">
+                          fads
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-xs-2">
+                              tip
+                          </div>
+                          <div class="col-xs-2">
+                            fads
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2">
+                                tip
+                            </div>
+                            <div class="col-xs-2">
+                              fads
+                              </div>
+                          </div>
+                    </div>
+                  </div>
+
+                </div>
               </span>
+              <span class="hidden-xs hidden-sm">
+                <a href="#" v-bind:title="trans['language_icon']" v-on:click="toggleMenu('lang-list')" style="margin-right:15px;">
+                  <i class="fas fa-language"></i>
+                  <i class="fas fa-caret-down" style="font-size: 15px;"></i>
+                </a>
+                <div id="lang-list">
+                  <nav>
+                    <a href="#" title="Mostra la web en català" v-on:click="toggleLanguage('cat')">
+                      <img src="images/catalonia.png" />Català</a>
+                    <a href="#" title="Display the website in english" v-on:click="toggleLanguage('en')">
+                      <img src="images/gb.png">English</a>
+                    <a href="#" class="selected-lang" title="Muestra la web en castellano." v-on:click="toggleLanguage('es')">
+                      <img src="images/es.png" />Español</a>
+                  </nav>
+                </div>
+              </span>
+            </span>
+            <div id="filterMobile" class="dropdown-menu pull-right">
+              <!-- filter textbox -->
+              <div class="col-md-6 filter-input">
+                <input type="text" v-on:keyup="filterByText" v-model="filter_text" v-bind:placeholder="trans['filter_device']" />
+                <i class="fas fa-search pull-right filter-search-icon"></i>
+              </div>
+              <div>
+                <select id="type" v-model="device_type" v-on:change="filterByType" v-on:keyup="filterByType" class="col-md-5 filter-input">
+                  <option value="">{{trans['filter_device_by_type']}}</option>
+                  <option value="1">{{trans['doctor']}}</option>
+                  <option value="2">{{trans['ambulance']}}</option>
+                  <option value="3">{{trans['smoke']}}</option>
+                  <option value="4">{{trans['weather']}}</option>
+                  <option value="4">{{trans['air_quality']}}</option>
+                </select>
+                <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
+                  <i class="fas fa-angle-double-left"></i>
+                </a>
+              </div>
+
+            </div>
+
+            </span>
             </span>
           </nav>
         </div>
@@ -162,7 +222,7 @@
               </div>
             </div>
 
-            <div id="devices-list">
+            <div id="devices-list" v-on:scroll="newDevicePage">
               <div class="row">
                 <div class="col-md-6">
                   <div class="device" v-for="device in devices_column1" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
