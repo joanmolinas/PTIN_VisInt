@@ -65,23 +65,6 @@ router.get('/', function(req, res, next){
 
     let prom = Device.paginate(query, {page: page, limit: size, sort: { modificationDate: -1}, select: filter})
     .then(docs => {
-        // let doc = docs.docs
-        // let count = 0
-        // if (doc.length == 0) { res.status(200).send([]) }
-
-        // doc.forEach(u => {
-        //     DeviceInformation.findOne({'id_device': u._id}, {'info': {'$slice': -1}})
-        //     .then(info => {
-        //         if(info) u.lastInfo = info.info
-        //         response.push(u)
-
-        //         // TODO: Improve this shit, wait to finish all promises
-        //         if (++count == doc.length) res.status(200).send(response)
-        //     })
-        //     .catch(e => {
-        //         console.log(e)
-        //     })
-        // })
         res.status(200).send(docs)
     })
     .catch(e => {
