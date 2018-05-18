@@ -25,7 +25,7 @@ router.get('/', function(req, res, next) {
     delete query.page
 
 
-    let prom = Device.paginate(query, {page: page, limit: size})
+    let prom = User.paginate(query, {page: page, limit: size})
     .then(docs => {
         res.status(200).send(docs)
     })
