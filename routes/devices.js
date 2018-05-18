@@ -62,28 +62,27 @@ router.get('/', function(req, res, next){
         filter = arr.join('')
         delete query.fields
     }
-    let response = []
 
     let prom = Device.paginate(query, {page: page, limit: size, sort: { modificationDate: -1}, select: filter})
     .then(docs => {
-        let doc = docs.docs
-        console.log(docs)
-        let count = 0
-        if (doc.length == 0) { res.statis(200).send([]) }
+        // let doc = docs.docs
+        // let count = 0
+        // if (doc.length == 0) { res.status(200).send([]) }
 
-        doc.forEach(u => {
-            DeviceInformation.findOne({'id_device': u._id}, {'info': {'$slice': -1}})
-            .then(info => {
-                if(info) u.lastInfo = info.info
-                response.push(u)
+        // doc.forEach(u => {
+        //     DeviceInformation.findOne({'id_device': u._id}, {'info': {'$slice': -1}})
+        //     .then(info => {
+        //         if(info) u.lastInfo = info.info
+        //         response.push(u)
 
-                // TODO: Improve this shit, wait to finish all promises
-                if (++count == doc.length) res.status(200).send(response)
-            })
-            .catch(e => {
-                console.log(e)
-            })
-        })
+        //         // TODO: Improve this shit, wait to finish all promises
+        //         if (++count == doc.length) res.status(200).send(response)
+        //     })
+        //     .catch(e => {
+        //         console.log(e)
+        //     })
+        // })
+        res.status(200).send(docs)
     })
     .catch(e => {
         console.log(e)
@@ -140,7 +139,8 @@ router.put('/:id/info', service.ensureDeviceAuthenticated, function(req, res, bo
     	if (!device.enabled){
     		res.status(400).send({"message": 'Device is not enabled'})
     		return
-    	}
+        }
+        
         DeviceInformation.findOneAndUpdate({'id_device': device._id}, {
             $push: {
                 info: req.body
@@ -148,28 +148,31 @@ router.put('/:id/info', service.ensureDeviceAuthenticated, function(req, res, bo
         })
         .then(doc => {
             if (!doc) {
-                // Schema create cause didn't exists before
                 let schema = new DeviceInformation({ id_device: req.params.id, info: [ req.body ] })
 
                 schema.save()
                 .then(doc => {
-                    res.send({'status': 201})
+                    device.lastInfo = req.body;
+                    device.save()
+                    res.status(201).send({'message': 'Information added to device'})
                     socket.deviceWasUpdated()
                 })
                 .catch(e => {
-                    res.send({'status': 400})
+                    res.status(500).send({'message': 'Internal server error'})
                 })
             } else {
-                res.send({'status': 200})
+                device.lastInfo = req.body;
+                device.save()
+                res.status(200).send({'message': 'Device information updated'})
                 socket.deviceWasUpdated()
             }
         })
         .catch(e => {
-            res.send({'status': 400})
+            res.status(500).send({'message': 'Internal server error'})
         })
     })
     .catch(e => {
-        res.send({'status': 500})
+        res.status(500).send({'message': 'Internal server error'})
 
     })
 })
