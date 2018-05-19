@@ -28,5 +28,7 @@
         "_id":"Identificador",
         "modificationDate":"Modificacion",
         "type":"Tipo",
-        "active":"Activo"
+        "active":"Activo",
+        "Notifydate":"Fecha",
+        "Notifytype":"Tipo"
 }
