@@ -28,5 +28,7 @@
     "_id":"Identifier",
     "modificationDate":"Modification",
     "type":"Type",
-    "active":"Active"
+    "active":"Active",
+    "Notifydate":"Date",
+    "Notifytype":"Type"
 }

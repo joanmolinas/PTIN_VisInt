@@ -22,7 +22,7 @@ window.addEventListener('load', function () {
     new Vue({
         el: '#vue',
         data: {
-            base_url_api: /*'https://ptin2018.herokuapp.com/api/',*/ 'http://localhost:3000/api/',
+            base_url_api: /*'https://ptin2018.herokuapp.com/api/', */'http://localhost:3000/api/',
             devices_column1: [],
             devices_column2: [],
             selected_device: '',
@@ -41,7 +41,7 @@ window.addEventListener('load', function () {
             deviceSensors:[],
             
             min_length_filter: 3,
-
+            nots,
             trans: [],
             atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active"],
             atributesTraductionNames:[],
@@ -53,7 +53,7 @@ window.addEventListener('load', function () {
             blue:"rgb(0, 140, 255,1)",
             green:"rgb(7, 112, 7)",
             lightblue:"rgb(45, 231, 245)",
-            notifications:["1","2","3","4","5"],
+            notifications:[],//[{'_id':"1",'date':"26012018",'type':"General"},{'_id':"2",'date':"27012018",'type':"General"},{'_id':"3",'date':"28012018",'type':"General"}],
             page:1
 
     
@@ -62,6 +62,7 @@ window.addEventListener('load', function () {
             this.loadMap()
             this.getLanguage()
             this.getDevices()
+           this.loadNotifications()
             console.log('Usuario: ' + localStorage.username)
         },
         methods: {
@@ -712,11 +713,29 @@ window.addEventListener('load', function () {
                     console.log(this.devices_column1.length+this.devices_column2.length)
                 }
             },
-            selectNotify:function(){
-                 document.getElementById("circleView").style.backgroundColor="rgb(255,255,255)"
-                document.getElementById("circleView").style.color="rgb(45, 138, 245)"
+            loadNotifications(){
+                let self=this
+                
+                axios.get(this.base_url_api + 'notifications/').then(function (response) {
+                     self.nots=response.data
+                     self.nots.forEach(function (not){
+                        self.notifications.push(not)
+                                
+                        document.getElementById(not._id).style.backgroundColor="#ccc"
+                     })
+                    }).catch( function(error){
+                        console.log(error.message)
+                    })
+            },
+            selectNotify:function(notify){
+                console.log(notify)
+                 document.getElementById(notify._id).style.backgroundColor="white"
+
+                 
+                
                 
             }
+
 
         }
 
