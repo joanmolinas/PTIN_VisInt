@@ -63,6 +63,10 @@ router.get('/', function(req, res, next){
         delete query.fields
     }
 
+    if (Object.keys(query).length !== 0) {
+        query.lastInfo = { $elemMatch: req.body}
+    }
+
     let prom = Device.paginate(query, {page: page, limit: size, sort: { modificationDate: -1}, select: filter})
     .then(docs => {
         res.status(200).send(docs)
