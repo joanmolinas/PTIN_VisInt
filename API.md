@@ -289,7 +289,30 @@ Backend is listening forever to a client sockets connection on this endpoint. On
 You don't need any port or similar to connect, just using the url. We encourage you to use a socket.io python library to connect with backend service. This kind of libraries are build on top of socket services and will handle connections and errors.
 
 ### Send notifications to backend
-This section will explain how to send notifications to backend from the devices 
+
+This section will explain how to send notifications to backend from the devices. 
+
+At the moment we have 4 types of notifications: 
+
+- Fire notification
+- Heart attack notification
+- High temperature notification
+- Low temperature notification
+
+All you have to do is go to a socketIO client tool (http://amritb.github.io/socketio-client-tool/) and:
+
+1. At field Socket.io server URL you must write the URL https://ptin2018.herokuapp.com then click "Connect".
+
+2. Go to the option "Emiting". At field "Event name" you must write one of the four types of notifications that we mentioned before. If you want to send a fire notification you must write just "fire", without the quotes. "heart_attack" for Heart attack notification, "high_temp" and "low_temp" for high/low temperature notifications.
+
+3. At "Data: plaintext" field you must write whatever you want, it doesn't matter.
+
+4. Click "Emit" button and you have sent the notification.
+
+
+You can also send notifications to backend with a script. You should do the same as before but with code, using socketIO library.
+
+You have an example of a script made in Python in https://github.com/ulidev/PTIN_VisInt/edit/develop/
 
 ### Receive messages from the backend
 

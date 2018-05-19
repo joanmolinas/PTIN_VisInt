@@ -10,27 +10,56 @@ function connect(http) {
         let dId = socket.handshake.query['id']
         if (dId) { sockets[dId] = socket }
         onDisconnect(socket)
-        alarm(socket)
+	fire(socket)
+	heart_attack(socket)
+	high_temp(socket)
+	low_temp(socket)
     })
 }
 
 function onDisconnect(socket) {
     socket.on('disconnect', () => {
-        console.log("disconnect")
         console.log(socket.id)
         delete sockets[socket.id]
         console.log(sockets)
     })
 }
 
-function alarm(socket) {
-    socket.on('alarm', () => {
-        console.log("He rebut una alarma")
+// listen and receive fire notification
+function fire(socket) {
+    socket.on('fire', () => {
+        console.log('Fire notification received')
     })
 }
 
+// listen and receive heart attack notification
+function heart_attack(socket) {
+    socket.on('heart_attack', () => {
+	console.log('Heart atack notification received')
+    })
+}
+
+// listen and receive high temperature notification
+function high_temp(socket) {
+    socket.on('high_temp', () => {
+	console.log('High temperature notification received')
+    })
+}
+
+// listen and receive low temperature notification
+function low_temp(socket) {
+    socket.on('low_temp', () => {
+	console.log('Low temperature notification received')
+    })
+} 
+
 function deviceWasUpdated() {
     io.emit('refreshDevicesTable', { for: 'everyone' });
+}
+
+// nil
+function notificationWasUpdated() {
+    io.emit('refreshNotificationsTable', { for: 'everyone' });
 }
 
 function emitShutdown(clientID) {
@@ -51,6 +80,7 @@ function emitToPacient(clientID, message) {
 module.exports = {
     connect,
     deviceWasUpdated,
+    notificationWasUpdated,
     emitShutdown,
     emitToDoctor,
     emitToPacient

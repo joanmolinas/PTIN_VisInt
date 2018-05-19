@@ -108,42 +108,22 @@
 
                 </a>
                 <div id="notifications" class="dropdown-menu">
+                  <div class=" notify" v-for="notify in notifications" v-bind:id="notify._id" v-on:click="selectNotify(notify)">
+                    <div style="cursor: pointer;">
+                      <p>
+                          {{trans['Notifydate']}}:
+                        <strong>{{notify.date}}</strong>
+                      </p>
+                      <p>
+                        {{trans['Notifytype']}}:
+                        <strong>{{notify.type}}</strong>
+                      </p>
+                     </div>
 
-                  <div id="notification" class="row" v-for="notify in notifications" v-on:click="selectNotify">
-                    <div class="col-xs-1 ">
-                      <span class="row"></span>
-                      <i id="circleView" class="row fas fa-dot-circle img-circle  center-bloc"></i>
-                      <span class="row"></span>
-                    </div>
-                    <div class="col-md-8">
-                      <div class="row">
-                        <div class="col-xs-2">
-                            tip
-                        </div>
-                        <div class="col-xs-2">
-                          fads
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-xs-2">
-                              tip
-                          </div>
-                          <div class="col-xs-2">
-                            fads
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-2">
-                                tip
-                            </div>
-                            <div class="col-xs-2">
-                              fads
-                              </div>
-                          </div>
-                    </div>
                   </div>
 
                 </div>
+            
               </span>
               <span class="hidden-xs hidden-sm">
                 <a href="#" v-bind:title="trans['language_icon']" v-on:click="toggleMenu('lang-list')" style="margin-right:15px;">

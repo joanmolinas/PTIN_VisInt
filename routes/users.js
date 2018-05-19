@@ -16,6 +16,25 @@ router.get('/:id', function(req, res, next) {
     })
 });
 
+//Get all users
+router.get('/', function(req, res, next) {
+    let query = url.parse(req.url, true).query
+    let size = parseInt(query.size || 20)
+    let page = parseInt(query.page || 1)
+    delete query.size
+    delete query.page
+
+
+    let prom = User.paginate(query, {page: page, limit: size})
+    .then(docs => {
+        res.status(200).send(docs)
+    })
+    .catch(e => {
+        console.log(e)
+        res.status(400).send({})
+  })
+
+});
 
 router.put('/:id', service.ensureUserAuthenticated, async function(req, res, next) {
 	if (!req.body.username || !req.body.password || !req.body.language) {
