@@ -198,7 +198,7 @@ POST: /devices
 
 **Update device**
 ```
-PUT: /devices
+PUT: /devices/:id/info
 ```
 
 ### Request
