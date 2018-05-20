@@ -41,7 +41,7 @@ window.addEventListener('load', function () {
             deviceSensors:[],
             
             min_length_filter: 3,
-            nots,
+            nots:[],
             trans: [],
             atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active"],
             atributesTraductionNames:[],
