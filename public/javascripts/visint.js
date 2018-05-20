@@ -41,7 +41,7 @@ window.addEventListener('load', function () {
             deviceSensors:[],
             
             min_length_filter: 3,
-            nots,
+           
             trans: [],
             atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active"],
             atributesTraductionNames:[],
@@ -659,9 +659,10 @@ window.addEventListener('load', function () {
             },
             toggleNotifies: function(){
                 let notify = document.getElementById("notifications").style
-                
+                let self=this
                 if(notify.display ==="none"){
                     notify.display="block"
+                   
                 }else{
                     notify.display="none"
                 }
@@ -714,22 +715,23 @@ window.addEventListener('load', function () {
                 }
             },
             loadNotifications(){
-                let self=this
+               let self=this
                 
                 axios.get(this.base_url_api + 'notifications/').then(function (response) {
-                     self.nots=response.data
-                     self.nots.forEach(function (not){
-                        self.notifications.push(not)
-                                
-                        document.getElementById(not._id).style.backgroundColor="#ccc"
-                     })
+                     
+                     self.notifications=response.data
+                     
                     }).catch( function(error){
                         console.log(error.message)
                     })
             },
             selectNotify:function(notify){
                 console.log(notify)
-                 document.getElementById(notify._id).style.backgroundColor="white"
+                if(notify.notification_seen==false){
+
+                    document.getElementById(notify._id).style.backgroundColor="white"
+                }
+                
 
                  
                 
