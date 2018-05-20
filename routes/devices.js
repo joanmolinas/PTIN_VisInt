@@ -20,8 +20,7 @@ router.get('/:id', function(req, res, next){
         let arr = query.fields.replace("[",'').replace("]",'').split(',') //TODO: Improve it, this is a shit
         filter = arr.join('')
     }
-    
-    return 
+
     Promise.all([
         Device.findById(req.params.id).select(filter),
         DeviceInformation.findOne({'id_device': req.params.id}, {'info': {'$slice': -1}})
@@ -98,7 +97,8 @@ router.post('/', function(req, res, next) {
     device.save()
     .then(device => {
     	let tok = service.createToken(device)
-    	device.token = tok
+        device.token = tok
+        device.save()
         res.send({"status": 201, "id": device._id, "token": device.token})
         socket.deviceWasUpdated()
     }).catch(e => {
@@ -158,23 +158,19 @@ router.put('/:id/info', service.ensureDeviceAuthenticated, function(req, res, bo
     })
     .catch(e => {
         res.status(500).send({'message': 'Internal server error'})
-
     })
 })
 
 router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
-
     if (!req.body ) {
         res.status(400).send({"message": 'ERROR Fields missing'})
         return
     }
 
+    req.body.modificationDate = new Date().toISOString()
+
     Device.findByIdAndUpdate(req.params.id,{
-        $set: {
-        	modificationDate: new Date(),
-            enabled: req.body.enabled,
-            deleted: req.body.deleted
-        }
+        $set: req.body
     })
     .then(doc => {
     	socket.deviceWasUpdated()
@@ -182,7 +178,6 @@ router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
     })
     .catch(e => {
     	res.status(400).send({"message": 'ERROR Something went wrong'})
-    	return
   })
 })
 
