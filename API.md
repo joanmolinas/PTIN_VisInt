@@ -277,11 +277,21 @@ If you want to receive messages to a device, you must provide your device id as 
 { query: "id=my_fancy_id" }
 ```
 
-**Example with javascript**
+**Examples**
 ```javascript
     // io is a client library from socket.io
     io.connect("http://localhost:3000", { query: "id=1234" });
     
+```
+
+```python
+    from socketIO_client_nexus import SocketIO
+
+    # params is optional. If you want to connect end to end, you must provide a
+    # device token on params. 
+    with SocketIO('https://ptin2018.herokuapp.com', params={'id': '1234'}) as socketIO:
+        socketIO.emit('fire')
+        socketIO.wait(seconds=3)  
 ```
 
 Backend is listening forever to a client sockets connection on this endpoint. Once you have been connect, you can send notifications and receive messages.
@@ -309,9 +319,7 @@ To test these notifications, you can use a third party library. A lot of tools a
 
 4. Click *Emit* button and to send the notificaciton to the server.
 
-You can also send notifications to backend via script. You should do the same as before but with code, using socketIO library.
-
-You have an example of a script made in Python in https://github.com/ulidev/PTIN_VisInt/edit/develop/
+You can also send notifications to backend via script. You should do the same as before but with code, using socketIO library (https://github.com/nexus-devs/socketIO-client-2.0.3).
 
 ### Receive messages from the backend
 

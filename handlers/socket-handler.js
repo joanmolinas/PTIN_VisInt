@@ -8,20 +8,19 @@ function connect(http) {
     io.on('connection', (socket) => {
         console.log('Device connected')
         let dId = socket.handshake.query['id']
+        console.log(dId)
         if (dId) { sockets[dId] = socket }
         onDisconnect(socket)
-	fire(socket)
-	heart_attack(socket)
-	high_temp(socket)
-	low_temp(socket)
+        fire(socket)
+        heart_attack(socket)
+        high_temp(socket)
+        low_temp(socket)
     })
 }
 
 function onDisconnect(socket) {
     socket.on('disconnect', () => {
-        console.log(socket.id)
         delete sockets[socket.id]
-        console.log(sockets)
     })
 }
 
@@ -35,21 +34,21 @@ function fire(socket) {
 // listen and receive heart attack notification
 function heart_attack(socket) {
     socket.on('heart_attack', () => {
-	console.log('Heart atack notification received')
+	    console.log('Heart atack notification received')
     })
 }
 
 // listen and receive high temperature notification
 function high_temp(socket) {
     socket.on('high_temp', () => {
-	console.log('High temperature notification received')
+	    console.log('High temperature notification received')
     })
 }
 
 // listen and receive low temperature notification
 function low_temp(socket) {
     socket.on('low_temp', () => {
-	console.log('Low temperature notification received')
+	    console.log('Low temperature notification received')
     })
 } 
 
