@@ -22,7 +22,7 @@ window.addEventListener('load', function () {
     new Vue({
         el: '#vue',
         data: {
-            base_url_api: /*'https://ptin2018.herokuapp.com/api/', */'http://localhost:3000/api/',
+            base_url_api: 'https://ptin2018.herokuapp.com/api/', /*'http://localhost:3000/api/',*/
             devices_column1: [],
             devices_column2: [],
             selected_device: '',
