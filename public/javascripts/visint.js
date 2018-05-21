@@ -75,8 +75,9 @@ window.addEventListener('load', function () {
             getDevices: function () {
                 let self = this
                
-                axios.get(this.base_url_api + 'devices?page='+self.page+'&size=14').then(function (response) {
-                    self.devices = response.data
+                axios.get(this.base_url_api + 'devices?page='+self.page+'&size=40').then(function (response) {
+                    self.devices = response.data.docs
+                    console.log(self.devices)
                     self.devices.filter(function(device) {
                         return device.lastInfo != null || device.lastInfo != undefined
                     }).forEach(function (device, index) {
@@ -366,7 +367,7 @@ window.addEventListener('load', function () {
                     devices.forEach(function (device) {
 
                         if (device.lastInfo) {
-                            if((device.lastInfo[0].latitude)&&(device.lastInfo[0].longitude)){
+                            if((device.lastInfo.latitude)&&(device.lastInfo.longitude)){
                                 //Compute a sum of latituds and a sum of longituds only if the device values are not very diferents from the map center
                                 /*if((device.lastInfo[0].latitude<self.mapCenter[1]+0.1)&&(device.lastInfo[0].latitude>self.mapCenter[1]-0.1)){
 
@@ -381,7 +382,7 @@ window.addEventListener('load', function () {
                                 let source = self.vectorLayer.getSource();
                                 let point=new ol.Feature({
                                     name: device._id,
-                                    geometry: new ol.geom.Point([parseFloat(device.lastInfo[0].longitude), parseFloat(device.lastInfo[0].latitude)])
+                                    geometry: new ol.geom.Point([parseFloat(device.lastInfo.longitude), parseFloat(device.lastInfo.latitude)])
                                     
                                 })
                                 //For each device type is set one style point.
@@ -519,7 +520,7 @@ window.addEventListener('load', function () {
 
                             self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
 
-                            self.deviceInfo.push( self.deviceInfo.push(self.selected_device.lastInfo[k]))
+                            self.deviceInfo.push( self.deviceInfo.push(self.selected_device.lastInfo))
                             self.deviceSensors.push(self.deviceInfo)
                             self.deviceInfo=[]
                         }
@@ -659,9 +660,10 @@ window.addEventListener('load', function () {
             },
             toggleNotifies: function(){
                 let notify = document.getElementById("notifications").style
-                
+                let self=this
                 if(notify.display ==="none"){
                     notify.display="block"
+                   
                 }else{
                     notify.display="none"
                 }
@@ -696,8 +698,8 @@ window.addEventListener('load', function () {
                 
                 if(devicelist.scrollHeight-devicelist.scrollTop===devicelist.clientHeight){
                     this.page=this.page+1
-                    if((this.devices_column1.length+this.devices_column2.length)>=10){
-                        while((this.devices_column1.length+this.devices_column2.length)>=10){
+                    if((this.devices_column1.length+this.devices_column2.length)>=100){
+                        while((this.devices_column1.length+this.devices_column2.length)>=100){
                             this.devices_column1.pop(0)
                             this.devices_column2.pop(0)
                         }
@@ -713,15 +715,20 @@ window.addEventListener('load', function () {
                     console.log(this.devices_column1.length+this.devices_column2.length)
                 }
             },
-            loadNotifications(){
-                let self=this
+            loadNotifications:function (){
+               let self=this
                 
                 axios.get(this.base_url_api + 'notifications/').then(function (response) {
-                     self.nots=response.data
+                    self.notifications=response.data
                      self.nots.forEach(function (not){
                         self.notifications.push(not)
-                                
-                        document.getElementById(not._id).style.backgroundColor="#ccc"
+                        
+                        if(not.notification_seen){
+                            document.getElementById(not._id).style.backgroundColor="white"
+                        }else{
+                            document.getElementById(not._id).style.backgroundColor="#ccc"
+                        }
+                        
                      })
                     }).catch( function(error){
                         console.log(error.message)
@@ -729,7 +736,11 @@ window.addEventListener('load', function () {
             },
             selectNotify:function(notify){
                 console.log(notify)
-                 document.getElementById(notify._id).style.backgroundColor="white"
+                if(notify.notification_seen==false){
+
+                    document.getElementById(notify._id).style.backgroundColor="white"
+                }
+                
 
                  
                 

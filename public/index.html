@@ -212,11 +212,11 @@
                     </p>
                     <p v-if="device.lastInfo">
                       <i class="fas fa-arrows-alt-v"></i> {{trans['device_latitude']}}:
-                      <strong>{{ device.lastInfo[0].latitude }}</strong>
+                      <strong>{{ device.lastInfo.latitude }}</strong>
                     </p>
                     <p v-if="device.lastInfo">
                       <i class="fas fa-arrows-alt-h"></i> {{trans['device_longitude']}}:
-                      <strong>{{ device.lastInfo[0].longitude }}</strong>
+                      <strong>{{ device.lastInfo.longitude }}</strong>
                     </p>
                   </div>
                 </div>
@@ -228,11 +228,11 @@
                     </p>
                     <p>
                       <i class="fas fa-arrows-alt-v"></i> {{trans['device_latitude']}}:
-                      <strong>{{ device.lastInfo[0].latitude }}</strong>
+                      <strong>{{ device.lastInfo.latitude }}</strong>
                     </p>
                     <p>
                       <i class="fas fa-arrows-alt-h"></i> {{trans['device_longitude']}}:
-                      <strong>{{ device.lastInfo[0].longitude }}</strong>
+                      <strong>{{ device.lastInfo.longitude }}</strong>
                     </p>
                   </div>
                 </div>
