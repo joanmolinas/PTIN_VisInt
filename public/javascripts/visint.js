@@ -715,7 +715,7 @@ window.addEventListener('load', function () {
                     console.log(this.devices_column1.length+this.devices_column2.length)
                 }
             },
-            loadNotifications(){
+            loadNotifications:function (){
                let self=this
                 
                 axios.get(this.base_url_api + 'notifications/').then(function (response) {
