@@ -20,16 +20,14 @@ router.get('/:id', function(req, res, next){
         let arr = query.fields.replace("[",'').replace("]",'').split(',') //TODO: Improve it, this is a shit
         filter = arr.join('')
     }
-    
-    return 
-    Promise.all([
-        Device.findById(req.params.id).select(filter),
-        DeviceInformation.findOne({'id_device': req.params.id}, {'info': {'$slice': -1}})
-    ]).then(([device, information]) => {
-        if (information) { device.lastInfo = information.info[0] }
-        res.send(device)
-    }).catch(e => {
-        console.log(e);
+
+    Device.findById(req.params.id).select(filter)
+    .then(dev => {
+        if (!dev) res.status(404).send({message: "device doesn't exists"})
+        else res.status(200).send(dev)
+    })
+    .catch(e => {
+        res.status(500).send({message: 'Internal server error'})
     })
 })
 

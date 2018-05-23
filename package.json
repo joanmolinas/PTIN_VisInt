@@ -13,6 +13,7 @@
     "debug": "~2.6.9",
     "express": "~4.15.5",
     "express-session": "^1.15.6",
+    "geo-nearby": "^2.0.1",
     "hbs": "~4.0.1",
     "jwt-simple": "^0.5.1",
     "moment": "^2.22.1",
