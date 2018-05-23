@@ -1,13 +1,14 @@
 let mongoose = require('mongoose')
-var mongoosePaginate = require('mongoose-paginate');
+let Schema = mongoose.Schema
+let mongoosePaginate = require('mongoose-paginate');
+
 
 var notificationSchema = new mongoose.Schema({
-	notification_seen: {type:Boolean, required:true},
-	date: Date,
-	features: {
-		type: String,
-		id_patient: String
-	}
-}, { collection: 'notifications' });
+	requester: { type: Schema.Types.ObjectId, ref: "Device", required: true },
+	date: { type: String, required: true },
+	deviceAssociated: { type: Schema.Types.ObjectId, ref: "Device", required: true },
+	readed: Boolean,
+	typeOfAction: { type: Number, enum: [1, 2]}
+}, { collection: 'notification'})
 notificationSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model( 'notifications' , notificationSchema);

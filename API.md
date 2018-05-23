@@ -198,7 +198,7 @@ POST: /devices
 
 **Update device**
 ```
-PUT: /devices
+PUT: /devices/:id/info
 ```
 
 ### Request
@@ -277,43 +277,50 @@ If you want to receive messages to a device, you must provide your device id as 
 { query: "id=my_fancy_id" }
 ```
 
-**Example with javascript**
+**Examples**
 ```javascript
     // io is a client library from socket.io
     io.connect("http://localhost:3000", { query: "id=1234" });
     
 ```
 
+```python
+    from socketIO_client_nexus import SocketIO
+
+    # params is optional. If you want to connect end to end, you must provide a
+    # device token on params. 
+    with SocketIO('https://ptin2018.herokuapp.com', params={'id': '1234'}) as socketIO:
+        socketIO.emit('fire')
+        socketIO.wait(seconds=3)  
+```
 
 Backend is listening forever to a client sockets connection on this endpoint. Once you have been connect, you can send notifications and receive messages.
 You don't need any port or similar to connect, just using the url. We encourage you to use a socket.io python library to connect with backend service. This kind of libraries are build on top of socket services and will handle connections and errors.
 
 ### Send notifications to backend
 
-This section will explain how to send notifications to backend from the devices. 
+This section will explain how to send notifications to backend from devices. 
 
-At the moment we have 4 types of notifications: 
+At this moment we have 4 types of notifications: 
 
 - Fire notification
 - Heart attack notification
 - High temperature notification
 - Low temperature notification
 
-All you have to do is go to a socketIO client tool (http://amritb.github.io/socketio-client-tool/) and:
-
-1. At field Socket.io server URL you must write the URL https://ptin2018.herokuapp.com then click "Connect".
-
-2. Go to the option "Emiting". At field "Event name" you must write one of the four types of notifications that we mentioned before. If you want to send a fire notification you must write just "fire", without the quotes. "heart_attack" for Heart attack notification, "high_temp" and "low_temp" for high/low temperature notifications.
-
-3. At "Data: plaintext" field you must write whatever you want, it doesn't matter.
-
-4. Click "Emit" button and you have sent the notification.
+To test these notifications, you can use a third party library. A lot of tools are existing right now throught internet. We recommend you to use this one (http://amritb.github.io/socketio-client-tool/). Following steps will allow you to test our sockets service and has an idea to how to use it in your code.
 
 
-You can also send notifications to backend with a script. You should do the same as before but with code, using socketIO library.
+1. At field Socket.io server URL you must write the URL https://ptin2018.herokuapp.com then click *Connect*.
 
-You have an example of a script made in Python in https://github.com/ulidev/PTIN_VisInt/edit/develop/
+2. Go to the option "Emiting". On the field "Event name" you must write one of the four types of notifications that we mentioned before. If you want to send a fire notification you need to write just *fire*, without the quotes. *heart_attack* for Heart attack notification, *high_temp* and *low_temp* for high/low temperature notifications.
 
+3. At *Data: plaintext* field you must write whatever you want, it doesn't matter.
+
+4. Click *Emit* button and to send the notificaciton to the server.
+
+You can also send notifications to backend via script. You should do the same as before but with code, using socketIO library (https://github.com/nexus-devs/socketIO-client-2.0.3).
+it 
 ### Receive messages from the backend
 
 This section will explain how to receive messages from the backend. Message is the action to receive data via socket from backend. For example if I want to receive shutdown notifications, I will need to know how to handle shutdown endpoint. 
