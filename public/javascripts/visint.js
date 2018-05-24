@@ -36,10 +36,11 @@ window.addEventListener('load', function () {
             vectorLayer: '',
             iconstyle: [],
             map: '',
+            heatmap:'',
             deviceInfo:[],
             deviceAtributes:[],
             deviceSensors:[],
-            
+        
             min_length_filter: 3,
             nots:[],
             trans: [],
@@ -62,6 +63,7 @@ window.addEventListener('load', function () {
             this.loadMap()
             this.getLanguage()
             this.getDevices()
+            this.drawDevicesOnHeatMap()
            this.loadNotifications()
             console.log('Usuario: ' + localStorage.username)
         },
@@ -91,12 +93,14 @@ window.addEventListener('load', function () {
                 }).then(function(){
                     //Draw The devices on the map
                     self.drawDevices()
+                   
                 })
             },
 
             refreshDevices: function() {
-                self.removeDevicesFromList()
-                self.getDevices()
+                this.removeDevicesFromList()
+                this.getDevices()
+                this.drawDevicesOnHeatMap()
             },
 
             /**
@@ -217,7 +221,15 @@ window.addEventListener('load', function () {
             expandMap: function () {
                 document.getElementById("sidebar").style.display = "none"
                 document.getElementById("content").className = "col-md-12"
-                document.getElementById("shrink").style.display = "block"
+                if(this.heatmap.getVisible()){
+                    document.getElementById("shrink").style.display = "none"
+                    document.getElementById("expand").style.display = "none"
+                }else{
+                    document.getElementById("shrink").style.display = "block"
+                    document.getElementById("expand").style.display = "none"
+                }
+                this.map.updateSize()
+                
             },
 
             /**
@@ -227,15 +239,19 @@ window.addEventListener('load', function () {
              */
             shrinkMap: function () {
                 document.getElementById("sidebar").style.display = "block"
-                document.getElementById("content").className = "col-md-6"
+                document.getElementById("content").className = "col-md-6 col-md-push-6"
+                this.map.updateSize()
                 document.getElementById("shrink").style.display = "none"
+                document.getElementById("expand").style.display = "block"
+                
             },
-
+           
             loadMap: function () {
                 let self=this
                 //Inicialitzate the vectorial layer empty.
                 this.vectorLayer = new ol.layer.Vector({
                     name: "vector",
+                    visible:true,
                     source: new ol.source.Vector({
                         features: [
 
@@ -243,7 +259,14 @@ window.addEventListener('load', function () {
                     })
 
                 });
+                self.heatmap= new ol.layer.Heatmap({
+                    visible:false,
+                    source: new ol.source.Vector({
+                        features:[
 
+                        ]
+                    })
+                })
 
                 //Defining diferents sytles for the points in the map
                 let style=new ol.style.Style({
@@ -315,7 +338,18 @@ window.addEventListener('load', function () {
                 //Define layers (vectorial and Open Street Maps)
                 //Define map center, map inital zoom, maxzoom and min zoom
                 this.map = new ol.Map({
-                    layers: [new ol.layer.Tile({ source: new ol.source.OSM() }), this.vectorLayer],
+                    layers: [new ol.layer.Group({
+                        layers:[
+                            new ol.layer.Tile({
+                                title:'Base',
+                                visible:true,
+                                source: new ol.source.OSM({layer:'mapaBase'})
+                            }), 
+                            this.vectorLayer,
+                            this.heatmap
+                            ]
+                        })],
+                
                     target: document.getElementById('content'),
                     view: new ol.View({
                         projection: 'EPSG:4326',
@@ -323,9 +357,13 @@ window.addEventListener('load', function () {
                         zoom: this.zoomInicial,
                         minZoom: this.minzm,
                         maxZoom: this.maxzm
+                        
 
                     })
                 })
+             
+                
+                
                 
                 this.map.on("click",function(evt){
                     let cord=evt.coordinate
@@ -333,29 +371,68 @@ window.addEventListener('load', function () {
                     })
 
             },
+            changeMap: function() {
+                let icone= document.getElementById("ChangeMap")
+                if(this.heatmap.getVisible()){
+                    icone.title="Canviar a Mapa de Calor"
+                    this.heatmap.setVisible(false);
+                    this.vectorLayer.setVisible(true);
+                    this.shrinkMap()
+                    
+                }else{
+                    icone.title="Canviar a Mapa de Punts"
+                    this.heatmap.setVisible(true);
+                    this.vectorLayer.setVisible(false);
+                    this.expandMap()
+                }
+            },
             //Show the detail view when a point on the map is click
             detaillonMapDevices:function(coord){
+                
                 let self=this
-                let source = self.vectorLayer.getSource();
-                let features = source.getFeatures();
-                let i=0
-                let find=false
-                while((i<features.length)&&(find==false)){
-                    let geom=features[i].getGeometry()
-                    let pcoord=geom.getCoordinates()
-                    let plat=parseFloat(pcoord[0]).toFixed(4)
-                    let plon=parseFloat(pcoord[1]).toFixed(4)
-                    let lat=parseFloat(coord[0]).toFixed(4)
-                    let lon=parseFloat(coord[1]).toFixed(4)
-                    let offset=0.00000001
-                    if(((plat<=lat+offset)&&(plat>=lat-offset))&&((plon<=lon+offset)&&(plon>=lon-offset))){
-                        this.deviceDetail(features[i].get("name"))
-                        find=true
-                    }
-                    i=i+1
-                } 
+                if(!self.heatmap.getVisible()){
+                    let source = self.vectorLayer.getSource();
+                    let features = source.getFeatures();
+                    let i=0
+                    let find=false
+                    while((i<features.length)&&(find==false)){
+                        let geom=features[i].getGeometry()
+                        let pcoord=geom.getCoordinates()
+                        let plat=parseFloat(pcoord[0]).toFixed(4)
+                        let plon=parseFloat(pcoord[1]).toFixed(4)
+                        let lat=parseFloat(coord[0]).toFixed(4)
+                        let lon=parseFloat(coord[1]).toFixed(4)
+                        let offset=0.00000001
+                        if(((plat<=lat+offset)&&(plat>=lat-offset))&&((plon<=lon+offset)&&(plon>=lon-offset))){
+                            this.deviceDetail(features[i].get("name"))
+                            find=true
+                        }
+                        i=i+1
+                    } 
+                }
             },
-            //Make a request of the Devices in BD and draw all devices then have latitude and longitude.
+            
+            drawDevicesOnHeatMap: function(){
+                let self=this
+                axios.get(this.base_url_api + 'devices?active=true&enabled=true&page='+self.page).then(function (response) {
+                    self.devices = response.data.docs
+                   
+                    self.devices.forEach(function (device, index) {
+                        let source = self.heatmap.getSource();
+                        let heatPoint= new ol.Feature({
+                            name: device._id,
+                            geometry: new ol.geom.Point([parseFloat(device.lastInfo.longitude), parseFloat(device.lastInfo.latitude)])
+                            
+                        })
+                        
+                        source.addFeature(heatPoint)
+                    });
+                }).catch(function (error) {
+                    console.log(error.message)
+                })
+                
+            },
+            //draw all devices then have latitude and longitude.
             drawDevices: function () {
                 let self = this
 
@@ -380,11 +457,20 @@ window.addEventListener('load', function () {
                                 }*/
 
                                 let source = self.vectorLayer.getSource();
+                                
                                 let point=new ol.Feature({
                                     name: device._id,
                                     geometry: new ol.geom.Point([parseFloat(device.lastInfo.longitude), parseFloat(device.lastInfo.latitude)])
                                     
                                 })
+                                
+                                
+                                
+                               
+                               
+                               
+                                
+                                
                                 //For each device type is set one style point.
                                 switch(device.type){
                                     case 1:
@@ -410,6 +496,7 @@ window.addEventListener('load', function () {
                                 
                                 //point is added
                                 source.addFeature(point)
+                                
                          }
                         }
 

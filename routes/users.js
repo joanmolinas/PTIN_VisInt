@@ -37,11 +37,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.put('/:id', service.ensureUserAuthenticated, async function(req, res, next) {
-	if (!req.body.username || !req.body.password || !req.body.language) {
+    if (!req.body.username || !req.body.password || !req.body.language) {
         res.status(400).send({"message": 'ERROR Fields missing'})
         return
     }
-
+    
     let name = req.body.username;
     let pass = req.body.password
     let hashPassword = await encryption.encrypt(pass)

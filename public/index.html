@@ -157,9 +157,10 @@
                   <option value="4">{{trans['weather']}}</option>
                   <option value="4">{{trans['air_quality']}}</option>
                 </select>
-                <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
+                <!-- <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
                   <i class="fas fa-angle-double-left"></i>
-                </a>
+                </a> -->
+                
               </div>
 
             </div>
@@ -170,9 +171,15 @@
         </div>
 
         <!-- Display map -->
-        <div id="content" class="col-md-6 col-md-push-6">
-          <div id="shrink" v-on:click="shrinkMap" style="cursor: pointer;">
+        <div id="content" class="col-md-6 col-md-push-6 ">
+            <div id="expand" class="mapbutton"  v-on:click="expandMap" title="Ocultar dispositivos" style="cursor: pointer">
+                <i class="fas fa-angle-double-left"></i>
+          </div>
+          <div id="shrink" class="mapbutton" v-on:click="shrinkMap" style="cursor: pointer;">
             <i class="fas fa-angle-double-right "></i>
+          </div>
+          <div id="ChangeMap" class="mapbutton" v-on:click="changeMap" title="Canviar a Mapa de Calor" style="cursor: pointer;">
+            <i class="fas fa-exchange-alt"></i>
           </div>
         </div>
         <!-- sidebar -->
@@ -196,9 +203,9 @@
                   <option value="4">{{trans['weather']}}</option>
                   <option value="4">{{trans['air_quality']}}</option>
                 </select>
-                <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
+                <!-- <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
                   <i class="fas fa-angle-double-left"></i>
-                </a>
+                </a> -->
               </div>
             </div>
 
