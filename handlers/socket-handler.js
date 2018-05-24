@@ -47,13 +47,14 @@ let callbacks = {
 
 function alarm(socket) {
     socket.on('alarm', (data) => {
-        data['requester'] = socket.handshake.query['id']
+        let id = socket.handshake.query['id']
+        data['requester'] = id
         callbacks[data.type](data).
         then(resp => {
-            
+            notificationWasUpdated()
         })
         .catch(e => {
-
+            console.log(e)
         })
     })
 }
@@ -117,8 +118,8 @@ function deviceWasUpdated() {
 }
 
 // nil
-function notificationWasUpdated(userid) {
-    // io.emit('refreshNotificationsTable', { for: 'everyone' });
+function notificationWasUpdated() {
+    io.emit('refreshNotificationsTable', "");
 }
 
 function emitShutdown(clientID) {
