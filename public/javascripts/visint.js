@@ -44,7 +44,7 @@ window.addEventListener('load', function () {
             min_length_filter: 3,
             nots:[],
             trans: [],
-            atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active","enabled","deleted"],
+            atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active","enabled","deleted","body_temperature","heart_rate","blood_pressure_systolic","bloog_pressure_diastolic","gas_level","tyres_pressure_alarm","Detection_alarm","humidity","air_pressure","NO2","PM10"],
             atributesTraductionNames:[],
             debug: false,
             //Colors
@@ -670,7 +670,7 @@ window.addEventListener('load', function () {
                         self.trans = trans_string.data
                         console.log("language file: " + trans_file)
                         console.log("Website language: " + localStorage.language)
-                        self.atributesTraductionNames=[self.trans["latitude"],self.trans["longitude"],self.trans["creationDate"],self.trans["name"],self.trans["_id"],self.trans["modificationDate"],self.trans["type"],self.trans["active"],self.trans["enabled"],self.trans["deleted"]]
+                        self.atributesTraductionNames=[self.trans["latitude"],self.trans["longitude"],self.trans["creationDate"],self.trans["name"],self.trans["_id"],self.trans["modificationDate"],self.trans["type"],self.trans["active"],self.trans["enabled"],self.trans["deleted"],self.trans["body_temperature"],self.trans["heart_rate"],self.trans["blood_pressure_systolic"],self.trans["bloog_pressure_diastolic"],self.trans["gas_level"],self.trans["tyres_pressure_alarm"],self.trans["Detection_alarm"],self.trans["humidity"],self.trans["air_pressure"],self.trans["NO2"],self.trans["PM10"]]
                         
                     }).catch( function(error){
                         console.log(error.message)
