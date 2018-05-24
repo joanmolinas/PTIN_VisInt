@@ -29,6 +29,8 @@
     "modificationDate":"Modification",
     "type":"Type",
     "active":"Active",
+    "enabled":"Enabled",
+    "deleted":"Deleted",
     "Notifydate":"Date",
     "Notifytype":"Type"
 }

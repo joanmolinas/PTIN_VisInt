@@ -44,7 +44,7 @@ window.addEventListener('load', function () {
             min_length_filter: 3,
             nots:[],
             trans: [],
-            atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active"],
+            atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active","enabled","deleted"],
             atributesTraductionNames:[],
             debug: false,
             //Colors
@@ -536,7 +536,7 @@ window.addEventListener('load', function () {
                 let keys=Object.keys(self.selected_device)
                //For each parameters, is used the atributesTraductionNames and the atributesNames arrays to get de name of the parameter
                     //each parameter is keepst in array
-
+                
                 keys.forEach(function(k){
                     if((k!="lastInfo")&&(k!="__v")){
                         //If device is active the icon shadow wil be green, if it is not active the icon shadow will be red
@@ -585,11 +585,14 @@ window.addEventListener('load', function () {
 
                                }
                             }
-                            self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                            if(k!="token"){
+                                self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
                             
-                            self.deviceInfo.push(self.selected_device[k])
-                            self.deviceAtributes.push(self.deviceInfo)
-                            self.deviceInfo=[]
+                                self.deviceInfo.push(self.selected_device[k])
+                                self.deviceAtributes.push(self.deviceInfo)
+                               
+                                self.deviceInfo=[]
+                            }
                         }
 
                     }
@@ -601,21 +604,24 @@ window.addEventListener('load', function () {
                     let keysSensors=Object.keys(self.selected_device.lastInfo)
                 //For each parameters, is used the atributesTraductionNames and the atributesNames arrays to get de name of the parameter
                     //each parameter is keepst in array
-
+                   
                     keysSensors.forEach(function(k){
                         if(k!="date"){
 
                             self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
-
-                            self.deviceInfo.push( self.deviceInfo.push(self.selected_device.lastInfo))
+                            
+                            
+                            self.deviceInfo.push(self.selected_device.lastInfo[k])
+                            
                             self.deviceSensors.push(self.deviceInfo)
+                           
                             self.deviceInfo=[]
                         }
 
                     })
                     //If device have a localitzation the map view is center in the device.
                     if((self.selected_device.lastInfo.latitude)&&(self.selected_device.lastInfo.longitude)){
-                       console.log([self.selected_device.lastInfo.longitude, self.selected_device.lastInfo.latitude])
+                      
                         self.map.getView().setCenter([parseFloat(self.selected_device.lastInfo.longitude), parseFloat(self.selected_device.lastInfo.latitude)])
                         self.map.getView().setZoom(20)
                     }
@@ -664,7 +670,7 @@ window.addEventListener('load', function () {
                         self.trans = trans_string.data
                         console.log("language file: " + trans_file)
                         console.log("Website language: " + localStorage.language)
-                        self.atributesTraductionNames=[self.trans["latitude"],self.trans["longitude"],self.trans["creationDate"],self.trans["name"],self.trans["_id"],self.trans["modificationDate"],self.trans["type"],self.trans["active"]]
+                        self.atributesTraductionNames=[self.trans["latitude"],self.trans["longitude"],self.trans["creationDate"],self.trans["name"],self.trans["_id"],self.trans["modificationDate"],self.trans["type"],self.trans["active"],self.trans["enabled"],self.trans["deleted"]]
                         
                     }).catch( function(error){
                         console.log(error.message)

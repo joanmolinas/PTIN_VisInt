@@ -28,6 +28,8 @@
         "_id":"Identificador",
         "modificationDate":"Modificacion",
         "type":"Tipo",
+        "enabled":"Habilitado",
+        "deleted":"Borrado",
         "active":"Activo",
         "Notifydate":"Fecha",
         "Notifytype":"Tipo"

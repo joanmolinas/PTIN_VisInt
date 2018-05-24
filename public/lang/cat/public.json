@@ -29,6 +29,8 @@
     "modificationDate":"Modificació",
     "type":"Tipus",
     "active":"Actiu",
+    "enabled":"Habilitat",
+    "deleted":"Borrat",
     "Notifydate":"Data",
     "Notifytype":"Tipus"
            
