@@ -6,7 +6,186 @@ router = express.Router()
 socket = require("../handlers/socket-handler")
 service = require("../handlers/token-service")
 
+
+router.get('/temp', function(req, res, next){
+
+	// array per guardar els diccionaris
+	var array = [];
+
+	// mitjana de temperatura, igual per a tots els diccionaris
+	var mitjana = 5;
+
+
+	let data = new Date();
+
+
+	// tenim 8 diccionaris, dic8 = 8 del mati, dic10 = 10 del mati, etc
+	var dic8 = {
+		x:mitjana,
+		y:"8:00"
+	};
+
+	var dic10 = {
+		x:mitjana,
+		y:"10:00"
+	};
+
+	var dic12 = {
+		x:mitjana,
+		y:"12:00"
+	};
+
+	var dic14 = {
+		x:mitjana,
+		y:"14:00"
+	};
+
+	var dic16 = {
+		x:mitjana,
+		y:"16:00"
+	};
+
+	var dic18 = {
+		x:mitjana,
+		y:"18:00"
+	};
+
+	var dic20 = {
+		x:mitjana,
+		y:"20:00"
+	};
+
+	var dic22 = {
+		x:mitjana,
+		y:"22:00"
+	};
+
+
+	// get de tots els dispositius de temperatura
+
+	Device.find({}, function(err, devices) {
+		devices.forEach(function(dev){
+			// ok, torna tots els tipus 5
+			if(dev.type == 5){
+				//console.log('hola')
+				if(dev.lastInfo!=null) {
+					console.log(dev.lastInfo.temperature)
+					mitjana = (mitjana + dev.lastInfo.temperature)/2
+					console.log(mitjana)
+				}
+			}
+		})
+		array.push(dic8)
+		array.push(dic10)
+		array.push(dic12)
+		array.push(dic14)
+		array.push(dic16)
+		array.push(dic18)
+		array.push(dic20)
+		array.push(dic22)
+	})
+    .then(doc => {
+        res.status(200).send(array)
+    })
+    .catch(e => {
+        res.status(500).send('Something went wrong')
+    })
+
+})
+
+router.get('/hum', function(req, res, next){
+
+	// array per guardar els diccionaris
+	var arrayHum = [];
+
+	// mitjana de temperatura, igual per a tots els diccionaris
+	var mitjana = 5;
+
+
+	let data = new Date();
+
+
+	// tenim 8 diccionaris, dic8 = 8 del mati, dic10 = 10 del mati, etc
+	var dic8 = {
+		x:mitjana,
+		y:"8:00"
+	};
+
+	var dic10 = {
+		x:mitjana,
+		y:"10:00"
+	};
+
+	var dic12 = {
+		x:mitjana,
+		y:"12:00"
+	};
+
+	var dic14 = {
+		x:mitjana,
+		y:"14:00"
+	};
+
+	var dic16 = {
+		x:mitjana,
+		y:"16:00"
+	};
+
+	var dic18 = {
+		x:mitjana,
+		y:"18:00"
+	};
+
+	var dic20 = {
+		x:mitjana,
+		y:"20:00"
+	};
+
+	var dic22 = {
+		x:mitjana,
+		y:"22:00"
+	};
+
+
+	// get de tots els dispositius de temperatura
+
+	Device.find({}, function(err, devices) {
+		devices.forEach(function(dev){
+			// ok, torna tots els tipus 5
+			if(dev.type == 5){
+				//console.log('hola')
+				if(dev.lastInfo!=null) {
+					console.log(dev.lastInfo.temperature)
+					mitjana = (mitjana + dev.lastInfo.temperature)/2
+					console.log(mitjana)
+				}
+			}
+		})
+		arrayHum.push(dic8)
+		arrayHum.push(dic10)
+		arrayHum.push(dic12)
+		arrayHum.push(dic14)
+		arrayHum.push(dic16)
+		arrayHum.push(dic18)
+		arrayHum.push(dic20)
+		arrayHum.push(dic22)
+	})
+    .then(doc => {
+        res.status(200).send(arrayHum)
+    })
+    .catch(e => {
+        res.status(500).send('Something went wrong')
+    })
+
+})
+
 router.get('/:id', function(req, res, next){
+    
+    if(req.params.id == 'count') { 
+        next()
+        return
+    }
+
     let query = url.parse(req.url, true).query
     let dict = {}
     let filter = ''
@@ -14,7 +193,8 @@ router.get('/:id', function(req, res, next){
         let arr = query.fields.replace("[",'').replace("]",'').split(',') //TODO: Improve it, this is a shit
         filter = arr.join('')
     }
-
+    
+    return 
     Promise.all([
         Device.findById(req.params.id).select(filter),
         DeviceInformation.findOne({'id_device': req.params.id}, {'info': {'$slice': -1}})
@@ -26,9 +206,21 @@ router.get('/:id', function(req, res, next){
     })
 })
 
+router.get('/count', (req, res, next) => {
+    let size = req.query.size || 20
+    console.log(size)
+    Device.find().count()
+    .then(doc => {
+        res.status(200).send({count: Math.round(doc/size)})
+    })
+    .catch(e => {
+        res.status(500).send('Internal server errorxw')
+    })
+})
+
 router.get('/', function(req, res, next){
     let query = url.parse(req.url, true).query
-    let size = parseInt(query.size || 3)
+    let size = parseInt(query.size || 20)
     let page = parseInt(query.page || 1)
     delete query.size
     delete query.page
@@ -43,29 +235,14 @@ router.get('/', function(req, res, next){
         filter = arr.join('')
         delete query.fields
     }
-    let response = []
 
-    // let prom = Device.find(query).sort({modificationDate: -1}).limit(size).select(filter)
+    if (Object.keys(query).length !== 0) {
+        query.lastInfo = { $elemMatch: req.body}
+    }
+
     let prom = Device.paginate(query, {page: page, limit: size, sort: { modificationDate: -1}, select: filter})
     .then(docs => {
-        let doc = docs.docs
-        console.log(docs)
-        let count = 0
-        if (doc.length == 0) { res.statis(200).send([]) }
-
-        doc.forEach(u => {
-            DeviceInformation.findOne({'id_device': u._id}, {'info': {'$slice': -1}})
-            .then(info => {
-                if(info) u.lastInfo = info.info
-                response.push(u)
-
-                // TODO: Improve this shit, wait to finish all promises
-                if (++count == doc.length) res.status(200).send(response)
-            })
-            .catch(e => {
-                console.log(e)
-            })
-        })
+        res.status(200).send(docs)
     })
     .catch(e => {
         console.log(e)
@@ -80,8 +257,8 @@ router.post('/', function(req, res, next) {
     let type = req.body.type
 
     if (!name || !type) {
-        res.send({'status': 400})
-        return
+        res.status(400).send({"message": 'ERROR Fields missing'})
+    	return
     }
 
     let device = new Device({
@@ -89,24 +266,25 @@ router.post('/', function(req, res, next) {
         active: true,
         type: type,
         creationDate: creationDate,
-        modificationDate: modificationDate
+        modificationDate: modificationDate,
+        deleted: false,
+        enabled: false
     })
-
     device.save()
     .then(device => {
-        res.send({"status": 201, "id": device._id})
+    	let tok = service.createToken(device)
+    	device.token = tok
+        res.send({"status": 201, "id": device._id, "token": device.token})
         socket.deviceWasUpdated()
     }).catch(e => {
         res.send({"status": 400})
     })
 })
 
-router.put('/:id', function(req, res, body) {
-    // res.send('no valid')
-    // return
-    
+router.put('/:id/info', service.ensureDeviceAuthenticated, function(req, res, body) {
     if (!req.body) {
-        res.send({"status": 400})
+    	res.status(400).send({"message": 'ERROR Fields missing'})
+    	return
     }
 
     let modificationDate = new Date()
@@ -118,6 +296,11 @@ router.put('/:id', function(req, res, body) {
         }
     })
     .then(device => {
+    	if (!device.enabled){
+    		res.status(400).send({"message": 'Device is not enabled'})
+    		return
+        }
+        
         DeviceInformation.findOneAndUpdate({'id_device': device._id}, {
             $push: {
                 info: req.body
@@ -125,33 +308,60 @@ router.put('/:id', function(req, res, body) {
         })
         .then(doc => {
             if (!doc) {
-                // Schema create cause didn't exists before
                 let schema = new DeviceInformation({ id_device: req.params.id, info: [ req.body ] })
 
                 schema.save()
                 .then(doc => {
-                    res.send({'status': 201})
+                    device.lastInfo = req.body;
+                    device.save()
+                    res.status(201).send({'message': 'Information added to device'})
                     socket.deviceWasUpdated()
                 })
                 .catch(e => {
-                    res.send({'status': 400})
+                    res.status(500).send({'message': 'Internal server error'})
                 })
             } else {
-                res.send({'status': 200})
+                device.lastInfo = req.body;
+                device.save()
+                res.status(200).send({'message': 'Device information updated'})
                 socket.deviceWasUpdated()
             }
         })
         .catch(e => {
-            res.send({'status': 400})
+            res.status(500).send({'message': 'Internal server error'})
         })
     })
     .catch(e => {
-        res.send({'status': 500})
+        res.status(500).send({'message': 'Internal server error'})
 
     })
 })
 
-router.get('/delete/:id', function(req, res, next){
+router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
+
+    if (!req.body ) {
+        res.status(400).send({"message": 'ERROR Fields missing'})
+        return
+    }
+
+    Device.findByIdAndUpdate(req.params.id,{
+        $set: {
+        	modificationDate: new Date(),
+            enabled: req.body.enabled,
+            deleted: req.body.deleted
+        }
+    })
+    .then(doc => {
+    	socket.deviceWasUpdated()
+    	res.status(200).send({"message": 'OK: Device Changed '})
+    })
+    .catch(e => {
+    	res.status(400).send({"message": 'ERROR Something went wrong'})
+    	return
+  })
+})
+
+router.get('/:id/delete', function(req, res, next){
   Device.findByIdAndRemove(req.params.id)
   .then(doc => {
       res.send({'status': 200})
