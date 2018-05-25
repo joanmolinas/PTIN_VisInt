@@ -6,6 +6,97 @@ router = express.Router()
 socket = require("../handlers/socket-handler")
 service = require("../handlers/token-service")
 
+router.get('/stadistics', function(req, res, next){
+	var resultat = [];
+    //Inicialitzem Arrays a 0
+    var ArrayA = [];
+        for (i=0;i<8;i++) ArrayA[i] = 0;
+    var ArrayB = [];
+        for (i=0;i<8;i++) ArrayB[i] = 0;
+    var ArrayNea = [];
+        for (i=0;i<8;i++) ArrayNea[i] = 0;
+    var ArrayExterior = [];
+        for (i=0;i<8;i++) ArrayExterior[i] = 0;
+
+	Device.find({}, function(err, devices) {
+		devices.forEach(function(dev){
+			if (dev.lastInfo!=null){
+				if(dev.lastInfo.edificio == "A")
+            	{
+				ArrayA[0]++;
+				if(dev.active) ArrayA[1]++;
+				ArrayA[dev.type+1]++
+				}
+	            else if(dev.lastInfo.edificio == "B")
+	            {
+	                ArrayB[0]++;
+	                if(dev.active) ArrayB[1]++;
+	                ArrayB[dev.type+1]++
+	            }
+	            else if(dev.lastInfo.edificio == "Neapolis")
+	            {
+	                ArrayNea[0]++;
+	                if(dev.active) ArrayNea[1]++;
+	                ArrayNea[dev.type+1]++
+	            }
+	            else
+	            {	console.log("elseee")
+	                ArrayExterior[0]++;
+	                if(dev.active) ArrayExterior[1]++;
+	                ArrayExterior[dev.type+1]++
+	            }
+			}
+        })
+    	var edificiA = {
+			total: ArrayA[0],
+			actius: ArrayA[1],
+			doctors: ArrayA[2],
+			pacients: ArrayA[3],
+	        fum: ArrayA[4],
+	        tipus4: ArrayA[5],
+	        temp: ArrayA[6],
+	        aire: ArrayA[7]
+		};
+	    var edificiB = {
+	        total: ArrayB[0],
+	        actius: ArrayB[1],
+	        doctors: ArrayB[2],
+	        pacients: ArrayB[3],
+	        fum: ArrayB[4],
+	        tipus4: ArrayB[5],
+	        temp: ArrayB[6],
+	        aire: ArrayB[7]
+	    };
+	    var edificiNea = {
+	        total: ArrayNea[0],
+	        actius: ArrayNea[1],
+	        doctors: ArrayNea[2],
+	        pacients: ArrayNea[3],
+	        fum: ArrayNea[4],
+	        tipus4: ArrayNea[5],
+	        temp: ArrayNea[6],
+	        aire: ArrayNea[7]
+	    };
+	    var exterior = {
+	        total: ArrayExterior[0],
+	        actius: ArrayExterior[1],
+	        doctors: ArrayExterior[2],
+	        pacients: ArrayExterior[3],
+	        fum: ArrayExterior[4],
+	        tipus4: ArrayExterior[5],
+	        temp: ArrayExterior[6],
+	        aire: ArrayExterior[7]
+	    };
+    	resultat.push(edificiA, edificiB, edificiNea, exterior)	
+	})
+    .then(doc => {
+        res.status(200).send(resultat)
+    })
+    .catch(e => {
+        res.status(500).send('Internal server error')
+    })
+})
+
 router.get('/:id', function(req, res, next){
     
     if(req.params.id == 'count') { 
