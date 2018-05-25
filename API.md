@@ -257,6 +257,65 @@ GET: /devices/delete/:id
 }
 ```
 
+**GET STATISTICS TABLE**
+```
+GET: /devices/statistics
+```
+
+### Response
+**OK**
+> Returns an array of dictionaries. An example of a dictionary could be:
+```json
+{
+  "Edifici" : A
+  "Total dispositius" : 50
+  "Dispositius actius" : 40
+  "Doctors" : 12
+  "Pacients" : 15
+  "Fum" : 3
+  "Temperatura" : 5
+  "Qualitat de l'aire" : 5
+}
+```
+
+We will return 4 dictionaries, one for each building (including exterior).
+
+**GET TEMPERATURE GRAPHIC**
+```
+GET: /devices/temp
+```
+
+### Response
+**OK**
+> Returns an array of dictionaries. An example of a dictionary could be:
+```json
+{
+  "x" : 20º
+  "y" : 12:00
+}
+```
+
+We will return 8 dictionaries, one each two hours (from 8am to 10pm).
+
+
+**GET HUMIDITY/AIR QUALITY GRAPHIC**
+```
+GET: /devices/hum
+```
+
+### Response
+**OK**
+> Returns an array of dictionaries. An example of a dictionary could be:
+```json
+{
+  "x" : 10 units of how humidity is measured
+  "y" : 16:00
+}
+```
+
+We will return 8 dictionaries, one each two hours (from 8am to 10pm).
+
+
 ## Sockets
 
 Sockets are a end to end connections allowing multiple devices send notifications to backend, also allows backend send messages to devices.
