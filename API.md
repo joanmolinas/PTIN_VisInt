@@ -267,7 +267,7 @@ GET: /devices/statistics
 > Returns an array of dictionaries. An example of a dictionary could be:
 ```json
 {
-  "Edifici" : A,
+  "Edifici" : "A",
   "Total dispositius" : 50,
   "Dispositius actius" : 40,
   "Doctors" : 12,
@@ -290,7 +290,7 @@ GET: /devices/temp
 > Returns an array of dictionaries. An example of a dictionary could be:
 ```json
 {
-  "x" : 20º,
+  "x" : "20º",
   "y" : 12:00
 }
 ```
@@ -308,7 +308,7 @@ GET: /devices/hum
 > Returns an array of dictionaries. An example of a dictionary could be:
 ```json
 {
-  "x" : 10 units of how humidity is measured,
+  "x" : "10 units of how humidity is measured",
   "y" : 16:00
 }
 ```
