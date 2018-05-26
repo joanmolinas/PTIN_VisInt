@@ -407,3 +407,61 @@ __Types of notifications__
 **This party tools to test it**
 
 [UI tool to test it](http://amritb.github.io/socketio-client-tool/)
+
+# Services
+
+Service is an interaction between two or more devices to figure out a problem. 
+
+There are 2 services implemented on the backend, *heart attack* and *general*. Following descriptions, explain as clear as we could how to implemented on the devices.
+
+## Connect
+
+When a pacient suffers a heart attack, he can send an alarm to be attended as soon as possible. System will find nearest doctor and will send to him the location of the pacient. System will determine what kind of doctor will need it (in this case cardiologist).
+
+To be able to send an alarm, device needs to be connected via socket with backend and send the **id** of the device through socket connection.
+
+*Attach the following dictionary to the socket connection*
+> {"query":"id=device_id"}
+
+If previous query is attach on connection, socket will be linked with the id, so backend could send the location if device is a doctor. If **id** is not provided on the connection, couldn't receive the location, even if its a doctor.
+
+Since moment that device is connected and query is passed, the device is active on the system, this means that can receive messages with data directly from the backend. 
+
+## Heart attack
+In this scenario, two kind of actor appear. Pacient and doctors. Pacient is who send the alarm to the system and doctor is who receive the information needed to attend the pacient.
+
+### Pacient
+Once pacient was connected to the backend, can send alarms. To send alarm of heart attack you need to send next message through socket.
+
+> Endpoint: alarm
+
+**Data to send**
+``` json 
+{
+    "type": 1,
+    "longitude": 0,
+    "longitude": 0
+}
+```
+
+This message will execute a trigger that will find the nearest active doctor and will send the information needed.
+
+### Doctor
+As a doctor, you're a pasive actor, you will receive messages when someone needs your help.
+
+To receive information about heart attack you need to listen next endpoint.
+
+> Endpoint: pacientLocation
+
+``` json
+{
+    "requester": "All the user data",
+    "latitude": 0,
+    "longitude": 0
+}
+```
+
+## General
+**WIP**
+
+
