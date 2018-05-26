@@ -36,7 +36,7 @@
   <!-- Socket io -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
-  var socket = io.connect('https://ptin2018.herokuapp.com', { query: "id=1234" });
+  var socket = io.connect('http://localhost:3000');
   socket.on('refreshDevicesTable', function() {
       console.log('refresh')
       document.getElementById("inici").click()
@@ -157,9 +157,10 @@
                   <option value="4">{{trans['weather']}}</option>
                   <option value="4">{{trans['air_quality']}}</option>
                 </select>
-                <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
+                <!-- <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
                   <i class="fas fa-angle-double-left"></i>
-                </a>
+                </a> -->
+                
               </div>
 
             </div>
@@ -170,9 +171,15 @@
         </div>
 
         <!-- Display map -->
-        <div id="content" class="col-md-6 col-md-push-6">
-          <div id="shrink" v-on:click="shrinkMap" style="cursor: pointer;">
+        <div id="content" class="col-md-6 col-md-push-6 ">
+            <div id="expand" class="mapbutton"  v-on:click="expandMap" title="Ocultar dispositivos" style="cursor: pointer">
+                <i class="fas fa-angle-double-left"></i>
+          </div>
+          <div id="shrink" class="mapbutton" v-on:click="shrinkMap" style="cursor: pointer;">
             <i class="fas fa-angle-double-right "></i>
+          </div>
+          <div id="ChangeMap" class="mapbutton" v-on:click="changeMap" title="Canviar a Mapa de Calor" style="cursor: pointer;">
+            <i class="fas fa-exchange-alt"></i>
           </div>
         </div>
         <!-- sidebar -->
@@ -196,9 +203,9 @@
                   <option value="4">{{trans['weather']}}</option>
                   <option value="4">{{trans['air_quality']}}</option>
                 </select>
-                <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
+                <!-- <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
                   <i class="fas fa-angle-double-left"></i>
-                </a>
+                </a> -->
               </div>
             </div>
 
@@ -206,34 +213,46 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="device" v-for="device in devices_column1" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
-                    <p>
-                      <i class="fas fa-microchip"></i> {{trans['device_name']}}:
-                      <strong>{{ device.name }}</strong>
-                    </p>
-                    <p v-if="device.lastInfo">
-                      <i class="fas fa-arrows-alt-v"></i> {{trans['device_latitude']}}:
-                      <strong>{{ device.lastInfo.latitude }}</strong>
-                    </p>
-                    <p v-if="device.lastInfo">
-                      <i class="fas fa-arrows-alt-h"></i> {{trans['device_longitude']}}:
-                      <strong>{{ device.lastInfo.longitude }}</strong>
-                    </p>
-                  </div>
+                    <div class="row">
+                      <div class="col-md-3">
+                      </div>
+                      <div class="col-md-8" style="border:1px solid #e2e2e2;border-radius: 2px;font-weight:bolder;">
+                        <p>
+                          <span style="color:#4A4A4A">{{trans['device_name']}}</span>
+                          <strong class="pull-right" style="color:#C2C2C2">{{ device.name }}</strong>
+                        </p>
+                        <p v-if="device.lastInfo">
+                          <span style="color:#4A4A4A">{{trans['device_latitude']}}</span>
+                          <strong class="pull-right" style="color:#C2C2C2">{{ device.lastInfo.latitude }}</strong>
+                        </p>
+                        <p v-if="device.lastInfo">
+                          <span style="color:#4A4A4A">{{trans['device_longitude']}}</span>
+                          <strong class="pull-right" style="color:#C2C2C2">{{ device.lastInfo.longitude }}</strong>
+                        </p>
+                      </div>
+                    </div>
+                  </div>  
                 </div>
                 <div class="col-md-6">
                   <div class="device" v-for="device in devices_column2" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
-                    <p>
-                      <i class="fas fa-microchip"></i> {{trans['device_name']}}:
-                      <strong>{{ device.name }}</strong>
-                    </p>
-                    <p>
-                      <i class="fas fa-arrows-alt-v"></i> {{trans['device_latitude']}}:
-                      <strong>{{ device.lastInfo.latitude }}</strong>
-                    </p>
-                    <p>
-                      <i class="fas fa-arrows-alt-h"></i> {{trans['device_longitude']}}:
-                      <strong>{{ device.lastInfo.longitude }}</strong>
-                    </p>
+                    <div class="row">
+                      <div class="col-md-3">
+                      </div>
+                      <div class="col-md-8" style="border:1px solid #e2e2e2;border-radius: 2px;font-weight:bolder;">
+                        <p>
+                          <span style="color:#4A4A4A">{{trans['device_name']}}</span>
+                          <strong class="pull-right" style="color:#C2C2C2">{{ device.name }}</strong>
+                        </p>
+                        <p v-if="device.lastInfo">
+                          <span style="color:#4A4A4A">{{trans['device_latitude']}}</span>
+                          <strong class="pull-right" style="color:#C2C2C2">{{ device.lastInfo.latitude }}</strong>
+                        </p>
+                        <p v-if="device.lastInfo">
+                          <span style="color:#4A4A4A">{{trans['device_longitude']}}</span>
+                          <strong class="pull-right" style="color:#C2C2C2">{{ device.lastInfo.longitude }}</strong>
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

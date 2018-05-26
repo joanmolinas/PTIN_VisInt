@@ -2,7 +2,7 @@ $header-height: 65px;
 $sidebar-width: 70px;
 $vh: 93vh;
 $sidebar-menu-color: #7A7979;
-$sidebar-device-list-color: #FAFAFA;
+$sidebar-device-list-color: white;
 
 * {
   padding: 0;
@@ -173,14 +173,16 @@ body {
   padding: 0;
   min-height: $vh;
   max-height: $vh;
-
+  
   #devices {
     background-color: $sidebar-device-list-color;
     min-height: inherit;
     margin-left: 2px;
 
     #filter {
+      width: 100%;
       padding-top:10px;
+      margin-left: 0px;
       padding-bottom: 10px;
       padding-right: 15px;
       background-color: white;
@@ -221,11 +223,16 @@ body {
       padding-bottom: 50px;
 
       .device {
-        border: 1px solid #ccc;
-        background-color: whitesmoke;
+        border-radius: 5px 40px 5px 40px;
+        background-color: #FAFAFA;
         margin: 20px;
-        padding: 10px;
-        
+        padding: 20px;
+        p {
+          padding-bottom: 10px;
+        }
+        p:first-child {
+          padding-top: 20px;
+        }
       }
     }
   }
@@ -302,13 +309,12 @@ body {
   padding:0;
   overflow: hidden;
   z-index: 0;
-
-  #shrink {
+  .mapbutton{
     z-index:9999;
-    background-color:rgba(0,60,136,.7);
+    background-color:rgba(24, 90, 177, 0.7);
     position: fixed;
-    top: 60px+ $header-height;
-    left: 9px;
+   
+    right: 9px;
     color: white;
     padding: 5px;
     text-align: center;
@@ -318,11 +324,21 @@ body {
     display: block;
     margin: 1px;
     box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.19), 0 6px 20px 0 rgba(255, 255, 255, 0.19);
-    display: none;
-    opacity: 30%;
+    
+    opacity: 90%;
     border-radius: 2px;
+  }
+  #shrink {
+    top: 60px+ $header-height;
+    display: none;
     
   
+  }
+  #expand{
+    top: 60px+ $header-height;
+  }
+  #ChangeMap {
+    top:10px+ $header-height;
   }
 }
 

@@ -6,6 +6,102 @@ router = express.Router()
 socket = require("../handlers/socket-handler")
 service = require("../handlers/token-service")
 
+router.get('/stadistics', function(req, res, next){
+	var resultat = [];
+    //Inicialitzem Arrays a 0
+    var ArrayA = [];
+    for (i=0;i<8;i++) ArrayA[i] = 0;
+    
+    var ArrayB = [];
+    for (i=0;i<8;i++) ArrayB[i] = 0;
+    
+    var ArrayNea = [];
+    for (i=0;i<8;i++) ArrayNea[i] = 0;
+    
+    var ArrayExterior = [];
+    for (i=0;i<8;i++) ArrayExterior[i] = 0;
+
+	Device.find({}, function(err, devices) {
+		devices.forEach(function(dev){
+			if (dev.lastInfo!=null){
+				if(dev.lastInfo.edificio == "A"){
+				    ArrayA[0]++;
+				    if(dev.active) ArrayA[1]++;
+				    ArrayA[dev.type+1]++
+				}
+	            else if(dev.lastInfo.edificio == "B") {
+	                ArrayB[0]++;
+	                if(dev.active) ArrayB[1]++;
+	                ArrayB[dev.type+1]++
+	            }
+	            else if(dev.lastInfo.edificio == "Neapolis") {
+	                ArrayNea[0]++;
+	                if(dev.active) ArrayNea[1]++;
+	                ArrayNea[dev.type+1]++
+	            }
+	            else {	
+                    console.log("elseee")
+	                ArrayExterior[0]++;
+	                if(dev.active) ArrayExterior[1]++;
+	                ArrayExterior[dev.type+1]++
+	            }
+			}
+        })
+
+    	var edificiA = {
+			total: ArrayA[0],
+			actius: ArrayA[1],
+			doctors: ArrayA[2],
+			pacients: ArrayA[3],
+	        fum: ArrayA[4],
+	        tipus4: ArrayA[5],
+	        temp: ArrayA[6],
+	        aire: ArrayA[7]
+		};
+	    var edificiB = {
+	        total: ArrayB[0],
+	        actius: ArrayB[1],
+	        doctors: ArrayB[2],
+	        pacients: ArrayB[3],
+	        fum: ArrayB[4],
+	        tipus4: ArrayB[5],
+	        temp: ArrayB[6],
+	        aire: ArrayB[7]
+	    };
+	    var edificiNea = {
+	        total: ArrayNea[0],
+	        actius: ArrayNea[1],
+	        doctors: ArrayNea[2],
+	        pacients: ArrayNea[3],
+	        fum: ArrayNea[4],
+	        tipus4: ArrayNea[5],
+	        temp: ArrayNea[6],
+	        aire: ArrayNea[7]
+	    };
+	    var exterior = {
+	        total: ArrayExterior[0],
+	        actius: ArrayExterior[1],
+	        doctors: ArrayExterior[2],
+	        pacients: ArrayExterior[3],
+	        fum: ArrayExterior[4],
+	        tipus4: ArrayExterior[5],
+	        temp: ArrayExterior[6],
+	        aire: ArrayExterior[7]
+        };
+        let result = {
+            "Edifici A": edificiA,
+            "Edifici B": edificiB,
+            "Neàpolis": edificiNea,
+            "Exterior": exterior
+
+        }
+        res.status(200).send(result)	
+	})
+    .catch(e => {
+        res.status(500).send('Internal server error')
+    })
+})
+
 router.get('/:id', function(req, res, next){
     
     if(req.params.id == 'count') { 
@@ -21,14 +117,13 @@ router.get('/:id', function(req, res, next){
         filter = arr.join('')
     }
 
-    Promise.all([
-        Device.findById(req.params.id).select(filter),
-        DeviceInformation.findOne({'id_device': req.params.id}, {'info': {'$slice': -1}})
-    ]).then(([device, information]) => {
-        if (information) { device.lastInfo = information.info[0] }
-        res.send(device)
-    }).catch(e => {
-        console.log(e);
+    Device.findById(req.params.id).select(filter)
+    .then(dev => {
+        if (!dev) res.status(404).send({message: "device doesn't exists"})
+        else res.status(200).send(dev)
+    })
+    .catch(e => {
+        res.status(500).send({message: 'Internal server error'})
     })
 })
 
@@ -48,8 +143,12 @@ router.get('/', function(req, res, next){
     let query = url.parse(req.url, true).query
     let size = parseInt(query.size || 20)
     let page = parseInt(query.page || 1)
+    let paginated = query.paginated || 'true'
+
+    
     delete query.size
     delete query.page
+    delete query.paginated
 
     if (query.name) {
         let regexp = new RegExp("^"+ query.name, "i");
@@ -62,10 +161,14 @@ router.get('/', function(req, res, next){
         delete query.fields
     }
 
-    console.log(query)
+    let prom;
+    if (paginated == 'true') {
+        prom = Device.paginate(query, {page: page, limit: size, sort: { modificationDate: -1}, select: filter})
+    } else {
+        prom = Device.find(query).sort({modificationDate: -1}).select(filter)
+    }
 
-    let prom = Device.paginate(query, {page: page, limit: size, sort: { modificationDate: -1}, select: filter})
-    .then(docs => {
+    prom.then(docs => {
         res.status(200).send(docs)
     })
     .catch(e => {
@@ -97,8 +200,7 @@ router.post('/', function(req, res, next) {
     device.save()
     .then(device => {
     	let tok = service.createToken(device)
-        device.token = tok
-        device.save()
+    	device.token = tok
         res.send({"status": 201, "id": device._id, "token": device.token})
         socket.deviceWasUpdated()
     }).catch(e => {
@@ -158,19 +260,23 @@ router.put('/:id/info', service.ensureDeviceAuthenticated, function(req, res, bo
     })
     .catch(e => {
         res.status(500).send({'message': 'Internal server error'})
+
     })
 })
 
 router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
+
     if (!req.body ) {
         res.status(400).send({"message": 'ERROR Fields missing'})
         return
     }
 
-    req.body.modificationDate = new Date().toISOString()
-
     Device.findByIdAndUpdate(req.params.id,{
-        $set: req.body
+        $set: {
+        	modificationDate: new Date(),
+            enabled: req.body.enabled,
+            deleted: req.body.deleted
+        }
     })
     .then(doc => {
     	socket.deviceWasUpdated()
@@ -178,6 +284,7 @@ router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
     })
     .catch(e => {
     	res.status(400).send({"message": 'ERROR Something went wrong'})
+    	return
   })
 })
 

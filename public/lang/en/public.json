@@ -29,6 +29,19 @@
     "modificationDate":"Modification",
     "type":"Type",
     "active":"Active",
+    "enabled":"Enabled",
+    "deleted":"Deleted",
+    "body_temperature":"Body Temperature",
+    "heart_rate":"Heart Rate",
+    "blood_pressure_systolic":"Low Pressure",
+    "bloog_pressure_diastolic":"Hight Pressure",
+    "gas_level":"Gas Level"
+    ,"tyres_pressure_alarm":"Pressure Alarm",
+    "Detection_alarm":"Alarm Detection",
+    "humidity":"Humidity",
+    "air_pressure":"Air Pressure",
+    "NO2":"NO2",
+    "PM10":"PM10",
     "Notifydate":"Date",
     "Notifytype":"Type"
 }

@@ -257,6 +257,65 @@ GET: /devices/delete/:id
 }
 ```
 
+**GET STATISTICS TABLE**
+```
+GET: /devices/statistics
+```
+
+### Response
+**OK**
+> Returns an array of dictionaries. An example of a dictionary could be:
+```json
+{
+  "Edifici" : "A",
+  "Total dispositius" : 50,
+  "Dispositius actius" : 40,
+  "Doctors" : 12,
+  "Pacients" : 15,
+  "Fum" : 3,
+  "Temperatura" : 5,
+  "Qualitat de l'aire" : 5
+}
+```
+
+We will return 4 dictionaries, one for each building (including exterior).
+
+**GET TEMPERATURE GRAPHIC**
+```
+GET: /devices/temp
+```
+
+### Response
+**OK**
+> Returns an array of dictionaries. An example of a dictionary could be:
+```json
+{
+  "x" : "20º",
+  "y" : 12:00
+}
+```
+
+We will return 8 dictionaries, one each two hours (from 8am to 10pm).
+
+
+**GET HUMIDITY/AIR QUALITY GRAPHIC**
+```
+GET: /devices/hum
+```
+
+### Response
+**OK**
+> Returns an array of dictionaries. An example of a dictionary could be:
+```json
+{
+  "x" : "10 units of how humidity is measured",
+  "y" : 16:00
+}
+```
+
+We will return 8 dictionaries, one each two hours (from 8am to 10pm).
+
+
 ## Sockets
 
 Sockets are a end to end connections allowing multiple devices send notifications to backend, also allows backend send messages to devices.
@@ -320,7 +379,7 @@ To test these notifications, you can use a third party library. A lot of tools a
 4. Click *Emit* button and to send the notificaciton to the server.
 
 You can also send notifications to backend via script. You should do the same as before but with code, using socketIO library (https://github.com/nexus-devs/socketIO-client-2.0.3).
-
+it 
 ### Receive messages from the backend
 
 This section will explain how to receive messages from the backend. Message is the action to receive data via socket from backend. For example if I want to receive shutdown notifications, I will need to know how to handle shutdown endpoint. 
