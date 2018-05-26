@@ -2,7 +2,7 @@ $header-height: 65px;
 $sidebar-width: 70px;
 $vh: 93vh;
 $sidebar-menu-color: #7A7979;
-$sidebar-device-list-color: #FAFAFA;
+$sidebar-device-list-color: white;
 
 * {
   padding: 0;
@@ -175,7 +175,7 @@ body {
   max-height: $vh;
   
   #devices {
-    background-color: white;
+    background-color: $sidebar-device-list-color;
     min-height: inherit;
     margin-left: 2px;
 
