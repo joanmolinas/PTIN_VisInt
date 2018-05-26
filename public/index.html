@@ -36,29 +36,29 @@
   <!-- Socket io -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
-  var socket = io.connect('http://localhost:3000', { query: "id=1234" });
-  socket.on('refreshDevicesTable', function() {
+    var socket = io.connect('http://localhost:3000', { query: "id=1234" });
+    socket.on('refreshDevicesTable', function () {
       console.log('refresh')
       document.getElementById("inici").click()
-     
-     $("device").load(location.href+" device>*","");
-  })
 
-  socket.on('shutdown', () => {
-    console.log('shutdown received')
-  })
+      $("device").load(location.href + " device>*", "");
+    })
 
-  socket.on('pacientLocation', (data) => {
-    console.log('Data received ' + data.location.latitude)
-  })
+    socket.on('shutdown', () => {
+      console.log('shutdown received')
+    })
+
+    socket.on('pacientLocation', (data) => {
+      console.log('Data received ' + data.location.latitude)
+    })
 
     socket.on('location', (data) => {
-    console.log('Data received ' + data.location.latitude)
-  })
-  
-</script>
+      console.log('Data received ' + data.location.latitude)
+    })
 
- <!-- End socket io -->
+  </script>
+
+  <!-- End socket io -->
 </head>
 
 <body>
@@ -94,6 +94,9 @@
             <a href="/" v-on:click="refreshDevices" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
               <i class="fas fa-home"></i>
             </a>
+            <a href="#" v-on:click="refreshDevices" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
+              <i class="fas fa-chart-bar"></i>
+            </a>          
             <span id="settings" class="pull-right">
               <a href="#" id="mobilFilterIcon" class="hidden-lg hidden-md" v-on:click="toggleMenu('filterMobile')">
                 <i class="fas fa-search"></i>
@@ -105,25 +108,21 @@
                 <a href="#" v-bind:title="trans['notifications_icon']" v-on:click="toggleNotifies" class="dropdown-toggle" data-toggle="dropdown">
                   <i class="fas fa-bell"></i>
                   <sup class="no-notification">0</sup>
-
                 </a>
                 <div id="notifications" class="dropdown-menu">
                   <div class=" notify" v-for="notify in notifications" v-bind:id="notify._id" v-on:click="selectNotify(notify)">
                     <div style="cursor: pointer;">
                       <p>
-                          {{trans['Notifydate']}}:
+                        {{trans['Notifydate']}}:
                         <strong>{{notify.date}}</strong>
                       </p>
                       <p>
                         {{trans['Notifytype']}}:
                         <strong>{{notify.type}}</strong>
                       </p>
-                     </div>
-
+                    </div>
                   </div>
-
                 </div>
-            
               </span>
               <span class="hidden-xs hidden-sm">
                 <a href="#" v-bind:title="trans['language_icon']" v-on:click="toggleMenu('lang-list')" style="margin-right:15px;">
@@ -160,7 +159,7 @@
                 <!-- <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
                   <i class="fas fa-angle-double-left"></i>
                 </a> -->
-                
+
               </div>
 
             </div>
@@ -172,8 +171,8 @@
 
         <!-- Display map -->
         <div id="content" class="col-md-6 col-md-push-6 ">
-            <div id="expand" class="mapbutton"  v-on:click="expandMap" title="Ocultar dispositivos" style="cursor: pointer">
-                <i class="fas fa-angle-double-left"></i>
+          <div id="expand" class="mapbutton" v-on:click="expandMap" title="Ocultar dispositivos" style="cursor: pointer">
+            <i class="fas fa-angle-double-left"></i>
           </div>
           <div id="shrink" class="mapbutton" v-on:click="shrinkMap" style="cursor: pointer;">
             <i class="fas fa-angle-double-right "></i>
@@ -213,42 +212,53 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="device" v-for="device in devices_column1" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
-                    <p>
-                      <i class="fas fa-microchip"></i> {{trans['device_name']}}:
-                      <strong>{{ device.name }}</strong>
-                    </p>
-                    <p v-if="device.lastInfo">
-                      <i class="fas fa-arrows-alt-v"></i> {{trans['device_latitude']}}:
-                      <strong>{{ device.lastInfo.latitude }}</strong>
-                    </p>
-                    <p v-if="device.lastInfo">
-                      <i class="fas fa-arrows-alt-h"></i> {{trans['device_longitude']}}:
-                      <strong>{{ device.lastInfo.longitude }}</strong>
-                    </p>
+                    <div class="row">
+                      <div class="col-md-3">
+                      </div>
+                      <div class="col-md-8" style="border:1px solid #e2e2e2;border-radius: 2px;font-weight:bolder;">
+                        <p>
+                          <span style="color:#4A4A4A">{{trans['device_name']}}</span>
+                          <strong class="pull-right" style="color:#C2C2C2">{{ device.name }}</strong>
+                        </p>
+                        <p v-if="device.lastInfo">
+                          <span style="color:#4A4A4A">{{trans['device_latitude']}}</span>
+                          <strong class="pull-right" style="color:#C2C2C2">{{ device.lastInfo.latitude }}</strong>
+                        </p>
+                        <p v-if="device.lastInfo">
+                          <span style="color:#4A4A4A">{{trans['device_longitude']}}</span>
+                          <strong class="pull-right" style="color:#C2C2C2">{{ device.lastInfo.longitude }}</strong>
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="device" v-for="device in devices_column2" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
-                    <p>
-                      <i class="fas fa-microchip"></i> {{trans['device_name']}}:
-                      <strong>{{ device.name }}</strong>
-                    </p>
-                    <p>
-                      <i class="fas fa-arrows-alt-v"></i> {{trans['device_latitude']}}:
-                      <strong>{{ device.lastInfo.latitude }}</strong>
-                    </p>
-                    <p>
-                      <i class="fas fa-arrows-alt-h"></i> {{trans['device_longitude']}}:
-                      <strong>{{ device.lastInfo.longitude }}</strong>
-                    </p>
+                    <div class="row">
+                      <div class="col-md-3">
+                      </div>
+                      <div class="col-md-8" style="border:1px solid #e2e2e2;border-radius: 2px;font-weight:bolder;">
+                        <p>
+                          <span style="color:#4A4A4A">{{trans['device_name']}}</span>
+                          <strong class="pull-right" style="color:#C2C2C2">{{ device.name }}</strong>
+                        </p>
+                        <p v-if="device.lastInfo">
+                          <span style="color:#4A4A4A">{{trans['device_latitude']}}</span>
+                          <strong class="pull-right" style="color:#C2C2C2">{{ device.lastInfo.latitude }}</strong>
+                        </p>
+                        <p v-if="device.lastInfo">
+                          <span style="color:#4A4A4A">{{trans['device_longitude']}}</span>
+                          <strong class="pull-right" style="color:#C2C2C2">{{ device.lastInfo.longitude }}</strong>
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
               </div>
             </div>
 
           </div>
           <div id="detail">
-            <div id="close" v-on:click="closeDetail" style="cursor: pointer;" class="row blocs">
+            <div id="close" v-on:click="closeDetail" style="cursor:pointer;" class="row blocs">
               <i class="fas fa-times"></i>
             </div>
             <div class=" row blocs">

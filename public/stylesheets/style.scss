@@ -175,7 +175,7 @@ body {
   max-height: $vh;
   
   #devices {
-    background-color: $sidebar-device-list-color;
+    background-color: white;
     min-height: inherit;
     margin-left: 2px;
 
@@ -223,11 +223,16 @@ body {
       padding-bottom: 50px;
 
       .device {
-        border: 1px solid #ccc;
-        background-color: whitesmoke;
+        border-radius: 5px 40px 5px 40px;
+        background-color: #FAFAFA;
         margin: 20px;
-        padding: 10px;
-        
+        padding: 20px;
+        p {
+          padding-bottom: 10px;
+        }
+        p:first-child {
+          padding-top: 20px;
+        }
       }
     }
   }

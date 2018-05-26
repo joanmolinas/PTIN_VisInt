@@ -3,28 +3,30 @@
 
 window.addEventListener('load', function () {
     /* Window resize behavior */
-    window.onresize = function(){
+    window.onresize = function () {
 
-        if(window.innerWidth <= 990){
+        if (window.innerWidth <= 990) {
             document.getElementsByTagName("body")[0].style.overflowX = "hidden"
-            document.getElementsByTagName("body")[0].style.overflowX = "hidden"        
-           
-        }else{
-            document.getElementsByTagName("body")[0].style.overflow = "hidden"   
-            window.scrollTo(0, 0);         
+            document.getElementsByTagName("body")[0].style.overflowX = "hidden"
+
+        } else {
+            document.getElementsByTagName("body")[0].style.overflow = "hidden"
+            window.scrollTo(0, 0);
         }
 
         // Fix mobile resize problems when user resize windows in desktop version.
         let sidebar = document.getElementById("sidebar").style.display = "block"
         let content = document.getElementById("content").style.display = "block"
     }
-    
+
     new Vue({
         el: '#vue',
         data: {
             base_url_api: 'https://ptin2018.herokuapp.com/api/', /*'http://localhost:3000/api/',*/
             devices_column1: [],
             devices_column2: [],
+            devices_icon_column1: [],
+            devices_icon_column2: [],
             selected_device: '',
             filter_text: '',
             device_type: '',
@@ -36,36 +38,35 @@ window.addEventListener('load', function () {
             vectorLayer: '',
             iconstyle: [],
             map: '',
-            heatmap:'',
-            deviceInfo:[],
-            deviceAtributes:[],
-            deviceSensors:[],
-        
+            heatmap: '',
+            deviceInfo: [],
+            deviceAtributes: [],
+            deviceSensors: [],
+
             min_length_filter: 3,
-            nots:[],
+            nots: [],
             trans: [],
-            atributesNames:["latitude","longitude","creationDate","name","_id","modificationDate","type","active","enabled","deleted","body_temperature","heart_rate","blood_pressure_systolic","bloog_pressure_diastolic","gas_level","tyres_pressure_alarm","Detection_alarm","humidity","air_pressure","NO2","PM10"],
-            atributesTraductionNames:[],
+            atributesNames: ["latitude", "longitude", "creationDate", "name", "_id", "modificationDate", "type", "active", "enabled", "deleted", "body_temperature", "heart_rate", "blood_pressure_systolic", "bloog_pressure_diastolic", "gas_level", "tyres_pressure_alarm", "Detection_alarm", "humidity", "air_pressure", "NO2", "PM10"],
+            atributesTraductionNames: [],
             debug: false,
             //Colors
-            gray:"rgb(125, 134, 134)",
-            orange:"rgb(243, 123, 11,1)",
-            yellow:"rgb(220, 241, 28)",
-            blue:"rgb(0, 140, 255,1)",
-            green:"rgb(7, 112, 7)",
-            lightblue:"rgb(45, 231, 245)",
-            notifications:[],//[{'_id':"1",'date':"26012018",'type':"General"},{'_id':"2",'date':"27012018",'type':"General"},{'_id':"3",'date':"28012018",'type':"General"}],
-            page:1
+            gray: "rgb(125, 134, 134)",
+            orange: "rgb(243, 123, 11,1)",
+            yellow: "rgb(220, 241, 28)",
+            blue: "rgb(0, 140, 255,1)",
+            green: "rgb(7, 112, 7)",
+            lightblue: "rgb(45, 231, 245)",
+            notifications: [],//[{'_id':"1",'date':"26012018",'type':"General"},{'_id':"2",'date':"27012018",'type':"General"},{'_id':"3",'date':"28012018",'type':"General"}],
+            page: 1
 
-    
+
         },
         mounted: function () {
             this.loadMap()
             this.getLanguage()
             this.getDevices()
             this.drawDevicesOnHeatMap()
-           this.loadNotifications()
-            console.log('Usuario: ' + localStorage.username)
+            this.loadNotifications()
         },
         methods: {
             /**
@@ -76,11 +77,11 @@ window.addEventListener('load', function () {
              */
             getDevices: function () {
                 let self = this
-               
-                axios.get(this.base_url_api + 'devices?page='+self.page+'&size=40').then(function (response) {
+
+                axios.get(this.base_url_api + 'devices?page=' + self.page + '&size=40').then(function (response) {
                     self.devices = response.data.docs
                     console.log(self.devices)
-                    self.devices.filter(function(device) {
+                    self.devices.filter(function (device) {
                         return device.lastInfo != null || device.lastInfo != undefined
                     }).forEach(function (device, index) {
                         if (index % 2 == 0)
@@ -90,14 +91,14 @@ window.addEventListener('load', function () {
                     });
                 }).catch(function (error) {
                     console.log(error.message)
-                }).then(function(){
+                }).then(function () {
                     //Draw The devices on the map
                     self.drawDevices()
-                   
+
                 })
             },
 
-            refreshDevices: function() {
+            refreshDevices: function () {
                 this.removeDevicesFromList()
                 this.getDevices()
                 this.drawDevicesOnHeatMap()
@@ -111,13 +112,13 @@ window.addEventListener('load', function () {
              */
             removeDevicesFromList: function () {
                 devices = document.getElementById("devices-list")
-                this.page=1
+                this.page = 1
                 let source = this.vectorLayer.getSource();
-                source.clear()              
-                
+                source.clear()
+
                 devices.getElementsByClassName("col-md-6")[0].innerHTML = ''
                 devices.getElementsByClassName("col-md-6")[1].innerHTML = ''
-               
+
             },
 
             /**
@@ -126,30 +127,30 @@ window.addEventListener('load', function () {
              * @version S2
              * @todo add spinner while. Filter by specified field.
              */
-            filterByText: function(){
-                if (this.filter_text.length == 0){
+            filterByText: function () {
+                if (this.filter_text.length == 0) {
                     this.removeDevicesFromList()
                     this.filterByType()
                 } else if (this.filter_text.length > 0 && this.filter_text.length < this.min_length_filter)
-                    console.log ("Nothing TO DO")
-                else{
+                    console.log("Nothing TO DO")
+                else {
                     let self = this
-                    setTimeout(function(){
+                    setTimeout(function () {
                         let query = self.base_url_api + 'devices/?'
-                        
-                        if(self.filter_text.length >= self.min_length_filter){
+
+                        if (self.filter_text.length >= self.min_length_filter) {
                             query += 'name=' + self.filter_text
                         }
-                        if(self.device_type.length > 0)
+                        if (self.device_type.length > 0)
                             query += '&type=' + self.device_type
 
-                        if(self.debug) console.log(query)
-                        
-                        axios.get(query).then(function(response){
+                        if (self.debug) console.log(query)
+
+                        axios.get(query).then(function (response) {
                             self.removeDevicesFromList()
                             self.devices = response.data
 
-                            self.devices.filter(function(device) {
+                            self.devices.filter(function (device) {
                                 return device.lastInfo != null || device.lastInfo != undefined
                             }).forEach(function (device, index) {
                                 console.log(device)
@@ -158,16 +159,16 @@ window.addEventListener('load', function () {
                                 else
                                     self.devices_column2.push(device)
                             });
-                        }).catch( function(error){
+                        }).catch(function (error) {
                             console.log(error.message)
-                        }).then(function(){
+                        }).then(function () {
                             //Draw The devices on the map after the filter is done
                             self.drawDevices()
                         })
                     }, this.queryDelay)
                 }
-                
-              
+
+
             },
 
             /**
@@ -176,27 +177,27 @@ window.addEventListener('load', function () {
              * @version S2
              * @todo add spinner while.
              */
-            filterByType: function(){
+            filterByType: function () {
 
                 this.removeDevicesFromList()
                 let self = this
                 let query = this.base_url_api + 'devices/?'
 
-                if(this.device_type.length > 0)
+                if (this.device_type.length > 0)
                     query += 'type=' + this.device_type
 
-                if(this.filter_text.length >= this.min_length_filter){
+                if (this.filter_text.length >= this.min_length_filter) {
                     if (query.slice(-1) != '?')
-                        query+='&'
+                        query += '&'
                     query += 'name=' + this.filter_text
                 }
 
                 if (this.debug) console.log(query)
 
-                axios.get(query).then(function(response){
+                axios.get(query).then(function (response) {
                     self.removeDevicesFromList()
                     self.devices = response.data
-                    self.devices.filter(function(device) {
+                    self.devices.filter(function (device) {
                         return device.lastInfo != null || device.lastInfo != undefined
                     }).forEach(function (device, index) {
                         if (index % 2 == 0)
@@ -204,13 +205,13 @@ window.addEventListener('load', function () {
                         else
                             self.devices_column2.push(device)
                     });
-                }).catch( function(error){
+                }).catch(function (error) {
                     console.log(error.message)
-                }).then(function(){
+                }).then(function () {
                     //Draw The devices on the map after the filter is done
                     self.drawDevices()
                 })
-                
+
             },
 
             /**
@@ -221,15 +222,15 @@ window.addEventListener('load', function () {
             expandMap: function () {
                 document.getElementById("sidebar").style.display = "none"
                 document.getElementById("content").className = "col-md-12"
-                if(this.heatmap.getVisible()){
+                if (this.heatmap.getVisible()) {
                     document.getElementById("shrink").style.display = "none"
                     document.getElementById("expand").style.display = "none"
-                }else{
+                } else {
                     document.getElementById("shrink").style.display = "block"
                     document.getElementById("expand").style.display = "none"
                 }
                 this.map.updateSize()
-                
+
             },
 
             /**
@@ -243,15 +244,15 @@ window.addEventListener('load', function () {
                 this.map.updateSize()
                 document.getElementById("shrink").style.display = "none"
                 document.getElementById("expand").style.display = "block"
-                
+
             },
-           
+
             loadMap: function () {
-                let self=this
+                let self = this
                 //Inicialitzate the vectorial layer empty.
                 this.vectorLayer = new ol.layer.Vector({
                     name: "vector",
-                    visible:true,
+                    visible: true,
                     source: new ol.source.Vector({
                         features: [
 
@@ -259,19 +260,19 @@ window.addEventListener('load', function () {
                     })
 
                 });
-                self.heatmap= new ol.layer.Heatmap({
-                    visible:false,
+                self.heatmap = new ol.layer.Heatmap({
+                    visible: false,
                     source: new ol.source.Vector({
-                        features:[
+                        features: [
 
                         ]
                     })
                 })
 
                 //Defining diferents sytles for the points in the map
-                let style=new ol.style.Style({
-                    image:new ol.style.Circle({
-                        radius:6,
+                let style = new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 6,
                         fill: new ol.style.Fill({
                             color: self.blue
                         }),
@@ -279,20 +280,20 @@ window.addEventListener('load', function () {
                     })
                 })
                 this.iconstyle.push(style)
-                style=new ol.style.Style({
-                    image:new ol.style.Circle({
-                        radius:6,
+                style = new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 6,
                         fill: new ol.style.Fill({
                             color: self.gray
                         }),
 
                     })
                 })
-                
+
                 this.iconstyle.push(style)
-                style=new ol.style.Style({
-                    image:new ol.style.Circle({
-                        radius:6,
+                style = new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 6,
                         fill: new ol.style.Fill({
                             color: self.orange
                         }),
@@ -300,9 +301,9 @@ window.addEventListener('load', function () {
                     })
                 })
                 this.iconstyle.push(style)
-                style=new ol.style.Style({
-                    image:new ol.style.Circle({
-                        radius:6,
+                style = new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 6,
                         fill: new ol.style.Fill({
                             color: self.green
                         }),
@@ -310,9 +311,9 @@ window.addEventListener('load', function () {
                     })
                 })
                 this.iconstyle.push(style)
-                style=new ol.style.Style({
-                    image:new ol.style.Circle({
-                        radius:6,
+                style = new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 6,
                         fill: new ol.style.Fill({
                             color: self.yellow
                         }),
@@ -320,9 +321,9 @@ window.addEventListener('load', function () {
                     })
                 })
                 this.iconstyle.push(style)
-                style=new ol.style.Style({
-                    image:new ol.style.Circle({
-                        radius:6,
+                style = new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 6,
                         fill: new ol.style.Fill({
                             color: self.lightblue
                         }),
@@ -339,173 +340,173 @@ window.addEventListener('load', function () {
                 //Define map center, map inital zoom, maxzoom and min zoom
                 this.map = new ol.Map({
                     layers: [new ol.layer.Group({
-                        layers:[
+                        layers: [
                             new ol.layer.Tile({
-                                title:'Base',
-                                visible:true,
-                                source: new ol.source.OSM({layer:'mapaBase'})
-                            }), 
+                                title: 'Base',
+                                visible: true,
+                                source: new ol.source.OSM({ layer: 'mapaBase' })
+                            }),
                             this.vectorLayer,
                             this.heatmap
-                            ]
-                        })],
-                
+                        ]
+                    })],
+
                     target: document.getElementById('content'),
                     view: new ol.View({
                         projection: 'EPSG:4326',
-                        center:this.mapCenter,
+                        center: this.mapCenter,
                         zoom: this.zoomInicial,
                         minZoom: this.minzm,
                         maxZoom: this.maxzm
-                        
+
 
                     })
                 })
-             
-                
-                
-                
-                this.map.on("click",function(evt){
-                    let cord=evt.coordinate
+
+
+
+
+                this.map.on("click", function (evt) {
+                    let cord = evt.coordinate
                     self.detaillonMapDevices(cord)
-                    })
+                })
 
             },
-            changeMap: function() {
-                let icone= document.getElementById("ChangeMap")
-                if(this.heatmap.getVisible()){
-                    icone.title="Canviar a Mapa de Calor"
+            changeMap: function () {
+                let icone = document.getElementById("ChangeMap")
+                if (this.heatmap.getVisible()) {
+                    icone.title = "Canviar a Mapa de Calor"
                     this.heatmap.setVisible(false);
                     this.vectorLayer.setVisible(true);
                     this.shrinkMap()
-                    
-                }else{
-                    icone.title="Canviar a Mapa de Punts"
+
+                } else {
+                    icone.title = "Canviar a Mapa de Punts"
                     this.heatmap.setVisible(true);
                     this.vectorLayer.setVisible(false);
                     this.expandMap()
                 }
             },
             //Show the detail view when a point on the map is click
-            detaillonMapDevices:function(coord){
-                
-                let self=this
-                if(!self.heatmap.getVisible()){
+            detaillonMapDevices: function (coord) {
+
+                let self = this
+                if (!self.heatmap.getVisible()) {
                     let source = self.vectorLayer.getSource();
                     let features = source.getFeatures();
-                    let i=0
-                    let find=false
-                    while((i<features.length)&&(find==false)){
-                        let geom=features[i].getGeometry()
-                        let pcoord=geom.getCoordinates()
-                        let plat=parseFloat(pcoord[0]).toFixed(4)
-                        let plon=parseFloat(pcoord[1]).toFixed(4)
-                        let lat=parseFloat(coord[0]).toFixed(4)
-                        let lon=parseFloat(coord[1]).toFixed(4)
-                        let offset=0.00000001
-                        if(((plat<=lat+offset)&&(plat>=lat-offset))&&((plon<=lon+offset)&&(plon>=lon-offset))){
+                    let i = 0
+                    let find = false
+                    while ((i < features.length) && (find == false)) {
+                        let geom = features[i].getGeometry()
+                        let pcoord = geom.getCoordinates()
+                        let plat = parseFloat(pcoord[0]).toFixed(4)
+                        let plon = parseFloat(pcoord[1]).toFixed(4)
+                        let lat = parseFloat(coord[0]).toFixed(4)
+                        let lon = parseFloat(coord[1]).toFixed(4)
+                        let offset = 0.00000001
+                        if (((plat <= lat + offset) && (plat >= lat - offset)) && ((plon <= lon + offset) && (plon >= lon - offset))) {
                             this.deviceDetail(features[i].get("name"))
-                            find=true
+                            find = true
                         }
-                        i=i+1
-                    } 
+                        i = i + 1
+                    }
                 }
             },
-            
-            drawDevicesOnHeatMap: function(){
-                let self=this
-                axios.get(this.base_url_api + 'devices?active=true&enabled=true&page='+self.page).then(function (response) {
+
+            drawDevicesOnHeatMap: function () {
+                let self = this
+                axios.get(this.base_url_api + 'devices?active=true&enabled=true&page=' + self.page).then(function (response) {
                     self.devices = response.data.docs
-                   
+
                     self.devices.forEach(function (device, index) {
                         let source = self.heatmap.getSource();
-                        let heatPoint= new ol.Feature({
+                        let heatPoint = new ol.Feature({
                             name: device._id,
                             geometry: new ol.geom.Point([parseFloat(device.lastInfo.longitude), parseFloat(device.lastInfo.latitude)])
-                            
+
                         })
-                        
+
                         source.addFeature(heatPoint)
                     });
                 }).catch(function (error) {
                     console.log(error.message)
                 })
-                
+
             },
             //draw all devices then have latitude and longitude.
             drawDevices: function () {
                 let self = this
 
-                let devices=self.devices_column1.concat(self.devices_column2)
-                    //Defining variables for compute the average center
-                   /* let i=0
-                    let latitudeCenter=0
-                    let longitudeCenter=0*/
-                    devices.forEach(function (device) {
+                let devices = self.devices_column1.concat(self.devices_column2)
+                //Defining variables for compute the average center
+                /* let i=0
+                 let latitudeCenter=0
+                 let longitudeCenter=0*/
+                devices.forEach(function (device) {
 
-                        if (device.lastInfo) {
-                            if((device.lastInfo.latitude)&&(device.lastInfo.longitude)){
-                                //Compute a sum of latituds and a sum of longituds only if the device values are not very diferents from the map center
-                                /*if((device.lastInfo[0].latitude<self.mapCenter[1]+0.1)&&(device.lastInfo[0].latitude>self.mapCenter[1]-0.1)){
+                    if (device.lastInfo) {
+                        if ((device.lastInfo.latitude) && (device.lastInfo.longitude)) {
+                            //Compute a sum of latituds and a sum of longituds only if the device values are not very diferents from the map center
+                            /*if((device.lastInfo[0].latitude<self.mapCenter[1]+0.1)&&(device.lastInfo[0].latitude>self.mapCenter[1]-0.1)){
 
-                                    if((device.lastInfo[0].longitude<self.mapCenter[0]+0.1)&&(device.lastInfo[0].longitude>self.mapCenter[0]-0.1)){
-                                        latitudeCenter=latitudeCenter+device.lastInfo[0].latitude
-                                        longitudeCenter=longitudeCenter+device.lastInfo[0].longitude
-                                        i=i+1
-                                    }
-
-                                }*/
-
-                                let source = self.vectorLayer.getSource();
-                                
-                                let point=new ol.Feature({
-                                    name: device._id,
-                                    geometry: new ol.geom.Point([parseFloat(device.lastInfo.longitude), parseFloat(device.lastInfo.latitude)])
-                                    
-                                })
-                                
-                                
-                                
-                               
-                               
-                               
-                                
-                                
-                                //For each device type is set one style point.
-                                switch(device.type){
-                                    case 1:
-                                        point.setStyle(self.iconstyle[0])
-                                        break;
-                                    case 2:
-                                        point.setStyle(self.iconstyle[1])
-                                        break;
-                                    case 3:
-                                        point.setStyle(self.iconstyle[2])
-                                        break;
-                                    case 4:
-                                        point.setStyle(self.iconstyle[3])
-                                        break;
-                                    case 5:
-                                        point.setStyle(self.iconstyle[4])
-                                        break;
-                                    case 6:
-                                        point.setStyle(self.iconstyle[4])
-                                        break;
-                                    
+                                if((device.lastInfo[0].longitude<self.mapCenter[0]+0.1)&&(device.lastInfo[0].longitude>self.mapCenter[0]-0.1)){
+                                    latitudeCenter=latitudeCenter+device.lastInfo[0].latitude
+                                    longitudeCenter=longitudeCenter+device.lastInfo[0].longitude
+                                    i=i+1
                                 }
-                                
-                                //point is added
-                                source.addFeature(point)
-                                
-                         }
+
+                            }*/
+
+                            let source = self.vectorLayer.getSource();
+
+                            let point = new ol.Feature({
+                                name: device._id,
+                                geometry: new ol.geom.Point([parseFloat(device.lastInfo.longitude), parseFloat(device.lastInfo.latitude)])
+
+                            })
+
+
+
+
+
+
+
+
+                            //For each device type is set one style point.
+                            switch (device.type) {
+                                case 1:
+                                    point.setStyle(self.iconstyle[0])
+                                    break;
+                                case 2:
+                                    point.setStyle(self.iconstyle[1])
+                                    break;
+                                case 3:
+                                    point.setStyle(self.iconstyle[2])
+                                    break;
+                                case 4:
+                                    point.setStyle(self.iconstyle[3])
+                                    break;
+                                case 5:
+                                    point.setStyle(self.iconstyle[4])
+                                    break;
+                                case 6:
+                                    point.setStyle(self.iconstyle[4])
+                                    break;
+
+                            }
+
+                            //point is added
+                            source.addFeature(point)
+
                         }
+                    }
 
 
 
-                    });
-                    //Compute the average center map and set the map center.
-                    /*self.mapCenter=[longitudeCenter/i,latitudeCenter/i]
-                    self.map.getView().setCenter(self.mapCenter)*/
+                });
+                //Compute the average center map and set the map center.
+                /*self.mapCenter=[longitudeCenter/i,latitudeCenter/i]
+                self.map.getView().setCenter(self.mapCenter)*/
 
 
             },
@@ -513,121 +514,121 @@ window.addEventListener('load', function () {
             //Makes a request for the device data, when request finish execute the function showdetail
             deviceDetail: function (idDevice) {
 
-                let self=this
-               //Rquest for device data
-                self.deviceAtributes=[]
-                self.deviceInfo=[]
-                self.deviceSensors=[]
-                self.selected_device=''
-                axios.get(this.base_url_api + 'devices/'+idDevice).then(function (response) {
+                let self = this
+                //Rquest for device data
+                self.deviceAtributes = []
+                self.deviceInfo = []
+                self.deviceSensors = []
+                self.selected_device = ''
+                axios.get(this.base_url_api + 'devices/' + idDevice).then(function (response) {
 
-                     self.selected_device=response.data
+                    self.selected_device = response.data
 
-                  //
+                    //
 
-                }).then(function(){
+                }).then(function () {
                     self.showDetail()
                 })
             },
             //Show the detail view with all the data from the deviece.
-            showDetail:function(){
-                let self=this
+            showDetail: function () {
+                let self = this
                 //Get array with the keys of diferent basic parameters
-                let keys=Object.keys(self.selected_device)
-               //For each parameters, is used the atributesTraductionNames and the atributesNames arrays to get de name of the parameter
-                    //each parameter is keepst in array
-                
-                keys.forEach(function(k){
-                    if((k!="lastInfo")&&(k!="__v")){
+                let keys = Object.keys(self.selected_device)
+                //For each parameters, is used the atributesTraductionNames and the atributesNames arrays to get de name of the parameter
+                //each parameter is keepst in array
+
+                keys.forEach(function (k) {
+                    if ((k != "lastInfo") && (k != "__v")) {
                         //If device is active the icon shadow wil be green, if it is not active the icon shadow will be red
-                        if(k=="active"){
+                        if (k == "active") {
 
-                            if(self.selected_device[k]==true){
+                            if (self.selected_device[k] == true) {
 
-                                 document.getElementById('icon').style.boxShadow=" 0px 0px 20px 5px greenyellow"
+                                document.getElementById('icon').style.boxShadow = " 0px 0px 20px 5px greenyellow"
 
-                            }else{
-                                document.getElementById('icon').style.boxShadow="0px 0px 20px 5px red"
+                            } else {
+                                document.getElementById('icon').style.boxShadow = "0px 0px 20px 5px red"
                             }
-                        }else{
-                            if(k=="type"){
+                        } else {
+                            if (k == "type") {
                                 //Each type of device have his own icon background color color
-                               switch(self.selected_device[k]){
-                                   case 1:
-                                        document.getElementById('icon').style.backgroundColor=self.blue
-                                        document.getElementById('close').style.color=self.blue
+                                switch (self.selected_device[k]) {
+                                    case 1:
+                                        document.getElementById('icon').style.backgroundColor = self.blue
+                                        document.getElementById('close').style.color = self.blue
                                         break;
                                     case 2:
-                                        document.getElementById('icon').style.backgroundColor=self.gray
-                                        document.getElementById('close').style.color=self.gray
+                                        document.getElementById('icon').style.backgroundColor = self.gray
+                                        document.getElementById('close').style.color = self.gray
                                         break;
                                     case 3:
-                                        document.getElementById('icon').style.backgroundColor=self.orange
-                                        document.getElementById('close').style.color=self.orange
+                                        document.getElementById('icon').style.backgroundColor = self.orange
+                                        document.getElementById('close').style.color = self.orange
                                         break;
                                     case 4:
-                                        document.getElementById('icon').style.backgroundColor=self.green
-                                        document.getElementById('close').style.color=self.green
+                                        document.getElementById('icon').style.backgroundColor = self.green
+                                        document.getElementById('close').style.color = self.green
                                         break;
                                     case 5:
-                                        document.getElementById('icon').style.backgroundColor=self.yellow
-                                        document.getElementById('close').style.color=self.yellow
+                                        document.getElementById('icon').style.backgroundColor = self.yellow
+                                        document.getElementById('close').style.color = self.yellow
                                         break;
                                     case 6:
-                                        document.getElementById('icon').style.backgroundColor=self.lightblue
-                                        document.getElementById('close').style.color=self.lightblue
+                                        document.getElementById('icon').style.backgroundColor = self.lightblue
+                                        document.getElementById('close').style.color = self.lightblue
                                         break;
 
-                                   default:
-                                        document.getElementById('icon').style.backgroundColor="rgb(0, 140, 255)"
-                                        document.getElementById('close').style.color="rgb(0, 140, 255)"
-                                   break;
+                                    default:
+                                        document.getElementById('icon').style.backgroundColor = "rgb(0, 140, 255)"
+                                        document.getElementById('close').style.color = "rgb(0, 140, 255)"
+                                        break;
 
-                               }
+                                }
                             }
-                            if(k!="token"){
+                            if (k != "token") {
                                 self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
-                            
+
                                 self.deviceInfo.push(self.selected_device[k])
                                 self.deviceAtributes.push(self.deviceInfo)
-                               
-                                self.deviceInfo=[]
+
+                                self.deviceInfo = []
                             }
                         }
 
                     }
 
                 })
-                
-                if(self.selected_device.lastInfo){
+
+                if (self.selected_device.lastInfo) {
                     //Get array with the keys of diferent Sensors parameters
-                    let keysSensors=Object.keys(self.selected_device.lastInfo)
-                //For each parameters, is used the atributesTraductionNames and the atributesNames arrays to get de name of the parameter
+                    let keysSensors = Object.keys(self.selected_device.lastInfo)
+                    //For each parameters, is used the atributesTraductionNames and the atributesNames arrays to get de name of the parameter
                     //each parameter is keepst in array
-                   
-                    keysSensors.forEach(function(k){
-                        if(k!="date"){
+
+                    keysSensors.forEach(function (k) {
+                        if (k != "date") {
 
                             self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
-                            
-                            
+
+
                             self.deviceInfo.push(self.selected_device.lastInfo[k])
-                            
+
                             self.deviceSensors.push(self.deviceInfo)
-                           
-                            self.deviceInfo=[]
+
+                            self.deviceInfo = []
                         }
 
                     })
                     //If device have a localitzation the map view is center in the device.
-                    if((self.selected_device.lastInfo.latitude)&&(self.selected_device.lastInfo.longitude)){
-                      
+                    if ((self.selected_device.lastInfo.latitude) && (self.selected_device.lastInfo.longitude)) {
+
                         self.map.getView().setCenter([parseFloat(self.selected_device.lastInfo.longitude), parseFloat(self.selected_device.lastInfo.latitude)])
                         self.map.getView().setZoom(20)
                     }
                 }
-                 //The layer device and filter is hide and show the detail layer
-                let mobilevers= document.getElementById("filter").style
+                //The layer device and filter is hide and show the detail layer
+                let mobilevers = document.getElementById("filter").style
                 document.getElementById("devices").style.display = "none"
                 document.getElementById("filter").style.display = "none"
                 document.getElementById("detail").style.display = "inherit"
@@ -635,15 +636,15 @@ window.addEventListener('load', function () {
 
             },
             //Closes the detailview
-            closeDetail:function(){
+            closeDetail: function () {
                 //Restart global variables
-                let self=this
-                self.deviceAtributes=[]
-                self.deviceInfo=[]
-                self.deviceSensors=[]
-                self.selected_device=''
+                let self = this
+                self.deviceAtributes = []
+                self.deviceInfo = []
+                self.deviceSensors = []
+                self.selected_device = ''
                 //hide the detail view and show the list devices
-                document.getElementsByClassName("detail").innerHTML=""
+                document.getElementsByClassName("detail").innerHTML = ""
                 document.getElementById("detail").style.display = "none"
                 document.getElementById("devices").style.display = "inherit"
                 document.getElementById("filter").style.display = "inherit"
@@ -656,39 +657,39 @@ window.addEventListener('load', function () {
              * @author ncarmona
              * @description Getting translation strings.
              * @version S3
-             */            
-            getLanguage: function(){
-                let trans_file = '/lang/'+localStorage.language+'/public.json'
+             */
+            getLanguage: function () {
+                let trans_file = '/lang/' + localStorage.language + '/public.json'
                 let self = this
 
                 console.log(trans_file)
 
-                if(localStorage.language == null){
+                if (localStorage.language == null) {
                     localStorage.language = 'cat'
-                }else{
-                    axios.get(trans_file).then(function(trans_string){
+                } else {
+                    axios.get(trans_file).then(function (trans_string) {
                         self.trans = trans_string.data
                         console.log("language file: " + trans_file)
                         console.log("Website language: " + localStorage.language)
-                        self.atributesTraductionNames=[self.trans["latitude"],self.trans["longitude"],self.trans["creationDate"],self.trans["name"],self.trans["_id"],self.trans["modificationDate"],self.trans["type"],self.trans["active"],self.trans["enabled"],self.trans["deleted"],self.trans["body_temperature"],self.trans["heart_rate"],self.trans["blood_pressure_systolic"],self.trans["bloog_pressure_diastolic"],self.trans["gas_level"],self.trans["tyres_pressure_alarm"],self.trans["Detection_alarm"],self.trans["humidity"],self.trans["air_pressure"],self.trans["NO2"],self.trans["PM10"]]
-                        
-                    }).catch( function(error){
+                        self.atributesTraductionNames = [self.trans["latitude"], self.trans["longitude"], self.trans["creationDate"], self.trans["name"], self.trans["_id"], self.trans["modificationDate"], self.trans["type"], self.trans["active"], self.trans["enabled"], self.trans["deleted"], self.trans["body_temperature"], self.trans["heart_rate"], self.trans["blood_pressure_systolic"], self.trans["bloog_pressure_diastolic"], self.trans["gas_level"], self.trans["tyres_pressure_alarm"], self.trans["Detection_alarm"], self.trans["humidity"], self.trans["air_pressure"], self.trans["NO2"], self.trans["PM10"]]
+
+                    }).catch(function (error) {
                         console.log(error.message)
-                    })  
+                    })
                 }
-               
+
             },
 
             /**
              * @author ncarmona
              * @description parse int to name lang.
              * @version S3
-             */ 
-            int2lang: function(intnum){
+             */
+            int2lang: function (intnum) {
                 let lang = 'cat'
-                
-                if(intnum == 2) lang = 'es'
-                else if(intnum == 3) lang = 'en'
+
+                if (intnum == 2) lang = 'es'
+                else if (intnum == 3) lang = 'en'
 
                 return lang
             },
@@ -697,12 +698,12 @@ window.addEventListener('load', function () {
              * @author ncarmona
              * @description parse lang to int number.
              * @version S3
-             */ 
-            lang2int: function(lang){
+             */
+            lang2int: function (lang) {
                 let intnum = 1
 
-                if(lang == 'es') intnum = 2
-                else if(lang == 'en') intnum = 3
+                if (lang == 'es') intnum = 2
+                else if (lang == 'en') intnum = 3
 
                 return intnum
             },
@@ -711,28 +712,28 @@ window.addEventListener('load', function () {
              * @author ncarmona
              * @description Change the website language.
              * @version S3
-             */             
-            toggleLanguage: function(language){
-                if(this.debug) console.log("selected language: " + language)
+             */
+            toggleLanguage: function (language) {
+                if (this.debug) console.log("selected language: " + language)
 
                 localStorage.language = language
                 this.getLanguage()
 
                 // Change user language in database.
-                if(localStorage.username !== null){
+                if (localStorage.username !== null) {
 
                     let self = this
-                    if(this.debug) console.log("Cambiando idioma: " + this.base_url_api + 'users/' + localStorage.userID)
+                    if (this.debug) console.log("Cambiando idioma: " + this.base_url_api + 'users/' + localStorage.userID)
                     console.log(localStorage.token)
 
-                    axios.put(this.base_url_api + 'users/' + localStorage.userID,{
+                    axios.put(this.base_url_api + 'users/' + localStorage.userID, {
                         language: self.lang2int(localStorage.language)
-                    },{
-                        headers: { Authorization: "bearer " + localStorage.token}
-                    }
-                ).then(function(){
-                        
-                    }).catch(function(error){
+                    }, {
+                            headers: { Authorization: "bearer " + localStorage.token }
+                        }
+                    ).then(function () {
+
+                    }).catch(function (error) {
                         console.log(error)
                     })
                 }
@@ -746,21 +747,21 @@ window.addEventListener('load', function () {
              * @description Toggle menus.
              * @version S3
              * @todo add transitions. Hide list if user clicks outside the div.
-             */               
-            toggleMenu: function(layer){
+             */
+            toggleMenu: function (layer) {
                 let langlist = document.getElementById(layer).style
                 langlist.display = langlist.display == "block" ? "none" : "block"
             },
-            toggleNotifies: function(){
+            toggleNotifies: function () {
                 let notify = document.getElementById("notifications").style
-                let self=this
-                if(notify.display ==="none"){
-                    notify.display="block"
-                   
-                }else{
-                    notify.display="none"
+                let self = this
+                if (notify.display === "none") {
+                    notify.display = "block"
+
+                } else {
+                    notify.display = "none"
                 }
-               
+
             },
 
             /**
@@ -768,81 +769,82 @@ window.addEventListener('load', function () {
              * @description Toggle map and sidebar.
              * @version S3
              * @todo add transitions. Hide list if user clicks outside the div.
-             */               
-            toggleMap: function(){
+             */
+            toggleMap: function () {
                 let sidebar = document.getElementById("sidebar").style
                 let content = document.getElementById("content").style
                 let iconToggle = document.getElementById("displaySidebarMap").classList
 
-                if(sidebar.display == "block"){
+                if (sidebar.display == "block") {
                     sidebar.display = "none"
-                    content.display = "block"   
+                    content.display = "block"
                     iconToggle.remove("fa-map")
-                    iconToggle.add("fa-list-alt")                     
-                }else{
+                    iconToggle.add("fa-list-alt")
+                } else {
                     sidebar.display = "block"
-                    content.display = "none"   
+                    content.display = "none"
                     iconToggle.remove("fa-list-alt")
-                    iconToggle.add("fa-map")                
+                    iconToggle.add("fa-map")
                 }
             },
-            newDevicePage:function(){
+            newDevicePage: function () {
                 let devicelist = document.getElementById("devices-list")
-                
-                if(devicelist.scrollHeight-devicelist.scrollTop===devicelist.clientHeight){
-                    this.page=this.page+1
-                    if((this.devices_column1.length+this.devices_column2.length)>=100){
-                        while((this.devices_column1.length+this.devices_column2.length)>=100){
+
+                if (devicelist.scrollHeight - devicelist.scrollTop === devicelist.clientHeight) {
+                    this.page = this.page + 1
+                    if ((this.devices_column1.length + this.devices_column2.length) >= 100) {
+                        while ((this.devices_column1.length + this.devices_column2.length) >= 100) {
                             this.devices_column1.pop(0)
                             this.devices_column2.pop(0)
                         }
                     }
-                   
+
                     devices = document.getElementById("devices-list")
                     let source = this.vectorLayer.getSource();
-                    source.clear()              
-                    
+                    source.clear()
+
                     devices.getElementsByClassName("col-md-6")[0].innerHTML = ''
                     devices.getElementsByClassName("col-md-6")[1].innerHTML = ''
                     this.getDevices()
-                    console.log(this.devices_column1.length+this.devices_column2.length)
+                    console.log(this.devices_column1.length + this.devices_column2.length)
                 }
             },
-            loadNotifications:function (){
-               let self=this
-                
+            loadNotifications: function () {
+                let self = this
+
                 axios.get(this.base_url_api + 'notifications/').then(function (response) {
-                    self.notifications=response.data
-                     self.nots.forEach(function (not){
+                    self.notifications = response.data
+                    self.nots.forEach(function (not) {
                         self.notifications.push(not)
-                        
-                        if(not.notification_seen){
-                            document.getElementById(not._id).style.backgroundColor="white"
-                        }else{
-                            document.getElementById(not._id).style.backgroundColor="#ccc"
+
+                        if (not.notification_seen) {
+                            document.getElementById(not._id).style.backgroundColor = "white"
+                        } else {
+                            document.getElementById(not._id).style.backgroundColor = "#ccc"
                         }
-                        
-                     })
-                    }).catch( function(error){
-                        console.log(error.message)
                     })
+                }).catch(function (error) {
+                    console.log(error.message)
+                })
             },
-            selectNotify:function(notify){
+            selectNotify: function (notify) {
                 console.log(notify)
-                if(notify.notification_seen==false){
+                if (notify.notification_seen == false) {
 
-                    document.getElementById(notify._id).style.backgroundColor="white"
+                    document.getElementById(notify._id).style.backgroundColor = "white"
                 }
-                
-
-                 
-                
-                
+            },
+            setDeviceIcon: function (type, devID) {
+                let deviceTypes = {
+                    1: '',
+                    2: '',
+                    3: '',
+                    4: '',
+                    5: '',
+                    6: '',
+                }
+                document.getElementById('device-icon-' + devID).innerHTML = deviceTypes[type]
             }
-
-
         }
-
-
     })
 })
