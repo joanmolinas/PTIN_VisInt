@@ -36,8 +36,8 @@
   <!-- Socket io -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    var socket = io.connect('http://localhost:3000', { query: "id=1234" });
-    socket.on('refreshDevicesTable', function () {
+  var socket = io.connect('http://localhost:3000');
+  socket.on('refreshDevicesTable', function() {
       console.log('refresh')
       document.getElementById("inici").click()
 

@@ -21,8 +21,15 @@ function ensureUserAuthenticated(req, res, next) {
 	let token = req.headers.authorization.split(" ")[1]
 	User.findOne({'token': token})
 	.then(doc => {
+		if (!doc) {
+			res.status(404).send({'message': 'Provide a valid token for this user'})
+			return
+		}
 		let payload = jwt.decode(token, config.SECRET_TOKEN)
-		if (payload.exp <= moment().unix) { res.status(401).send({'message' : 'Invalid token'})}
+		if (payload.exp <= moment().unix || req.params.id != doc._id) { 
+			res.status(401).send({'message' : 'Invalid token'})
+			return
+		}
 		next()
 	})
 	.catch(e => {
@@ -36,8 +43,16 @@ function ensureDeviceAuthenticated(req, res, next) {
 	let token = req.headers.authorization.split(" ")[1]
 	Device.findOne({'token': token})
 	.then(doc => {
+		if (!doc) {
+			res.status(404).send({'message': 'Provide a valid token for this device'})
+			return
+		}
+
 		let payload = jwt.decode(token, config.SECRET_TOKEN)
-		if (payload.exp <= moment().unix) { res.status(401).send({'message' : 'Invalid token'})}
+		if (payload.exp <= moment().unix || req.params.id != doc._id) { 
+			res.status(401).send({'message' : 'Invalid token'})
+			return
+		}
 		next()
 	})
 	.catch(e => {
