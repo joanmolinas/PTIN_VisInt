@@ -65,7 +65,7 @@ function heartAttack(data) {
 
         Promise.all([
             Device.find({'additionalInfo.type': 1, active: true}),
-            Device.findById(data.requester, '_id name')
+            Device.findById(data.requester)
         ])
         .then(([doctors, requester]) => {
             if (doctors.length == 0) {
@@ -90,19 +90,17 @@ function heartAttack(data) {
 
             let doctor = doctors.filter(item => item._id === doctorId)[0]
 
-            let notification = new Notification({
-                requester: requester._id,
-                date: new Date().toISOString(),
-                deviceAssociated: doctor._id,
-                readed: false,
-                typeOfAction: 1
-            })
+            // let notification = new Notification({
+            //     requester: requester._id,
+            //     date: new Date().toISOString(),
+            //     deviceAssociated: doctor._id,
+            //     readed: false,
+            //     typeOfAction: 1
+            // })
 
-            notification.save()
-            .then(resolve)
-            .catch(reject)
-
-
+            // notification.save()
+            // .then(resolve)
+            // .catch(reject)
         })
         .catch(e => {
             console.log(e)

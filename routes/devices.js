@@ -47,8 +47,12 @@ router.get('/', function(req, res, next){
     let query = url.parse(req.url, true).query
     let size = parseInt(query.size || 20)
     let page = parseInt(query.page || 1)
+    let paginated = query.paginated || 'true'
+
+    
     delete query.size
     delete query.page
+    delete query.paginated
 
     if (query.name) {
         let regexp = new RegExp("^"+ query.name, "i");
@@ -61,12 +65,14 @@ router.get('/', function(req, res, next){
         delete query.fields
     }
 
-    if (Object.keys(query).length !== 0) {
-        query.lastInfo = { $elemMatch: req.body}
+    let prom;
+    if (paginated == 'true') {
+        prom = Device.paginate(query, {page: page, limit: size, sort: { modificationDate: -1}, select: filter})
+    } else {
+        prom = Device.find(query).sort({modificationDate: -1}).select(filter)
     }
 
-    let prom = Device.paginate(query, {page: page, limit: size, sort: { modificationDate: -1}, select: filter})
-    .then(docs => {
+    prom.then(docs => {
         res.status(200).send(docs)
     })
     .catch(e => {
