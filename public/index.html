@@ -172,10 +172,10 @@
 
         <!-- Display map -->
         <div id="content" class="col-md-6 col-md-push-6 ">
-            <div id="expand" class="mapbutton"  v-on:click="expandMap" title="Ocultar dispositivos" style="cursor: pointer">
-                <i class="fas fa-angle-double-left"></i>
+          <div id="expand" class="mapbutton hidden-sm hidden-xs"  v-on:click="expandMap" title="Ocultar dispositivos" style="cursor: pointer">
+            <i class="fas fa-angle-double-left"></i>
           </div>
-          <div id="shrink" class="mapbutton" v-on:click="shrinkMap" style="cursor: pointer;">
+          <div id="shrink" class="mapbutton idden-sm hidden-xs" v-on:click="shrinkMap" style="cursor: pointer;">
             <i class="fas fa-angle-double-right "></i>
           </div>
           <div id="ChangeMap" class="mapbutton" v-on:click="changeMap" title="Canviar a Mapa de Calor" style="cursor: pointer;">
@@ -185,10 +185,8 @@
         <!-- sidebar -->
         <div id="sidebar" class="col-md-6 col-md-pull-6">
           <div id="devices">
-
             <!-- header sidebar. Filter devices, show/hide devices -->
             <div id="filter" class="row hidden-xs hidden-sm">
-
               <!-- filter textbox -->
               <div class="col-md-6 filter-input">
                 <input type="text" v-on:keyup="filterByText" v-model="filter_text" v-bind:placeholder="trans['filter_device']" />
