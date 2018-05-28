@@ -40,7 +40,7 @@ window.addEventListener('load', function () {
             deviceInfo: [],
             deviceAtributes: [],
             deviceSensors: [],
-
+            maxDevicesPages: 0,
             min_length_filter: 3,
             nots: [],
             trans: [],
@@ -76,8 +76,7 @@ window.addEventListener('load', function () {
              */
             getDevices: function () {
                 let self = this
-
-                axios.get(this.base_url_api + 'devices?page=' + self.page + '&size=40').then(function (response) {
+                axios.get(this.base_url_api + 'devices?page=' + self.page + '&size=10').then(function (response) {
                     self.devices = response.data.docs
                     self.devices.filter(function (device) {
                         return device.lastInfo != null || device.lastInfo != undefined
@@ -799,11 +798,13 @@ window.addEventListener('load', function () {
                     devices = document.getElementById("devices-list")
                     let source = this.vectorLayer.getSource();
                     source.clear()
-
-                    devices.getElementsByClassName("col-md-6")[0].innerHTML = ''
-                    devices.getElementsByClassName("col-md-6")[1].innerHTML = ''
-                    this.getDevices()
-                    console.log(this.devices_column1.length + this.devices_column2.length)
+                    console.log('num pagina' + this.page + 'paginas totales' + this.maxDevicesPages)
+                    if (this.page <= this.maxDevicesPages) {
+                        devices.getElementsByClassName("col-md-6")[0].innerHTML = ''
+                        devices.getElementsByClassName("col-md-6")[1].innerHTML = ''
+    
+                        this.getDevices()
+                    }
                 }
             },
             loadNotifications: function () {
