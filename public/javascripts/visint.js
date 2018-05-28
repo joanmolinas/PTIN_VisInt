@@ -411,9 +411,9 @@ window.addEventListener('load', function () {
 
             drawDevicesOnHeatMap: function () {
                 let self = this
-                axios.get(this.base_url_api + 'devices?active=true&enabled=true&page=' + self.page).then(function (response) {
+                axios.get(this.base_url_api + 'devices?paginated=false').then(function (response) {
                     self.devices = response.data.docs
-
+                    console.log(self.devices)
                     self.devices.forEach(function (device, index) {
                         let source = self.heatmap.getSource();
                         let heatPoint = new ol.Feature({
@@ -509,7 +509,7 @@ window.addEventListener('load', function () {
             //ShowDetail function params idDevice
             //Makes a request for the device data, when request finish execute the function showdetail
             deviceDetail: function (idDevice) {
-
+               
                 let self = this
                 //Rquest for device data
                 self.deviceAtributes = []
@@ -628,6 +628,7 @@ window.addEventListener('load', function () {
                 document.getElementById("devices").style.display = "none"
                 document.getElementById("filter").style.display = "none"
                 document.getElementById("detail").style.display = "inherit"
+               
 
 
             },
