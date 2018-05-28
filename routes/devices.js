@@ -7,7 +7,7 @@ socket = require("../handlers/socket-handler")
 service = require("../handlers/token-service")
 
 router.get('/stadistics', function(req, res, next){
-	var resultat = [];
+	
     //Inicialitzem Arrays a 0
     var ArrayA = [];
     for (i=0;i<8;i++) ArrayA[i] = 0;
@@ -51,42 +51,42 @@ router.get('/stadistics', function(req, res, next){
     	var edificiA = {
 			total: ArrayA[0],
 			actius: ArrayA[1],
-			doctors: ArrayA[2],
-			pacients: ArrayA[3],
-	        fum: ArrayA[4],
-	        tipus4: ArrayA[5],
-	        temp: ArrayA[6],
-	        aire: ArrayA[7]
+			1: ArrayA[2],
+			2: ArrayA[3],
+	        3: ArrayA[4],
+	        4: ArrayA[5],
+	        5: ArrayA[6],
+	        6: ArrayA[7]
 		};
 	    var edificiB = {
 	        total: ArrayB[0],
 	        actius: ArrayB[1],
-	        doctors: ArrayB[2],
-	        pacients: ArrayB[3],
-	        fum: ArrayB[4],
-	        tipus4: ArrayB[5],
-	        temp: ArrayB[6],
-	        aire: ArrayB[7]
+	        1: ArrayB[2],
+	        2: ArrayB[3],
+	        3: ArrayB[4],
+	        4: ArrayB[5],
+	        5: ArrayB[6],
+	        6: ArrayB[7]
 	    };
 	    var edificiNea = {
 	        total: ArrayNea[0],
 	        actius: ArrayNea[1],
-	        doctors: ArrayNea[2],
-	        pacients: ArrayNea[3],
-	        fum: ArrayNea[4],
-	        tipus4: ArrayNea[5],
-	        temp: ArrayNea[6],
-	        aire: ArrayNea[7]
+	        1: ArrayNea[2],
+	        2: ArrayNea[3],
+	        3: ArrayNea[4],
+	        4: ArrayNea[5],
+	        5: ArrayNea[6],
+	        6: ArrayNea[7]
 	    };
 	    var exterior = {
 	        total: ArrayExterior[0],
 	        actius: ArrayExterior[1],
-	        doctors: ArrayExterior[2],
-	        pacients: ArrayExterior[3],
-	        fum: ArrayExterior[4],
-	        tipus4: ArrayExterior[5],
-	        temp: ArrayExterior[6],
-	        aire: ArrayExterior[7]
+	        1: ArrayExterior[2],
+	        2: ArrayExterior[3],
+	        3: ArrayExterior[4],
+	        4: ArrayExterior[5],
+	        5: ArrayExterior[6],
+	        6: ArrayExterior[7]
         };
         let result = {
             "Edifici A": edificiA,
@@ -201,6 +201,7 @@ router.post('/', function(req, res, next) {
     .then(device => {
     	let tok = service.createToken(device)
     	device.token = tok
+    	device.save()
         res.send({"status": 201, "id": device._id, "token": device.token})
         socket.deviceWasUpdated()
     }).catch(e => {
