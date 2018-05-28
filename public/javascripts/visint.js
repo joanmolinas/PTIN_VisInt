@@ -48,6 +48,11 @@ window.addEventListener('load', function () {
             atributesNames: ["latitude", "longitude", "creationDate", "name", "_id", "modificationDate", "type", "active", "enabled", "deleted", "body_temperature", "heart_rate", "blood_pressure_systolic", "bloog_pressure_diastolic", "gas_level", "tyres_pressure_alarm", "Detection_alarm", "humidity", "air_pressure", "NO2", "PM10"],
             atributesTraductionNames: [],
             debug: false,
+            stadistics:[],
+            stadisticsBuilding:[[],[],[],[],[]],
+            stadisticsRows:[],
+            stadisticsColumns:[],
+          
             //Colors
             gray: "rgb(125, 134, 134)",
             orange: "rgb(243, 123, 11,1)",
@@ -839,6 +844,114 @@ window.addEventListener('load', function () {
 
                     document.getElementById(notify._id).style.backgroundColor = "white"
                 }
+            },
+            showStaticsTable:function(){
+                let self=this
+                self.stadisticsBuilding=[[],[],[],[],[]]
+                self.stadisticsRows=[]
+                self.stadisticsColumns=[]
+                self.stadisticsRows.push(0)
+                self.stadisticsColumns.push(0)
+                axios.get(this.base_url_api + 'devices/stadistics').then(function (response) {
+                    self.stadistics = response.data
+                   
+                    let stats=[]
+                    Object.keys(self.stadistics).forEach(function(k,index){
+                       
+                        switch(k){
+                            case "Edifici A":
+                                self.stadisticsBuilding[index+1][0]=self.trans["eA"]
+                                break;
+                            case "Edifici B":
+                                self.stadisticsBuilding[index+1][0]=self.trans["eB"]
+                                break;
+                            case "Neàpolis":
+                                self.stadisticsBuilding[index+1][0]=self.trans["neapolis"]
+                                break;
+                            case "Exterior":
+                                self.stadisticsBuilding[index+1][0]=self.trans["out"]
+                                break;
+                        }
+                        
+                        stats[index]=self.stadistics[k]
+                        self.stadisticsRows.push(index+1)
+                        
+                        
+                    })
+                    
+                    
+                    stats.forEach(function(stadistic,indexTot){
+                        
+                           
+                           
+                            Object.keys(stadistic).forEach(function(k,index){
+                                
+                                if(self.stadisticsBuilding[0][index+1]==undefined){
+                                    
+                                    switch(k){
+                                        case "1":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["doctor"]
+                                        break;
+                                        case "2":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["ambulance"]
+                                        break;
+                                        case "3":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["smoke"]
+                                        break;
+                                        case "4":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["patient"]
+                                        break;
+                                        case "5":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["weather"]
+                                        break;
+                                        case "6":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["air_quality"]
+                                        break;
+                                        case "total":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["total"]
+                                        break;
+                                        case "actius":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["activeDevice"]
+                                        break;
+                                    }
+                                    
+                                    self.stadisticsColumns.push(index+1)
+                                }
+                                self.stadisticsBuilding[indexTot+1][index+1]=stadistic[k]
+                            })
+                        
+                        
+                      
+                    })
+                    
+                    //self.stadistics.getKeys.forEach(function (stadistic) {
+                }).then(function(){
+                    console.log(self.stadisticsBuilding)
+                    document.getElementById("devices").style.display = "none"
+                    document.getElementById("filter").style.display = "none"
+                    document.getElementById("detail").style.display = "none"
+                    document.getElementById("staticsTable").style.display = "inherit"
+                    document.getElementById(self.trans["doctor"]).style.backgroundColor="#ccc";
+                    document.getElementById(self.trans["patient"]).style.backgroundColor="#ccc";
+                    document.getElementById(self.trans["ambulance"]).style.backgroundColor="#ccc";
+                    document.getElementById(self.trans["smoke"]).style.backgroundColor="#ccc";
+                    document.getElementById(self.trans["air_quality"]).style.backgroundColor="#ccc";
+                    document.getElementById(self.trans["weather"]).style.backgroundColor="#ccc";
+                    document.getElementById(self.trans["total"]).style.backgroundColor="#ccc";
+                    document.getElementById(self.trans["activeDevice"]).style.backgroundColor="#ccc";
+                    document.getElementById(self.trans["eA"]).style.backgroundColor="#ccc";
+                    document.getElementById(self.trans["eB"]).style.backgroundColor="#ccc";
+                    document.getElementById(self.trans["neapolis"]).style.backgroundColor="#ccc";
+                    document.getElementById(self.trans["out"]).style.backgroundColor="#ccc";
+                })
+
+               
+            },
+            closeTable:function(){
+                document.getElementById("devices").style.display = "inherit"
+                document.getElementById("filter").style.display = "inherit"
+                document.getElementById("detail").style.display = "none"
+                document.getElementById("staticsTable").style.display = "none"
             }
         }
     })
