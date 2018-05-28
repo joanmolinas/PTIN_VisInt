@@ -414,9 +414,12 @@ window.addEventListener('load', function () {
             drawDevicesOnHeatMap: function () {
                 let self = this
                 axios.get(this.base_url_api + 'devices?paginated=false').then(function (response) {
-                    self.devices = response.data.docs
-                    console.log(self.devices)
-                    self.devices.forEach(function (device, index) {
+                    self.devices = response.data
+                    self.devices.filter(function (device) {
+                        return device.lastInfo != null || device.lastInfo != undefined 
+                    }).forEach(function (device, index) {
+                        if(device.lastInfo.longitude!=undefined && device.lastInfo.latitude!=undefined) {
+                        
                         let source = self.heatmap.getSource();
                         let heatPoint = new ol.Feature({
                             name: device._id,
@@ -425,6 +428,7 @@ window.addEventListener('load', function () {
                         })
 
                         source.addFeature(heatPoint)
+                    }
                     });
                 }).catch(function (error) {
                     console.log(error.message)
