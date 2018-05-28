@@ -201,6 +201,7 @@ router.post('/', function(req, res, next) {
     .then(device => {
     	let tok = service.createToken(device)
     	device.token = tok
+    	device.save()
         res.send({"status": 201, "id": device._id, "token": device.token})
         socket.deviceWasUpdated()
     }).catch(e => {
