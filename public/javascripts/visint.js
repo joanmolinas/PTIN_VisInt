@@ -25,6 +25,7 @@ window.addEventListener('load', function () {
             base_url_api: 'https://ptin2018.herokuapp.com/api/', /*'http://localhost:3000/api/',*/
             devices_column1: [],
             devices_column2: [],
+            devices:[],
             selected_device: '',
             filter_text: '',
             device_type: '',
@@ -144,7 +145,7 @@ window.addEventListener('load', function () {
 
                         axios.get(query).then(function (response) {
                             self.removeDevicesFromList()
-                            self.devices = response.data
+                            self.devices = response.data.docs
 
                             self.devices.filter(function (device) {
                                 return device.lastInfo != null || device.lastInfo != undefined
@@ -180,6 +181,7 @@ window.addEventListener('load', function () {
                 let query = this.base_url_api + 'devices/?'
 
                 if (this.device_type.length > 0)
+                    console.log(this.device_type)
                     query += 'type=' + this.device_type
 
                 if (this.filter_text.length >= this.min_length_filter) {
@@ -192,7 +194,7 @@ window.addEventListener('load', function () {
 
                 axios.get(query).then(function (response) {
                     self.removeDevicesFromList()
-                    self.devices = response.data
+                    self.devices = response.data.docs
                     self.devices.filter(function (device) {
                         return device.lastInfo != null || device.lastInfo != undefined
                     }).forEach(function (device, index) {
