@@ -45,9 +45,14 @@ window.addEventListener('load', function () {
             min_length_filter: 3,
             nots: [],
             trans: [],
-            atributesNames: ["latitude", "longitude", "creationDate", "name", "_id", "modificationDate", "type", "active", "enabled", "deleted", "body_temperature", "heart_rate", "blood_pressure_systolic", "bloog_pressure_diastolic", "gas_level", "tyres_pressure_alarm", "Detection_alarm", "humidity", "air_pressure", "NO2", "PM10"],
+            atributesNames: ["latitude", "longitude", "creationDate", "name", "_id", "modificationDate", "type", "active", "enabled", "deleted", "body_temperature", "heart_rate", "blood_pressure_systolic", "bloog_pressure_diastolic", "gas_level", "tyres_pressure_alarm", "detection_alarm", "humidity", "air_pressure", "NO2", "PM10","alarmButton","ips","floor","building","availability","temperature"],
             atributesTraductionNames: [],
             debug: false,
+            stadistics:[],
+            stadisticsBuilding:[[],[],[],[],[]],
+            stadisticsRows:[],
+            stadisticsColumns:[],
+          
             //Colors
             gray: "rgb(125, 134, 134)",
             orange: "rgb(243, 123, 11,1)",
@@ -55,6 +60,7 @@ window.addEventListener('load', function () {
             blue: "rgb(0, 140, 255,1)",
             green: "rgb(7, 112, 7)",
             lightblue: "rgb(45, 231, 245)",
+            stadisticsView:false,
             notifications: [],//[{'_id':"1",'date':"26012018",'type':"General"},{'_id':"2",'date':"27012018",'type':"General"},{'_id':"3",'date':"28012018",'type':"General"}],
             page: 1
 
@@ -382,7 +388,9 @@ window.addEventListener('load', function () {
                     icone.title = "Canviar a Mapa de Punts"
                     this.heatmap.setVisible(true);
                     this.vectorLayer.setVisible(false);
-                    this.expandMap()
+                    if(!this.stadisticsView){
+                         this.expandMap()
+                    }
                 }
             },
             //Show the detail view when a point on the map is click
@@ -674,7 +682,7 @@ window.addEventListener('load', function () {
                         self.trans = trans_string.data
                         console.log("language file: " + trans_file)
                         console.log("Website language: " + localStorage.language)
-                        self.atributesTraductionNames = [self.trans["latitude"], self.trans["longitude"], self.trans["creationDate"], self.trans["name"], self.trans["_id"], self.trans["modificationDate"], self.trans["type"], self.trans["active"], self.trans["enabled"], self.trans["deleted"], self.trans["body_temperature"], self.trans["heart_rate"], self.trans["blood_pressure_systolic"], self.trans["bloog_pressure_diastolic"], self.trans["gas_level"], self.trans["tyres_pressure_alarm"], self.trans["Detection_alarm"], self.trans["humidity"], self.trans["air_pressure"], self.trans["NO2"], self.trans["PM10"]]
+                        self.atributesTraductionNames = [self.trans["latitude"], self.trans["longitude"], self.trans["creationDate"], self.trans["name"], self.trans["_id"], self.trans["modificationDate"], self.trans["type"], self.trans["active"], self.trans["enabled"], self.trans["deleted"], self.trans["body_temperature"], self.trans["heart_rate"], self.trans["blood_pressure_systolic"], self.trans["bloog_pressure_diastolic"], self.trans["gas_level"], self.trans["tyres_pressure_alarm"], self.trans["Detection_alarm"], self.trans["humidity"], self.trans["air_pressure"], self.trans["NO2"], self.trans["PM10"],self.trans["alarmButton"],self.trans["ips"],self.trans["floor"],self.trans["building"],self.trans["availability"],self.trans["temperature"]]
 
                     }).catch(function (error) {
                         console.log(error.message)
@@ -839,6 +847,129 @@ window.addEventListener('load', function () {
 
                     document.getElementById(notify._id).style.backgroundColor = "white"
                 }
+            },
+            showStaticsTable:function(){
+                let self=this
+                self.stadisticsBuilding=[[],[],[],[],[]]
+                self.stadisticsRows=[]
+                self.stadisticsColumns=[]
+                self.stadisticsRows.push(0)
+                self.stadisticsColumns.push(0)
+                axios.get(this.base_url_api + 'devices/stadistics').then(function (response) {
+                    self.stadistics = response.data
+                   
+                    let stats=[]
+                    Object.keys(self.stadistics).forEach(function(k,index){
+                       
+                        switch(k){
+                            case "Edifici A":
+                                self.stadisticsBuilding[index+1][0]=self.trans["eA"]
+                                break;
+                            case "Edifici B":
+                                self.stadisticsBuilding[index+1][0]=self.trans["eB"]
+                                break;
+                            case "Neàpolis":
+                                self.stadisticsBuilding[index+1][0]=self.trans["neapolis"]
+                                break;
+                            case "Exterior":
+                                self.stadisticsBuilding[index+1][0]=self.trans["out"]
+                                break;
+                        }
+                        
+                        stats[index]=self.stadistics[k]
+                        self.stadisticsRows.push(index+1)
+                        
+                        
+                    })
+                    
+                    
+                    stats.forEach(function(stadistic,indexTot){
+                        
+                           
+                           
+                            Object.keys(stadistic).forEach(function(k,index){
+                                
+                                if(self.stadisticsBuilding[0][index+1]==undefined){
+                                    
+                                    switch(k){
+                                        case "1":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["doctor"]
+                                        break;
+                                        case "2":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["ambulance"]
+                                        break;
+                                        case "3":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["smoke"]
+                                        break;
+                                        case "4":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["patient"]
+                                        break;
+                                        case "5":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["weather"]
+                                        break;
+                                        case "6":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["air_quality"]
+                                        break;
+                                        case "total":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["total"]
+                                        break;
+                                        case "actius":
+                                         self.stadisticsBuilding[0][index+1]=self.trans["activeDevice"]
+                                        break;
+                                    }
+                                    
+                                    self.stadisticsColumns.push(index+1)
+                                }
+                                self.stadisticsBuilding[indexTot+1][index+1]=stadistic[k]
+                            })
+                        
+                        
+                      
+                    })
+                    
+                    //self.stadistics.getKeys.forEach(function (stadistic) {
+                }).then(function(){
+                    console.log(self.stadisticsBuilding)
+                    document.getElementById("devices").style.display = "none"
+                    document.getElementById("filter").style.display = "none"
+                    document.getElementById("detail").style.display = "none"
+                    document.getElementById("iTable").style.display="none"
+                    document.getElementById("staticsTable").style.display = "inherit"
+                    document.getElementById(self.trans["doctor"]).style.backgroundColor="#ccc"
+                    document.getElementById(self.trans["patient"]).style.backgroundColor="#ccc"
+                    document.getElementById(self.trans["ambulance"]).style.backgroundColor="#ccc"
+                    document.getElementById(self.trans["smoke"]).style.backgroundColor="#ccc"
+                    document.getElementById(self.trans["air_quality"]).style.backgroundColor="#ccc"
+                    document.getElementById(self.trans["weather"]).style.backgroundColor="#ccc"
+                    document.getElementById(self.trans["total"]).style.backgroundColor="#ccc"
+                    document.getElementById(self.trans["activeDevice"]).style.backgroundColor="#ccc"
+                    document.getElementById(self.trans["eA"]).style.backgroundColor="#ccc"
+                    document.getElementById(self.trans["eB"]).style.backgroundColor="#ccc"
+                    document.getElementById(self.trans["neapolis"]).style.backgroundColor="#ccc"
+                    document.getElementById(self.trans["out"]).style.backgroundColor="#ccc"
+                    document.getElementById("shrink").style.display = "none"
+                    document.getElementById("expand").style.display = "none"
+                    document.getElementById("ChangeMap").style.display="none"
+                    self.stadisticsView=true
+                    self.changeMap()
+                    
+                 
+                })
+
+               
+            },
+            closeTable:function(){
+                
+                document.getElementById("shrink").style.display = "inherit"
+                document.getElementById("expand").style.display = "inherit"
+                document.getElementById("ChangeMap").style.display="inherit"
+                this.stadisticsView=false
+                this.changeMap()
+                document.getElementById("devices").style.display = "inherit"
+                document.getElementById("filter").style.display = "inherit"
+                document.getElementById("detail").style.display = "none"
+                document.getElementById("staticsTable").style.display = "none"
+                document.getElementById("iTable").style.display="inline"
             }
         }
     })

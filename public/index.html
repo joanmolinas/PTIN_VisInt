@@ -36,29 +36,29 @@
   <!-- Socket io -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
-  var socket = io.connect('http://localhost:3000');
-  socket.on('refreshDevicesTable', function() {
+    var socket = io.connect('http://localhost:3000');
+    socket.on('refreshDevicesTable', function () {
       console.log('refresh')
       document.getElementById("inici").click()
-     
-     $("device").load(location.href+" device>*","");
-  })
 
-  socket.on('shutdown', () => {
-    console.log('shutdown received')
-  })
+      $("device").load(location.href + " device>*", "");
+    })
 
-  socket.on('pacientLocation', (data) => {
-    console.log('Data received ' + data.location.latitude)
-  })
+    socket.on('shutdown', () => {
+      console.log('shutdown received')
+    })
+
+    socket.on('pacientLocation', (data) => {
+      console.log('Data received ' + data.location.latitude)
+    })
 
     socket.on('location', (data) => {
-    console.log('Data received ' + data.location.latitude)
-  })
-  
-</script>
+      console.log('Data received ' + data.location.latitude)
+    })
 
- <!-- End socket io -->
+  </script>
+
+  <!-- End socket io -->
 </head>
 
 <body>
@@ -68,6 +68,7 @@
         <!-- top menu -->
         <div id="header" class="col-md-12">
           <nav>
+
             <span>
               <a href="#" class="hidden-lg hidden-md" v-on:click="toggleMenu('responsive-menu')">
                 <i class="fas fa-bars"></i>
@@ -93,7 +94,13 @@
             </span>
             <a href="/" v-on:click="refreshDevices" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
               <i class="fas fa-home"></i>
+
             </a>
+            <a href="#" id="iTable" v-on:click="showStaticsTable" class="hidden-xs hidden-sm">
+              <i class="fas fa-table"></i>
+
+            </a>
+
             <span id="settings" class="pull-right">
               <a href="#" id="mobilFilterIcon" class="hidden-lg hidden-md" v-on:click="toggleMenu('filterMobile')">
                 <i class="fas fa-search"></i>
@@ -111,19 +118,19 @@
                   <div class=" notify" v-for="notify in notifications" v-bind:id="notify._id" v-on:click="selectNotify(notify)">
                     <div style="cursor: pointer;">
                       <p>
-                          {{trans['Notifydate']}}:
+                        {{trans['Notifydate']}}:
                         <strong>{{notify.date}}</strong>
                       </p>
                       <p>
                         {{trans['Notifytype']}}:
                         <strong>{{notify.type}}</strong>
                       </p>
-                     </div>
+                    </div>
 
                   </div>
 
                 </div>
-            
+
               </span>
               <span class="hidden-xs hidden-sm">
                 <a href="#" v-bind:title="trans['language_icon']" v-on:click="toggleMenu('lang-list')" style="margin-right:15px;">
@@ -160,7 +167,7 @@
                 <!-- <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
                   <i class="fas fa-angle-double-left"></i>
                 </a> -->
-                
+
               </div>
 
             </div>
@@ -172,7 +179,7 @@
 
         <!-- Display map -->
         <div id="content" class="col-md-6 col-md-push-6 ">
-          <div id="expand" class="mapbutton hidden-sm hidden-xs"  v-on:click="expandMap" title="Ocultar dispositivos" style="cursor: pointer">
+          <div id="expand" class="mapbutton hidden-sm hidden-xs" v-on:click="expandMap" title="Ocultar dispositivos" style="cursor: pointer">
             <i class="fas fa-angle-double-left"></i>
           </div>
           <div id="shrink" class="mapbutton idden-sm hidden-xs" v-on:click="shrinkMap" style="cursor: pointer;">
@@ -229,7 +236,7 @@
                         </p>
                       </div>
                     </div>
-                  </div>  
+                  </div>
                 </div>
                 <div class="col-md-6">
                   <div class="device" v-for="device in devices_column2" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
@@ -311,6 +318,30 @@
               <div class="separators"></div>
             </div>
 
+          </div>
+          <div id="staticsTable">
+            <div id="closeTable" v-on:click="closeTable" style="cursor: pointer;" class="row blocs">
+              <i class="fas fa-times"></i>
+            </div>
+            <div class=" row blocs">
+              <div id="iconTable" class="img-circle center-block ">
+                <i class="fas fa-table  iconPicture"></i>
+              </div>
+            </div>
+            <div class="row blocs">
+              <div class="separators">Taula d'Estadistiques</div>
+            </div>
+            <div class="row blocs">
+                <div class="separators"></div>
+              </div>
+            <div class="row blocs">
+              <table id="table">
+                <tr v-for="row in stadisticsRows">                
+                    <th v-for="col in stadisticsColumns" v-bind:id="stadisticsBuilding[row][col]">{{stadisticsBuilding[row][col]}}</th>
+                </tr>
+                
+              </table>
+            </div>
           </div>
         </div>
       </div>
