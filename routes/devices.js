@@ -10,16 +10,15 @@ router.get('/stadistics', function(req, res, next){
 	
     //Inicialitzem Arrays a 0
     var ArrayA = [];
-    for (i=0;i<8;i++) ArrayA[i] = 0;
-    
     var ArrayB = [];
-    for (i=0;i<8;i++) ArrayB[i] = 0;
-    
     var ArrayNea = [];
-    for (i=0;i<8;i++) ArrayNea[i] = 0;
-    
     var ArrayExterior = [];
-    for (i=0;i<8;i++) ArrayExterior[i] = 0;
+    for (i=0;i<8;i++){
+    	ArrayA[i] = 0
+    	ArrayB[i] = 0;
+    	ArrayNea[i] = 0;
+    	ArrayExterior[i] = 0;
+    }
 
 	Device.find({}, function(err, devices) {
 		devices.forEach(function(dev){
@@ -190,7 +189,7 @@ router.post('/', function(req, res, next) {
 
     let device = new Device({
         name: name,
-        active: true,
+        active: false,
         type: type,
         creationDate: creationDate,
         modificationDate: modificationDate,
