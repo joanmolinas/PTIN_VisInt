@@ -48,6 +48,12 @@
     "air_pressure":"Presio Aire",
     "NO2":"NO2",
     "PM10":"PM10",
+    "alarmButton":"Boto Alarma",
+    "ips":"IPS",
+    "floor":"Planta",
+    "building":"Edifici",
+    "availability":"Disponible",
+    "temperature":"Temperatura",
     "Notifydate":"Data",
     "Notifytype":"Tipus"
            

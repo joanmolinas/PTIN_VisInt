@@ -223,10 +223,10 @@ router.put('/:id/info', service.ensureDeviceAuthenticated, function(req, res, bo
         }
     })
     .then(device => {
-    	if (!device.enabled){
-    		res.status(400).send({"message": 'Device is not enabled'})
-    		return
-        }
+    	// if (!device.enabled){
+    	// 	res.status(400).send({"message": 'Device is not enabled'})
+    	// 	return
+        // }
         
         DeviceInformation.findOneAndUpdate({'id_device': device._id}, {
             $push: {
