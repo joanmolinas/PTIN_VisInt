@@ -1,10 +1,12 @@
 const Device = require('../models/Device')
-const Notification = require('../models/Notification')
 const Geo = require('geo-nearby');
+const Notification = require('../models/Notification')
+const Token_Service = require('./token-service')
 
 let io;
 
 let sockets = {}
+let generalTokenStored = {}
 
 function connect(http) {
     io = require('socket.io')(http);
@@ -23,10 +25,7 @@ function connect(http) {
         }
         onDisconnect(socket)
         alarm(socket)
-        // fire(socket)
-        // heart_attack(socket)
-        // high_temp(socket)
-        // low_temp(socket)
+        generalAuthentication(socket)
     })
 }
 
@@ -42,14 +41,16 @@ function onDisconnect(socket) {
 
 // Socket listener
 let callbacks = {
-    1: heartAttack
+    1: heartAttack,
+    2: general
+
 }
 
 function alarm(socket) {
     socket.on('alarm', (data) => {
         let id = socket.handshake.query['id']
-        data['requester'] = id
-        callbacks[data.type](data).
+        data.requester = id
+        callbacks[data.type](socket, data).
         then(resp => {
             notificationWasUpdated()
         })
@@ -60,7 +61,21 @@ function alarm(socket) {
 }
 
 // Private
-function heartAttack(data) {
+function general(socket, data) {
+    return new Promise((resolve, reject) => {
+        if(data.requester in generalTokenStored) {
+            reject({'message': 'Processing a request from this user'})
+            return
+        }
+        let token = Token_Service.createTokenDevice(data.requester)
+        generalTokenStored[data.requester] = token
+
+        socket.emit("generalAuthentication", token)
+
+    })
+}
+
+function heartAttack(socket, data) {
     return new Promise((resolve, reject) => {
 
         Promise.all([
@@ -106,6 +121,21 @@ function heartAttack(data) {
             console.log(e)
             reject({error: 500, message: 'Error buscant a mongo'})
         })
+    })
+}
+
+function generalAuthentication(socket) {
+    socket.on("generalAuthentication", (data) => {
+        let user = data.requester 
+        let token = data.token
+        let ensured = Token_Service.ensureTokenDevice(user, token)
+
+        if (ensured && generalTokenStored[data.requester] == token) {
+            delete generalTokenStored[data.requester]
+            socket.emit("generalResponse", {code: 200} )
+        } else {
+            socket.emit("generalResponse",{code: 500})
+        }
     })
 }
 

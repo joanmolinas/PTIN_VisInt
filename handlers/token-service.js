@@ -14,6 +14,21 @@ function createToken(user){
 	return jwt.encode(payload, config.SECRET_TOKEN)
 }
 
+function createTokenDevice(string) {
+	const payload = {
+		sub: string,
+		iat: moment().unix,
+		exp: moment().add(10, 'hours').unix()
+	}
+
+	return jwt.encode(payload, config.SECRET_TOKEN)
+}
+
+function ensureTokenDevice(user, token) {
+	let payload = jwt.decode(token, config.SECRET_TOKEN)
+	return payload.sub == user
+}
+
 function ensureUserAuthenticated(req, res, next) {
 
 	if (!req.headers.authorization) { res.status(401).send({'message': 'Provide a token'})}
@@ -61,7 +76,9 @@ function ensureDeviceAuthenticated(req, res, next) {
 }
 
 module.exports = {
-    createToken,
+	createToken,
+	createTokenDevice,
+	ensureTokenDevice,
 	ensureUserAuthenticated,
 	ensureDeviceAuthenticated
 }
