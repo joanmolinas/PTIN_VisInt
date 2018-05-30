@@ -129,8 +129,6 @@ body {
         text-align: center;
         background-color:rgb(187, 184, 184);
       }
-     
-   
 }
       #lang-list {
         display: none;
@@ -172,16 +170,35 @@ body {
 }
 
 #sidebar {
-
   padding: 0;
   min-height: $vh;
   max-height: $vh;
-  
+
+  #charts {
+    height: 100%;
+    overflow-y:scroll;
+    height: $vh;
+    margin-top: 20px;
+    margin:0;
+    padding:0;
+    display: none;
+    padding-top: 40px;
+    #close {
+      font-size: 30px;
+      text-align: left;
+      margin-left: 30px;
+    }
+    canvas {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
   #devices {
     background-color: $sidebar-device-list-color;
     min-height: inherit;
     margin-left: 2px;
-
+    display: block;
     #filter {
       width: 100%;
       padding-top:10px;
@@ -224,7 +241,25 @@ body {
       overflow-x: hidden;
       height: $vh;
       padding-bottom: 50px;
-
+      #charts {
+        height: 100%;
+        overflow-y:scroll;
+        height: $vh;
+        margin-top: 20px;
+        margin:0;
+        padding:0;
+        display: none;
+        padding-top: 40px;
+        #close {
+          font-size: 30px;
+          text-align: left;
+          margin-left: 30px;
+        }
+        canvas {
+          width: 100px;
+          height: 100px;
+        }
+      }
       .device {
         border-radius: 5px 40px 5px 40px;
         background-color: #FAFAFA;
@@ -235,6 +270,12 @@ body {
         }
         p:first-child {
           padding-top: 20px;
+        }
+        .device-icon {
+          color:white;
+          font-size:15px;
+          margin-left:-5px;
+          margin-top:30px;
         }
       }
     }

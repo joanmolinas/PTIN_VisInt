@@ -29,6 +29,9 @@
   <link rel="stylesheet" href="https://openlayers.org/en/v4.0.1/css/ol.css" type="text/css">
   <script src="https://openlayers.org/en/v4.0.1/build/ol.js"></script>
 
+  <!-- charts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+
   <!-- visint scripts -->
   <link rel="stylesheet" href="stylesheets/style.css" />
   <script src="javascripts/visint.js"></script>
@@ -36,29 +39,29 @@
   <!-- Socket io -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    var socket = io.connect('http://localhost:3000');
-    socket.on('refreshDevicesTable', function () {
+  var socket = io.connect('http://localhost:3000');
+  socket.on('refreshDevicesTable', function() {
       console.log('refresh')
       document.getElementById("inici").click()
+     
+     $("device").load(location.href+" device>*","");
+  })
 
-      $("device").load(location.href + " device>*", "");
-    })
+  socket.on('shutdown', () => {
+    console.log('shutdown received')
+  })
 
-    socket.on('shutdown', () => {
-      console.log('shutdown received')
-    })
-
-    socket.on('pacientLocation', (data) => {
-      console.log('Data received ' + data.location.latitude)
-    })
+  socket.on('pacientLocation', (data) => {
+    console.log('Data received ' + data.location.latitude)
+  })
 
     socket.on('location', (data) => {
-      console.log('Data received ' + data.location.latitude)
-    })
+    console.log('Data received ' + data.location.latitude)
+  })
+  
+</script>
 
-  </script>
-
-  <!-- End socket io -->
+ <!-- End socket io -->
 </head>
 
 <body>
@@ -68,7 +71,6 @@
         <!-- top menu -->
         <div id="header" class="col-md-12">
           <nav>
-
             <span>
               <a href="#" class="hidden-lg hidden-md" v-on:click="toggleMenu('responsive-menu')">
                 <i class="fas fa-bars"></i>
@@ -80,8 +82,11 @@
                   <i class="fas fa-bell icon"></i> {{trans['notifications_icon']}}
                   <i class="fas fa-caret-down"></i>
                 </a>
+                <a href="#" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
+                    <i class="far fa-chart-bar"></i>
+                  </a> 
                 <a href="#">
-                  <i class="fas fa-language icon"></i> {{trans['language_icon']}}</i>
+                  <i class="fas fa-language icon"></i> {{trans['language_icon']}}
                 </a>
                 <a href="#" title="Mostra la web en català" v-on:click="toggleLanguage('cat')">
                   <img src="images/catalonia.png" />Català</a>
@@ -94,13 +99,14 @@
             </span>
             <a href="/" v-on:click="refreshDevices" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
               <i class="fas fa-home"></i>
-
             </a>
-            <a href="#" id="iTable" v-on:click="showStaticsTable" class="hidden-xs hidden-sm">
-              <i class="fas fa-table"></i>
-
+            <a href="#" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm" v-on:click="displayCharts">
+              <i class="fas fa-chart-bar"></i>
             </a>
-
+          </a>
+          <a href="#" id="iTable" v-on:click="showStaticsTable" class="hidden-xs hidden-sm">
+            <i class="fas fa-table"></i>
+          </a>       
             <span id="settings" class="pull-right">
               <a href="#" id="mobilFilterIcon" class="hidden-lg hidden-md" v-on:click="toggleMenu('filterMobile')">
                 <i class="fas fa-search"></i>
@@ -118,19 +124,19 @@
                   <div class=" notify" v-for="notify in notifications" v-bind:id="notify._id" v-on:click="selectNotify(notify)">
                     <div style="cursor: pointer;">
                       <p>
-                        {{trans['Notifydate']}}:
+                          {{trans['Notifydate']}}:
                         <strong>{{notify.date}}</strong>
                       </p>
                       <p>
                         {{trans['Notifytype']}}:
                         <strong>{{notify.type}}</strong>
                       </p>
-                    </div>
+                     </div>
 
                   </div>
 
                 </div>
-
+            
               </span>
               <span class="hidden-xs hidden-sm">
                 <a href="#" v-bind:title="trans['language_icon']" v-on:click="toggleMenu('lang-list')" style="margin-right:15px;">
@@ -161,13 +167,14 @@
                   <option value="1">{{trans['doctor']}}</option>
                   <option value="2">{{trans['ambulance']}}</option>
                   <option value="3">{{trans['smoke']}}</option>
-                  <option value="4">{{trans['weather']}}</option>
-                  <option value="4">{{trans['air_quality']}}</option>
+                  <option value="4">{{trans['pacient']}}</option>
+                  <option value="5">{{trans['weather']}}</option>
+                  <option value="6">{{trans['air_quality']}}</option>
                 </select>
                 <!-- <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
                   <i class="fas fa-angle-double-left"></i>
                 </a> -->
-
+                
               </div>
 
             </div>
@@ -179,7 +186,7 @@
 
         <!-- Display map -->
         <div id="content" class="col-md-6 col-md-push-6 ">
-          <div id="expand" class="mapbutton hidden-sm hidden-xs" v-on:click="expandMap" title="Ocultar dispositivos" style="cursor: pointer">
+          <div id="expand" class="mapbutton hidden-sm hidden-xs"  v-on:click="expandMap" title="Ocultar dispositivos" style="cursor: pointer">
             <i class="fas fa-angle-double-left"></i>
           </div>
           <div id="shrink" class="mapbutton idden-sm hidden-xs" v-on:click="shrinkMap" style="cursor: pointer;">
@@ -191,6 +198,12 @@
         </div>
         <!-- sidebar -->
         <div id="sidebar" class="col-md-6 col-md-pull-6">
+          <div id="charts" class="row">
+            <div id="close"><a href="#" v-on:click="closeCharts"><i class="fas fa-times"></i></a></div>
+            <!-- Chart -->
+            <div class="col-md-8 col-md-offset-2"><canvas id="temperature"></canvas></div>
+            <div class="col-md-8 col-md-offset-2"><canvas id="humidity"></canvas></div>
+          </div>
           <div id="devices">
             <!-- header sidebar. Filter devices, show/hide devices -->
             <div id="filter" class="row hidden-xs hidden-sm">
@@ -208,9 +221,6 @@
                   <option value="4">{{trans['weather']}}</option>
                   <option value="4">{{trans['air_quality']}}</option>
                 </select>
-                <!-- <a href="#" v-on:click="expandMap" title="Ocultar dispositivos">
-                  <i class="fas fa-angle-double-left"></i>
-                </a> -->
               </div>
             </div>
 
@@ -219,7 +229,8 @@
                 <div class="col-md-6">
                   <div class="device" v-for="device in devices_column1" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
                     <div class="row">
-                      <div class="col-md-3">
+                      <div class="col-md-3 icon-col" v-bind:id="device._id">
+                        <span v-html="typeDev[device.type]"></span>
                       </div>
                       <div class="col-md-8" style="border:1px solid #e2e2e2;border-radius: 2px;font-weight:bolder;">
                         <p>
@@ -236,12 +247,13 @@
                         </p>
                       </div>
                     </div>
-                  </div>
+                  </div>  
                 </div>
                 <div class="col-md-6">
                   <div class="device" v-for="device in devices_column2" v-on:click="deviceDetail(device._id)" style="cursor: pointer;">
                     <div class="row">
-                      <div class="col-md-3">
+                      <div class="col-md-3" class="dev-icon">
+                        <span v-html="typeDev[device.type]"></span>
                       </div>
                       <div class="col-md-8" style="border:1px solid #e2e2e2;border-radius: 2px;font-weight:bolder;">
                         <p>
@@ -317,7 +329,6 @@
             <div class="row blocs">
               <div class="separators"></div>
             </div>
-
           </div>
           <div id="staticsTable">
             <div id="closeTable" v-on:click="closeTable" style="cursor: pointer;" class="row blocs">
@@ -341,7 +352,7 @@
                 </tr>
                 
               </table>
-            </div>
+</div>
           </div>
         </div>
       </div>

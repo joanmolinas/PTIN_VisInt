@@ -48,12 +48,6 @@
     "air_pressure":"Air Pressure",
     "NO2":"NO2",
     "PM10":"PM10",
-    "alarmButton":"Alarm Button",
-    "ips":"IPS",
-    "floor":"Floor",
-    "building":"Building",
-    "availability":"Available",
-    "temperature":"Temperature",
     "Notifydate":"Date",
     "Notifytype":"Type"
 }
