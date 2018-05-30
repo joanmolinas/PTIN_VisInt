@@ -89,45 +89,72 @@ router.get('/temp', function(req, res, next){
                             // si s'ha modificat abans de les 8 sumem la temperatura al diccionari de les 8
                             hora = dev.modificationDate.getHours();
                             minuts = dev.modificationDate.getMinutes();
-                            //console.log('hora de modificacio', minuts)
-                            //console.log(dev.modificationDate)
-                            if(hora < 8 && now >= 8) {
+                            // augmentem tots els diccionaris sino despres al fer la mitja no u fa be
+                            if(hora < 8 /*&& now >= 8*/) {
                             	compta8++
                             	dic8.x = dic8.x + dev.lastInfo.temperature
+                            	dic10.x = dic10.x + dev.lastInfo.temperature
+                            	dic12.x = dic12.x + dev.lastInfo.temperature
+                            	dic14.x = dic14.x + dev.lastInfo.temperature
+                            	dic16.x = dic16.x + dev.lastInfo.temperature
+                            	dic18.x = dic18.x + dev.lastInfo.temperature
+                            	dic20.x = dic20.x + dev.lastInfo.temperature
+                            	dic22.x = dic22.x + dev.lastInfo.temperature
                             }
 
                             // la darrera modificacio sa fet entre les 8 i les 10
-                            else if((hora >= 8 && minuts <= 59) && hora < 10 && now >= 10) {
+                            else if((hora >= 8 && minuts <= 59) && hora < 10 /*&& now >= 10*/) {
                             	compta10++
                             	dic10.x = dic10.x + dev.lastInfo.temperature
+                            	dic12.x = dic12.x + dev.lastInfo.temperature
+                            	dic14.x = dic14.x + dev.lastInfo.temperature
+                            	dic16.x = dic16.x + dev.lastInfo.temperature
+                            	dic18.x = dic18.x + dev.lastInfo.temperature
+                            	dic20.x = dic20.x + dev.lastInfo.temperature
+                            	dic22.x = dic22.x + dev.lastInfo.temperature
                             }
                             // 10 a 12
-                            else if((hora >= 10 && minuts <= 59) && hora < 12 && now >= 12) {
+                            else if((hora >= 10 && minuts <= 59) && hora < 12 /*&& now >= 12*/) {
                             	compta12++
                             	dic12.x = dic12.x + dev.lastInfo.temperature
+                            	dic14.x = dic14.x + dev.lastInfo.temperature
+                            	dic16.x = dic16.x + dev.lastInfo.temperature
+                            	dic18.x = dic18.x + dev.lastInfo.temperature
+                            	dic20.x = dic20.x + dev.lastInfo.temperature
+                            	dic22.x = dic22.x + dev.lastInfo.temperature
                             }
                             // 12 a 14
-                            else if((hora >= 12 && minuts <= 59) && hora < 14 && now >= 14) {
+                            else if((hora >= 12 && minuts <= 59) && hora < 14 /*&& now >= 14*/) {
                             	compta14++
                             	dic14.x = dic14.x + dev.lastInfo.temperature
+                            	dic16.x = dic16.x + dev.lastInfo.temperature
+                            	dic18.x = dic18.x + dev.lastInfo.temperature
+                            	dic20.x = dic20.x + dev.lastInfo.temperature
+                            	dic22.x = dic22.x + dev.lastInfo.temperature
                             }
                             // 14 a 16
-                            else if((hora >= 14 && minuts <= 59) && hora < 16 && now >= 16) {
+                            else if((hora >= 14 && minuts <= 59) && hora < 16 /*&& now >= 16*/) {
                             	compta16++
                             	dic16.x = dic16.x + dev.lastInfo.temperature
+                            	dic18.x = dic18.x + dev.lastInfo.temperature
+                            	dic20.x = dic20.x + dev.lastInfo.temperature
+                            	dic22.x = dic22.x + dev.lastInfo.temperature
                             }
                             // 16 a 18
-                            else if((hora >= 16 && minuts <= 59) && hora < 18 && now >= 18) {
+                            else if((hora >= 16 && minuts <= 59) && hora < 18 /*&& now >= 18*/) {
                             	compta18++
                             	dic18.x = dic18.x + dev.lastInfo.temperature
+                            	dic20.x = dic20.x + dev.lastInfo.temperature
+                            	dic22.x = dic22.x + dev.lastInfo.temperature
                             }
                             // 18 a 20
-                            else if((hora >= 18 && minuts <= 59) && hora < 20 && now >= 20) {
+                            else if((hora >= 18 && minuts <= 59) && hora < 20 /*&& now >= 20*/) {
                             	compta20++
                             	dic20.x = dic20.x + dev.lastInfo.temperature
+                            	dic22.x = dic22.x + dev.lastInfo.temperature
                             }
                             // 20 a 22
-                            else if((hora >= 20 && minuts <= 59) && hora < 22 && now >= 22) {
+                            else if((hora >= 20 && minuts <= 59) && hora < 22 /*&& now >= 22*/) {
                             	compta22++
                             	dic22.x = dic22.x + dev.lastInfo.temperature
                             } 
@@ -142,13 +169,14 @@ router.get('/temp', function(req, res, next){
         // fer mitjana a cada diccionari
 
         dic8.x = dic8.x/compta8
-        dic10.x = dic10.x/compta10
-        dic12.x = dic12.x/compta12
-        dic14.x = dic14.x/compta14
-        dic16.x = dic16.x/compta16
-        dic18.x = dic18.x/compta18
-        dic20.x = dic20.x/compta20
-        dic22.x = dic22.x/compta22
+        dic10.x = dic10.x/(compta8+compta10)
+        dic12.x = dic12.x/(compta8+compta10+compta12)
+        dic14.x = dic14.x/(compta8+compta10+compta12+compta14)
+        dic16.x = dic16.x/(compta8+compta10+compta12+compta14+compta16)
+        dic18.x = dic18.x/(compta8+compta10+compta12+compta14+compta16+compta18)
+        dic20.x = dic20.x/(compta8+compta10+compta12+compta14+compta16+compta18+compta20)
+        dic22.x = dic22.x/(compta8+compta10+compta12+compta14+compta16+compta18+compta20+compta22)
+
 
         array.push(dic8)
         array.push(dic10)
@@ -238,12 +266,12 @@ router.get('/hum', function(req, res, next){
     // get de tots els dispositius de temperatura
     Device.find({}, function(err, devices) {
         devices.forEach(function(dev){
-            // ok, torna tots els tipus 5
+            // ok, torna tots els tipus 6
             if(dev.type == 6){
-                dia_mod = dev.modificationDate.getDate();
-                mes_mod = dev.modificationDate.getMonth()+1;
-                any_mod = dev.modificationDate.getFullYear();
-                // hem modificat avui, comparem dia mes i any
+            	dia_mod = dev.modificationDate.getDate();
+            	mes_mod = dev.modificationDate.getMonth()+1;
+            	any_mod = dev.modificationDate.getFullYear();
+            	// hem modificat avui, comparem dia mes i any
                 if(dia == dia_mod && mes == mes_mod && any == any_mod){
                     if(dev.lastInfo!=null && dev.enabled == true) {
                         if(dev.lastInfo.no2!=null){
@@ -251,47 +279,74 @@ router.get('/hum', function(req, res, next){
                             // si s'ha modificat abans de les 8 sumem la temperatura al diccionari de les 8
                             hora = dev.modificationDate.getHours();
                             minuts = dev.modificationDate.getMinutes();
-                            //console.log('hora de modificacio', minuts)
-                            //console.log(dev.modificationDate)
-                            if(hora < 8 && now >= 8) {
-                                compta8++
-                                dic8.x = dic8.x + dev.lastInfo.no2
+                            // augmentem tots els diccionaris sino despres al fer la mitja no u fa be
+                            if(hora < 8 /*&& now >= 8*/) {
+                            	compta8++
+                            	dic8.x = dic8.x + dev.lastInfo.no2
+                            	dic10.x = dic10.x + dev.lastInfo.no2
+                            	dic12.x = dic12.x + dev.lastInfo.no2
+                            	dic14.x = dic14.x + dev.lastInfo.no2
+                            	dic16.x = dic16.x + dev.lastInfo.no2
+                            	dic18.x = dic18.x + dev.lastInfo.no2
+                            	dic20.x = dic20.x + dev.lastInfo.no2
+                            	dic22.x = dic22.x + dev.lastInfo.no2
                             }
 
                             // la darrera modificacio sa fet entre les 8 i les 10
-                            else if((hora >= 8 && minuts <= 59) && hora < 10 && now >= 10) {
-                                compta10++
-                                dic10.x = dic10.x + dev.lastInfo.no2
+                            else if((hora >= 8 && minuts <= 59) && hora < 10 /*&& now >= 10*/) {
+                            	compta10++
+                            	dic10.x = dic10.x + dev.lastInfo.no2
+                            	dic12.x = dic12.x + dev.lastInfo.no2
+                            	dic14.x = dic14.x + dev.lastInfo.no2
+                            	dic16.x = dic16.x + dev.lastInfo.no2
+                            	dic18.x = dic18.x + dev.lastInfo.no2
+                            	dic20.x = dic20.x + dev.lastInfo.no2
+                            	dic22.x = dic22.x + dev.lastInfo.no2
                             }
                             // 10 a 12
-                            else if((hora >= 10 && minuts <= 59) && hora < 12 && now >= 12) {
-                                compta12++
-                                dic12.x = dic12.x + dev.lastInfo.no2
+                            else if((hora >= 10 && minuts <= 59) && hora < 12 /*&& now >= 12*/) {
+                            	compta12++
+                            	dic12.x = dic12.x + dev.lastInfo.no2
+                            	dic14.x = dic14.x + dev.lastInfo.no2
+                            	dic16.x = dic16.x + dev.lastInfo.no2
+                            	dic18.x = dic18.x + dev.lastInfo.no2
+                            	dic20.x = dic20.x + dev.lastInfo.no2
+                            	dic22.x = dic22.x + dev.lastInfo.no2
                             }
                             // 12 a 14
-                            else if((hora >= 12 && minuts <= 59) && hora < 14 && now >= 14) {
-                                compta14++
-                                dic14.x = dic14.x + dev.lastInfo.no2
+                            else if((hora >= 12 && minuts <= 59) && hora < 14 /*&& now >= 14*/) {
+                            	compta14++
+                            	dic14.x = dic14.x + dev.lastInfo.no2
+                            	dic16.x = dic16.x + dev.lastInfo.no2
+                            	dic18.x = dic18.x + dev.lastInfo.no2
+                            	dic20.x = dic20.x + dev.lastInfo.no2
+                            	dic22.x = dic22.x + dev.lastInfo.no2
                             }
                             // 14 a 16
-                            else if((hora >= 14 && minuts <= 59) && hora < 16 && now >= 16) {
-                                compta16++
-                                dic16.x = dic16.x + dev.lastInfo.no2
+                            else if((hora >= 14 && minuts <= 59) && hora < 16 /*&& now >= 16*/) {
+                            	compta16++
+                            	dic16.x = dic16.x + dev.lastInfo.no2
+                            	dic18.x = dic18.x + dev.lastInfo.no2
+                            	dic20.x = dic20.x + dev.lastInfo.no2
+                            	dic22.x = dic22.x + dev.lastInfo.no2
                             }
                             // 16 a 18
-                            else if((hora >= 16 && minuts <= 59) && hora < 18 && now >= 18) {
-                                compta18++
-                                dic18.x = dic18.x + dev.lastInfo.no2
+                            else if((hora >= 16 && minuts <= 59) && hora < 18 /*&& now >= 18*/) {
+                            	compta18++
+                            	dic18.x = dic18.x + dev.lastInfo.no2
+                            	dic20.x = dic20.x + dev.lastInfo.no2
+                            	dic22.x = dic22.x + dev.lastInfo.no2
                             }
                             // 18 a 20
-                            else if((hora >= 18 && minuts <= 59) && hora < 20 && now >= 20) {
-                                compta20++
-                                dic20.x = dic20.x + dev.lastInfo.no2
+                            else if((hora >= 18 && minuts <= 59) && hora < 20 /*&& now >= 20*/) {
+                            	compta20++
+                            	dic20.x = dic20.x + dev.lastInfo.no2
+                            	dic22.x = dic22.x + dev.lastInfo.no2
                             }
                             // 20 a 22
-                            else if((hora >= 20 && minuts <= 59) && hora < 22 && now >= 22) {
-                                compta22++
-                                dic22.x = dic22.x + dev.lastInfo.no2
+                            else if((hora >= 20 && minuts <= 59) && hora < 22 /*&& now >= 22*/) {
+                            	compta22++
+                            	dic22.x = dic22.x + dev.lastInfo.no2
                             } 
                         }
                     }
@@ -304,13 +359,13 @@ router.get('/hum', function(req, res, next){
         // fer mitjana a cada diccionari
 
         dic8.x = dic8.x/compta8
-        dic10.x = dic10.x/compta10
-        dic12.x = dic12.x/compta12
-        dic14.x = dic14.x/compta14
-        dic16.x = dic16.x/compta16
-        dic18.x = dic18.x/compta18
-        dic20.x = dic20.x/compta20
-        dic22.x = dic22.x/compta22
+        dic10.x = dic10.x/(compta8+compta10)
+        dic12.x = dic12.x/(compta8+compta10+compta12)
+        dic14.x = dic14.x/(compta8+compta10+compta12+compta14)
+        dic16.x = dic16.x/(compta8+compta10+compta12+compta14+compta16)
+        dic18.x = dic18.x/(compta8+compta10+compta12+compta14+compta16+compta18)
+        dic20.x = dic20.x/(compta8+compta10+compta12+compta14+compta16+compta18+compta20)
+        dic22.x = dic22.x/(compta8+compta10+compta12+compta14+compta16+compta18+compta20+compta22)
 
         array.push(dic8)
         array.push(dic10)
