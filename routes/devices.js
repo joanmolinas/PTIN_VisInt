@@ -91,43 +91,43 @@ router.get('/temp', function(req, res, next){
                             minuts = dev.modificationDate.getMinutes();
                             //console.log('hora de modificacio', minuts)
                             //console.log(dev.modificationDate)
-                            if(hora < 8 && hora < now) {
+                            if(hora < 8 && now >= 8) {
                             	compta8++
                             	dic8.x = dic8.x + dev.lastInfo.temperature
                             }
 
                             // la darrera modificacio sa fet entre les 8 i les 10
-                            else if((hora >= 8 && minuts <= 59) && hora < 10 /*&& hora <= now*/) {
+                            else if((hora >= 8 && minuts <= 59) && hora < 10 && now >= 10) {
                             	compta10++
                             	dic10.x = dic10.x + dev.lastInfo.temperature
                             }
                             // 10 a 12
-                            else if((hora >= 10 && minuts <= 59) && hora < 12 /*&& hora <= now*/) {
+                            else if((hora >= 10 && minuts <= 59) && hora < 12 && now >= 12) {
                             	compta12++
                             	dic12.x = dic12.x + dev.lastInfo.temperature
                             }
                             // 12 a 14
-                            else if((hora >= 12 && minuts <= 59) && hora < 14 /*&& now < 14*/) {
+                            else if((hora >= 12 && minuts <= 59) && hora < 14 && now >= 14) {
                             	compta14++
                             	dic14.x = dic14.x + dev.lastInfo.temperature
                             }
                             // 14 a 16
-                            else if((hora >= 14 && minuts <= 59) && hora < 16 /*&& now <= 16*/) {
+                            else if((hora >= 14 && minuts <= 59) && hora < 16 && now >= 16) {
                             	compta16++
                             	dic16.x = dic16.x + dev.lastInfo.temperature
                             }
                             // 16 a 18
-                            else if((hora >= 16 && minuts <= 59) && hora < 18 /*&& (now <= 18*/) {
+                            else if((hora >= 16 && minuts <= 59) && hora < 18 && now >= 18) {
                             	compta18++
                             	dic18.x = dic18.x + dev.lastInfo.temperature
                             }
                             // 18 a 20
-                            else if((hora >= 18 && minuts <= 59) && hora < 20 /*&& now <= 20*/) {
+                            else if((hora >= 18 && minuts <= 59) && hora < 20 && now >= 20) {
                             	compta20++
                             	dic20.x = dic20.x + dev.lastInfo.temperature
                             }
                             // 20 a 22
-                            else if((hora >= 20 && minuts <= 59) && hora < 22 /*&& hora <= now*/) {
+                            else if((hora >= 20 && minuts <= 59) && hora < 22 && now >= 22) {
                             	compta22++
                             	dic22.x = dic22.x + dev.lastInfo.temperature
                             } 
