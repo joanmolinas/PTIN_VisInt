@@ -168,6 +168,168 @@ router.get('/temp', function(req, res, next){
 
 })
 
+// mateix codi que adalt, canviant tipus i en ves de temperatura no2 (nitrogen)
+router.get('/hum', function(req, res, next){
+
+    // array per guardar els diccionaris
+    var array = [];
+
+    // mitjana de temperatura, igual per a tots els diccionaris
+    var mitjana = 0;
+
+    var compta8 = 0;
+    var compta10 = 0;
+    var compta12 = 0;
+    var compta14 = 0;
+    var compta16 = 0;
+    var compta18 = 0;
+    var compta20 = 0;
+    var compta22 = 0;
+
+    let data_avui = new Date();
+    var dia = data_avui.getDate();
+    var mes = data_avui.getMonth()+1; //January is 0!
+    var any = data_avui.getFullYear();
+    var now = data_avui.getHours();
+    var minut = data_avui.getMinutes();
+
+
+    // tenim 8 diccionaris, dic8 = 8 del mati, dic10 = 10 del mati, etc
+    var dic8 = {
+        x:mitjana,
+        y:"8:00"
+    };
+
+    var dic10 = {
+        x:mitjana,
+        y:"10:00"
+    };
+
+    var dic12 = {
+        x:mitjana,
+        y:"12:00"
+    };
+
+    var dic14 = {
+        x:mitjana,
+        y:"14:00"
+    };
+
+    var dic16 = {
+        x:mitjana,
+        y:"16:00"
+    };
+
+    var dic18 = {
+        x:mitjana,
+        y:"18:00"
+    };
+
+    var dic20 = {
+        x:mitjana,
+        y:"20:00"
+    };
+
+    var dic22 = {
+        x:mitjana,
+        y:"22:00"
+    };
+
+    // get de tots els dispositius de temperatura
+    Device.find({}, function(err, devices) {
+        devices.forEach(function(dev){
+            // ok, torna tots els tipus 5
+            if(dev.type == 6){
+                dia_mod = dev.modificationDate.getDate();
+                mes_mod = dev.modificationDate.getMonth()+1;
+                any_mod = dev.modificationDate.getFullYear();
+                // hem modificat avui, comparem dia mes i any
+                if(dia == dia_mod && mes == mes_mod && any == any_mod){
+                    if(dev.lastInfo!=null && dev.enabled == true) {
+                        if(dev.lastInfo.no2!=null){
+                            // ara tenim un dispositiu enabled que te temperatura i s'ha modificat avui
+                            // si s'ha modificat abans de les 8 sumem la temperatura al diccionari de les 8
+                            hora = dev.modificationDate.getHours();
+                            minuts = dev.modificationDate.getMinutes();
+                            //console.log('hora de modificacio', minuts)
+                            //console.log(dev.modificationDate)
+                            if(hora < 8 && now >= 8) {
+                                compta8++
+                                dic8.x = dic8.x + dev.lastInfo.no2
+                            }
+
+                            // la darrera modificacio sa fet entre les 8 i les 10
+                            else if((hora >= 8 && minuts <= 59) && hora < 10 && now >= 10) {
+                                compta10++
+                                dic10.x = dic10.x + dev.lastInfo.no2
+                            }
+                            // 10 a 12
+                            else if((hora >= 10 && minuts <= 59) && hora < 12 && now >= 12) {
+                                compta12++
+                                dic12.x = dic12.x + dev.lastInfo.no2
+                            }
+                            // 12 a 14
+                            else if((hora >= 12 && minuts <= 59) && hora < 14 && now >= 14) {
+                                compta14++
+                                dic14.x = dic14.x + dev.lastInfo.no2
+                            }
+                            // 14 a 16
+                            else if((hora >= 14 && minuts <= 59) && hora < 16 && now >= 16) {
+                                compta16++
+                                dic16.x = dic16.x + dev.lastInfo.no2
+                            }
+                            // 16 a 18
+                            else if((hora >= 16 && minuts <= 59) && hora < 18 && now >= 18) {
+                                compta18++
+                                dic18.x = dic18.x + dev.lastInfo.no2
+                            }
+                            // 18 a 20
+                            else if((hora >= 18 && minuts <= 59) && hora < 20 && now >= 20) {
+                                compta20++
+                                dic20.x = dic20.x + dev.lastInfo.no2
+                            }
+                            // 20 a 22
+                            else if((hora >= 20 && minuts <= 59) && hora < 22 && now >= 22) {
+                                compta22++
+                                dic22.x = dic22.x + dev.lastInfo.no2
+                            } 
+                        }
+                    }
+                }
+            }    
+        })
+
+        // calculem mitjanes
+
+        // fer mitjana a cada diccionari
+
+        dic8.x = dic8.x/compta8
+        dic10.x = dic10.x/compta10
+        dic12.x = dic12.x/compta12
+        dic14.x = dic14.x/compta14
+        dic16.x = dic16.x/compta16
+        dic18.x = dic18.x/compta18
+        dic20.x = dic20.x/compta20
+        dic22.x = dic22.x/compta22
+
+        array.push(dic8)
+        array.push(dic10)
+        array.push(dic12)
+        array.push(dic14)
+        array.push(dic16)
+        array.push(dic18)
+        array.push(dic20)
+        array.push(dic22)
+    })
+    .then(doc => {
+        res.status(200).send(array)
+    })
+    .catch(e => {
+        res.status(500).send('Something went wrong')
+    })
+
+})
+
 router.get('/stadistics', function(req, res, next){
 	
     //Inicialitzem Arrays a 0
