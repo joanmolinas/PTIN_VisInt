@@ -95,7 +95,7 @@ router.get('/temp', function(req, res, next){
                             hora = dev.modificationDate.getHours();
                             minuts = dev.modificationDate.getMinutes();
                             // augmentem tots els diccionaris sino despres al fer la mitja no u fa be
-                            if(hora < 8 && now >= 8) {
+                            if(hora < 8) {
                                 compta8++
                                 dic8.x = dic8.x + dev.lastInfo.temperature
                                 dic10.x = dic10.x + dev.lastInfo.temperature
@@ -108,7 +108,7 @@ router.get('/temp', function(req, res, next){
                             }
 
                             // la darrera modificacio sa fet entre les 8 i les 10
-                            else if((hora >= 8 && minuts <= 59) && hora < 10 && now >= 10) {
+                            else if((hora >= 8 && minuts <= 59) && hora < 10) {
                                 compta10++
                                 dic10.x = dic10.x + dev.lastInfo.temperature
                                 dic12.x = dic12.x + dev.lastInfo.temperature
@@ -119,7 +119,7 @@ router.get('/temp', function(req, res, next){
                                 dic22.x = dic22.x + dev.lastInfo.temperature
                             }
                             // 10 a 12
-                            else if((hora >= 10 && minuts <= 59) && hora < 12 && now >= 12) {
+                            else if((hora >= 10 && minuts <= 59) && hora < 12) {
                                 compta12++
                                 dic12.x = dic12.x + dev.lastInfo.temperature
                                 dic14.x = dic14.x + dev.lastInfo.temperature
@@ -129,7 +129,7 @@ router.get('/temp', function(req, res, next){
                                 dic22.x = dic22.x + dev.lastInfo.temperature
                             }
                             // 12 a 14
-                            else if((hora >= 12 && minuts <= 59) && hora < 14 && now >= 14) {
+                            else if((hora >= 12 && minuts <= 59) && hora < 14) {
                                 compta14++
                                 dic14.x = dic14.x + dev.lastInfo.temperature
                                 dic16.x = dic16.x + dev.lastInfo.temperature
@@ -138,7 +138,7 @@ router.get('/temp', function(req, res, next){
                                 dic22.x = dic22.x + dev.lastInfo.temperature
                             }
                             // 14 a 16
-                            else if((hora >= 14 && minuts <= 59) && hora < 16 && now >= 16) {
+                            else if((hora >= 14 && minuts <= 59) && hora < 16) {
                                 compta16++
                                 dic16.x = dic16.x + dev.lastInfo.temperature
                                 dic18.x = dic18.x + dev.lastInfo.temperature
@@ -146,20 +146,20 @@ router.get('/temp', function(req, res, next){
                                 dic22.x = dic22.x + dev.lastInfo.temperature
                             }
                             // 16 a 18
-                            else if((hora >= 16 && minuts <= 59) && hora < 18 && now >= 18) {
+                            else if((hora >= 16 && minuts <= 59) && hora < 18) {
                                 compta18++
                                 dic18.x = dic18.x + dev.lastInfo.temperature
                                 dic20.x = dic20.x + dev.lastInfo.temperature
                                 dic22.x = dic22.x + dev.lastInfo.temperature
                             }
                             // 18 a 20
-                            else if((hora >= 18 && minuts <= 59) && hora < 20 && now >= 20) {
+                            else if((hora >= 18 && minuts <= 59) && hora < 20) {
                                 compta20++
                                 dic20.x = dic20.x + dev.lastInfo.temperature
                                 dic22.x = dic22.x + dev.lastInfo.temperature
                             }
                             // 20 a 22
-                            else if((hora >= 20 && minuts <= 59) && hora < 22 && now >= 22) {
+                            else if((hora >= 20 && minuts <= 59) && hora < 22) {
                                 compta22++
                                 dic22.x = dic22.x + dev.lastInfo.temperature
                             } 
@@ -180,7 +180,7 @@ router.get('/temp', function(req, res, next){
         dic16.x = dic16.x/(compta8+compta10+compta12+compta14+compta16)
         dic18.x = dic18.x/(compta8+compta10+compta12+compta14+compta16+compta18)
         dic20.x = dic20.x/(compta8+compta10+compta12+compta14+compta16+compta18+compta20)
-        if(now >= 22) dic22.x = dic22.x/(compta8+compta10+compta12+compta14+compta16+compta18+compta20+compta22)
+        dic22.x = dic22.x/(compta8+compta10+compta12+compta14+compta16+compta18+compta20+compta22)
 
 
         // 8
@@ -260,7 +260,6 @@ router.get('/temp', function(req, res, next){
     })
     .then(doc => {
         res.status(200).send(resultat)
-        //res.status(200).send(resultat_hores)
     })
     .catch(e => {
         res.status(500).send('Something went wrong')
@@ -358,7 +357,7 @@ router.get('/hum', function(req, res, next){
                             hora = dev.modificationDate.getHours();
                             minuts = dev.modificationDate.getMinutes();
                             // augmentem tots els diccionaris sino despres al fer la mitja no u fa be
-                            if(hora < 8 && now >= 8) {
+                            if(hora < 8) {
                                 compta8++
                                 dic8.x = dic8.x + dev.lastInfo.no2
                                 dic10.x = dic10.x + dev.lastInfo.no2
@@ -371,7 +370,7 @@ router.get('/hum', function(req, res, next){
                             }
 
                             // la darrera modificacio sa fet entre les 8 i les 10
-                            else if((hora >= 8 && minuts <= 59) && hora < 10 && now >= 10) {
+                            else if((hora >= 8 && minuts <= 59) && hora < 10) {
                                 compta10++
                                 dic10.x = dic10.x + dev.lastInfo.no2
                                 dic12.x = dic12.x + dev.lastInfo.no2
@@ -382,7 +381,7 @@ router.get('/hum', function(req, res, next){
                                 dic22.x = dic22.x + dev.lastInfo.no2
                             }
                             // 10 a 12
-                            else if((hora >= 10 && minuts <= 59) && hora < 12 && now >= 12) {
+                            else if((hora >= 10 && minuts <= 59) && hora < 12) {
                                 compta12++
                                 dic12.x = dic12.x + dev.lastInfo.no2
                                 dic14.x = dic14.x + dev.lastInfo.no2
@@ -392,7 +391,7 @@ router.get('/hum', function(req, res, next){
                                 dic22.x = dic22.x + dev.lastInfo.no2
                             }
                             // 12 a 14
-                            else if((hora >= 12 && minuts <= 59) && hora < 14 && now >= 14) {
+                            else if((hora >= 12 && minuts <= 59) && hora < 14) {
                                 compta14++
                                 dic14.x = dic14.x + dev.lastInfo.no2
                                 dic16.x = dic16.x + dev.lastInfo.no2
@@ -401,7 +400,7 @@ router.get('/hum', function(req, res, next){
                                 dic22.x = dic22.x + dev.lastInfo.no2
                             }
                             // 14 a 16
-                            else if((hora >= 14 && minuts <= 59) && hora < 16 && now >= 16) {
+                            else if((hora >= 14 && minuts <= 59) && hora < 16) {
                                 compta16++
                                 dic16.x = dic16.x + dev.lastInfo.no2
                                 dic18.x = dic18.x + dev.lastInfo.no2
@@ -409,20 +408,20 @@ router.get('/hum', function(req, res, next){
                                 dic22.x = dic22.x + dev.lastInfo.no2
                             }
                             // 16 a 18
-                            else if((hora >= 16 && minuts <= 59) && hora < 18 && now >= 18) {
+                            else if((hora >= 16 && minuts <= 59) && hora < 18) {
                                 compta18++
                                 dic18.x = dic18.x + dev.lastInfo.no2
                                 dic20.x = dic20.x + dev.lastInfo.no2
                                 dic22.x = dic22.x + dev.lastInfo.no2
                             }
                             // 18 a 20
-                            else if((hora >= 18 && minuts <= 59) && hora < 20 && now >= 20) {
+                            else if((hora >= 18 && minuts <= 59) && hora < 20) {
                                 compta20++
                                 dic20.x = dic20.x + dev.lastInfo.no2
                                 dic22.x = dic22.x + dev.lastInfo.no2
                             }
                             // 20 a 22
-                            else if((hora >= 20 && minuts <= 59) && hora < 22 && now >= 22) {
+                            else if((hora >= 20 && minuts <= 59) && hora < 22) {
                                 compta22++
                                 dic22.x = dic22.x + dev.lastInfo.no2
                             } 
@@ -443,7 +442,7 @@ router.get('/hum', function(req, res, next){
         dic16.x = dic16.x/(compta8+compta10+compta12+compta14+compta16)
         dic18.x = dic18.x/(compta8+compta10+compta12+compta14+compta16+compta18)
         dic20.x = dic20.x/(compta8+compta10+compta12+compta14+compta16+compta18+compta20)
-        if(now >= 22) dic22.x = dic22.x/(compta8+compta10+compta12+compta14+compta16+compta18+compta20+compta22)
+        dic22.x = dic22.x/(compta8+compta10+compta12+compta14+compta16+compta18+compta20+compta22)
 
 
         // 8
@@ -523,7 +522,6 @@ router.get('/hum', function(req, res, next){
     })
     .then(doc => {
         res.status(200).send(resultat)
-        //res.status(200).send(resultat_hores)
     })
     .catch(e => {
         res.status(500).send('Something went wrong')
