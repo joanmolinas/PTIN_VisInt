@@ -1,6 +1,6 @@
+
 // http://localhost:3000/api/
 // https://ptin2018.herokuapp.com/api/
-
 window.addEventListener('load', function () {
   /* Window resize behavior */
   window.onresize = function () {
@@ -44,6 +44,7 @@ window.addEventListener('load', function () {
       maxDevicesPages: 0,
       min_length_filter: 3,
       nots: [],
+      notReaded:0,
       trans: [],
       atributesNames: ["latitude", "longitude", "creationDate", "name", "_id", "modificationDate", "type", "active", "enabled", "deleted", "body_temperature", "heart_rate", "blood_pressure_systolic", "bloog_pressure_diastolic", "gas_level", "tyres_pressure_alarm", "Detection_alarm", "humidity", "air_pressure", "NO2", "PM10"],
       atributesTraductionNames: [],
@@ -766,17 +767,6 @@ window.addEventListener('load', function () {
         let langlist = document.getElementById(layer).style
         langlist.display = langlist.display == "block" ? "none" : "block"
       },
-      toggleNotifies: function () {
-        let notify = document.getElementById("notifications").style
-        let self = this
-        if (notify.display === "none") {
-          notify.display = "block"
-
-        } else {
-          notify.display = "none"
-        }
-
-      },
 
       /**
        * @author ncarmona
@@ -827,30 +817,77 @@ window.addEventListener('load', function () {
       },
       loadNotifications: function () {
         let self = this
-
+        
         axios.get(this.base_url_api + 'notifications/').then(function (response) {
-          self.notifications = response.data
-          self.nots.forEach(function (not) {
-            self.notifications.push(not)
+            self.nots = response.data
+            
+            self.nots.forEach(function(not){
+             
+               let d= new Date(not.date)
+               let t=""+d.getHours()
+               date=""+d.getDate()
 
-            if (not.notification_seen) {
-              document.getElementById(not._id).style.backgroundColor = "white"
-            } else {
-              document.getElementById(not._id).style.backgroundColor = "#ccc"
+                switch(not.typeOfAction){
+                    case 1:
+                        
+                        self.notifications.unshift({"_id":not._id,"message":not.requester.name,"message2":self.trans["not_heartAttack1"],"message3":date+self.trans["not_heartAttack2"],"message4":t+self.trans["not_heartAttack3"]})
+                        break
+                    case 2:
+                        self.notifications.unshift({"_id":not._id,"message":not.requester.name,"message2":self.trans["not_general1"],"message3":date+self.trans["not_general2"],"message4":t+self.trans["not_general3"]})
+                        break
+                    default:
+                       
+                        break
+                }
+                if(not.readed){
+                    self.notReaded=self.notReaded+1
+                }
+                    
+            })
+            if(self.notReaded==0){
+                document.getElementById("numberNots").style.display="none"
+            }else{
+                document.getElementById("numberNots").style.display="inherit"
             }
-
-          })
         }).catch(function (error) {
-          console.log(error.message)
+            console.log(error.message)
         })
-      },
-      selectNotify: function (notify) {
-        console.log(notify)
-        if (notify.notification_seen == false) {
+           
+            
+    
+    },
+    newNotification:function(){
+        console.log("hols")
+        this.notifications=[]
+        this.nots=[]
+        this.loadNotifications()
+    },
+    toggleNotifies: function () {
+        let notify = document.getElementById("notifications").style
+        let self = this
+        if (notify.display === "none") {
+            notify.display = "inline-block"
+             self.nots.forEach(function(not){
+                if(not.readed){
+                    document.getElementById(not._id).style.backgroundColor = "white"
+                    axios.put(self.base_url_api + 'notifications/:'+not._id).then(function(){
+                        self.notReaded=self.notReaded-1
+                        if(self.notReaded==0){
+                            document.getElementById("numberNots").style.display="none"
+                        }
+                    }).catch(function (error) {
+                        console.log(error.message)
+                    })
+                }else{
+                    document.getElementById(not._id).style.backgroundColor = "#ccc"
+                }
+            })
 
-          document.getElementById(notify._id).style.backgroundColor = "white"
+        } else {
+            notify.display = "none"
         }
-      },
+
+    },
       showStaticsTable: function () {
         let self = this
         self.stadisticsBuilding = [[], [], [], [], []]

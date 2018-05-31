@@ -49,5 +49,11 @@
         "PM10":"PM10",  
         "active":"Activo",
         "Notifydate":"Fecha",
-        "Notifytype":"Tipo"
+        "Notifytype":"Tipo",
+        "not_heartAttack1":" ha tenido un ataque al corazon el dia ",
+        "not_heartAttack2":" a las ",
+        "not_heartAttack3":" horas",
+        "not_general1":" ha tenido una emergencia el dia ",
+        "not_general2":" a las ",
+        "not_general3":" horas"
 }

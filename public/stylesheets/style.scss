@@ -111,14 +111,17 @@ body {
       }
 }    
 .dropdown-toggle{
-  margin-right: 25px;
+  margin-right: 30px;
+  
 }  
-  #notifications{
-    display: none;
-    margin-top: 15px;
-    margin-right: 30px;
-    overflow-y:scroll;
-    height: 37vh;
+#notifications{
+  display: none;
+  
+  margin-top: 15px;
+  margin-right: 100px;
+  overflow-y:scroll;
+  height: 37vh;
+  
     font-size: 15px;
     color: black;
     padding:3px;
@@ -128,6 +131,7 @@ body {
         width: 100%;
         text-align: center;
         background-color:rgb(187, 184, 184);
+       
       }
 }
       #lang-list {

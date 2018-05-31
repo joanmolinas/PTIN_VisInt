@@ -49,5 +49,12 @@
     "NO2":"NO2",
     "PM10":"PM10",
     "Notifydate":"Date",
-    "Notifytype":"Type"
+    "Notifytype":"Type",
+    "not_heartAttack1":" has a heart attack on",
+    "not_heartAttack2":" at ",
+    "not_heartAttack3":" o'clock",
+    "not_general1":" has an emergency on",
+    "not_general2":" at ",
+    "not_general3":" o'clock"
+    
 }

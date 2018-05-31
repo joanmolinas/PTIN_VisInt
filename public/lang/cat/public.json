@@ -49,6 +49,12 @@
     "NO2":"NO2",
     "PM10":"PM10",
     "Notifydate":"Data",
-    "Notifytype":"Tipus"
+    "Notifytype":"Tipus",
+    "not_heartAttack1":" ha tingut un atac de cor el dia ",
+    "not_heartAttack2":" a les ",
+    "not_heartAttack3":" hores",
+    "not_general1":" ha tingut una emergencia el dia ",
+    "not_general2":" a les ",
+    "not_general3":" hores"
            
 }
