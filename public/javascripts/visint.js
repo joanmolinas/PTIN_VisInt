@@ -46,7 +46,7 @@ window.addEventListener('load', function () {
       nots: [],
       notReaded:0,
       trans: [],
-      atributesNames: ["latitude", "longitude", "creationDate", "name", "_id", "modificationDate", "type", "active", "enabled", "deleted", "body_temperature", "heart_rate", "blood_pressure_systolic", "bloog_pressure_diastolic", "gas_level", "tyres_pressure_alarm", "Detection_alarm", "humidity", "air_pressure", "NO2", "PM10"],
+      atributesNames: ["latitude", "longitude", "creationDate", "name", "_id", "modificationDate", "type", "active", "enabled", "deleted", "body_temperature", "heart_rate", "blood_pressure_systolic", "bloog_pressure_diastolic", "gas_level", "tyres_pressure_alarm", "Detection_alarm", "humidity", "air_pressure", "NO2", "PM10","floor","building","availability","alarmButton","ips","general","cardiologist"],
       atributesTraductionNames: [],
       debug: false,
       stadistics: [],
@@ -564,43 +564,86 @@ window.addEventListener('load', function () {
               } else {
                 document.getElementById('icon').style.boxShadow = "0px 0px 20px 5px red"
               }
+              
             } else {
               if (k == "type") {
                 //Each type of device have his own icon background color color
+                
                 switch (self.selected_device[k]) {
                   case 1:
                     document.getElementById('icon').style.backgroundColor = self.blue
-                    document.getElementById('close').style.color = self.blue
+                    document.getElementById('closeDetail').style.color = self.blue
+                    self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                    self.deviceInfo.push(self.trans["doctor"])
+                    self.deviceAtributes.push(self.deviceInfo)
+                  
+                    if(self.selected_device.additionalInfo){
+                      self.deviceInfo = []
+                      switch(self.selected_device.additionalInfo.type){
+                        case 1:
+                          self.deviceInfo.push(self.trans["especiality"])
+                          self.deviceInfo.push(self.trans["cardiologist"])
+                          self.deviceAtributes.push(self.deviceInfo)
+                        break;
+                        case 2:
+                          self.deviceInfo.push(self.trans["especiality"])
+                          self.deviceInfo.push(self.trans["general"])
+                          self.deviceAtributes.push(self.deviceInfo)
+                        break;
+                        default:
+                        break;
+                      }
+                      
+                    }
+                    
                     break;
                   case 2:
                     document.getElementById('icon').style.backgroundColor = self.gray
-                    document.getElementById('close').style.color = self.gray
+                    document.getElementById('closeDetail').style.color = self.gray
+                    self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                    self.deviceInfo.push(self.trans["ambulance"])
+                    self.deviceAtributes.push(self.deviceInfo)
                     break;
                   case 3:
                     document.getElementById('icon').style.backgroundColor = self.orange
-                    document.getElementById('close').style.color = self.orange
+                    document.getElementById('closeDetail').style.color = self.orange
+                    self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                    self.deviceInfo.push(self.trans["smoke"])
+                    self.deviceAtributes.push(self.deviceInfo)
                     break;
                   case 4:
                     document.getElementById('icon').style.backgroundColor = self.green
-                    document.getElementById('close').style.color = self.green
+                    document.getElementById('closeDetail').style.color = self.green
+                    self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                    self.deviceInfo.push(self.trans["patient"])
+                    self.deviceAtributes.push(self.deviceInfo)
                     break;
                   case 5:
                     document.getElementById('icon').style.backgroundColor = self.yellow
-                    document.getElementById('close').style.color = self.yellow
+                    document.getElementById('closeDetail').style.color = self.yellow
+                    self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                    self.deviceInfo.push(self.trans["wheather"])
+                    self.deviceAtributes.push(self.deviceInfo)
                     break;
                   case 6:
                     document.getElementById('icon').style.backgroundColor = self.lightblue
-                    document.getElementById('close').style.color = self.lightblue
+                    document.getElementById('closeDetail').style.color = self.lightblue
+                    self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                    self.deviceInfo.push(self.trans["air_quality"])
+                    self.deviceAtributes.push(self.deviceInfo)
                     break;
-
+              
                   default:
+                    
                     document.getElementById('icon').style.backgroundColor = "rgb(0, 140, 255)"
                     document.getElementById('close').style.color = "rgb(0, 140, 255)"
                     break;
 
                 }
+                self.deviceInfo = []
               }
-              if (k != "token") {
+              if( (k != "token")&&(k!="type")) {
+                
                 self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
 
                 self.deviceInfo.push(self.selected_device[k])
@@ -622,7 +665,7 @@ window.addEventListener('load', function () {
 
           keysSensors.forEach(function (k) {
             if (k != "date") {
-
+              console.log(k)
               self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
 
 
@@ -686,7 +729,7 @@ window.addEventListener('load', function () {
             self.trans = trans_string.data
             console.log("language file: " + trans_file)
             console.log("Website language: " + localStorage.language)
-            self.atributesTraductionNames = [self.trans["latitude"], self.trans["longitude"], self.trans["creationDate"], self.trans["name"], self.trans["_id"], self.trans["modificationDate"], self.trans["type"], self.trans["active"], self.trans["enabled"], self.trans["deleted"], self.trans["body_temperature"], self.trans["heart_rate"], self.trans["blood_pressure_systolic"], self.trans["bloog_pressure_diastolic"], self.trans["gas_level"], self.trans["tyres_pressure_alarm"], self.trans["Detection_alarm"], self.trans["humidity"], self.trans["air_pressure"], self.trans["NO2"], self.trans["PM10"]]
+            self.atributesTraductionNames = [self.trans["latitude"], self.trans["longitude"], self.trans["creationDate"], self.trans["name"], self.trans["_id"], self.trans["modificationDate"], self.trans["type"], self.trans["active"], self.trans["enabled"], self.trans["deleted"], self.trans["body_temperature"], self.trans["heart_rate"], self.trans["blood_pressure_systolic"], self.trans["bloog_pressure_diastolic"], self.trans["gas_level"], self.trans["tyres_pressure_alarm"], self.trans["Detection_alarm"], self.trans["humidity"], self.trans["air_pressure"], self.trans["NO2"], self.trans["PM10"],self.trans["floor"],self.trans["building"],self.trans["availability"],self.trans["alarmButton"],self.trans["ips"],self.trans["general"],self.trans["cardiologist"]]
 
           }).catch(function (error) {
             console.log(error.message)
@@ -870,12 +913,7 @@ window.addEventListener('load', function () {
              self.nots.forEach(function(not){
                 if(not.readed){
                     document.getElementById(not._id).style.backgroundColor = "white"
-                    axios.put(self.base_url_api + 'notifications/:'+not._id).then(function(){
-                        self.notReaded=self.notReaded-1
-                        if(self.notReaded==0){
-                            document.getElementById("numberNots").style.display="none"
-                        }
-                    }).catch(function (error) {
+                    axios.put('http://localhost:3000/api/' + 'notifications/'+not._id).catch(function (error) {
                         console.log(error.message)
                     })
                 }else{
@@ -884,6 +922,10 @@ window.addEventListener('load', function () {
             })
 
         } else {
+          self.notReaded=0
+          if(self.notReaded==0){
+            document.getElementById("numberNots").style.display="none"
+        }
             notify.display = "none"
         }
 
