@@ -22,7 +22,7 @@ window.addEventListener('load', function () {
   new Vue({
     el: '#vue',
     data: {
-      base_url_api: 'https://ptin2018.herokuapp.com/api/', /*'http://localhost:3000/api/',*/
+      base_url_api: /*'https://ptin2018.herokuapp.com/api/',*/ 'http://localhost:3000/api/',
       devices_column1: [],
       devices_column2: [],
       devices: [],
@@ -45,6 +45,7 @@ window.addEventListener('load', function () {
       min_length_filter: 3,
       nots: [],
       notReaded:0,
+      readed:0,
       trans: [],
       atributesNames: ["latitude", "longitude", "creationDate", "name", "_id", "modificationDate", "type", "active", "enabled", "deleted", "body_temperature", "heart_rate", "blood_pressure_systolic", "bloog_pressure_diastolic", "gas_level", "tyres_pressure_alarm", "Detection_alarm", "humidity", "air_pressure", "NO2", "PM10","floor","building","availability","alarmButton","ips","general","cardiologist"],
       atributesTraductionNames: [],
@@ -912,8 +913,9 @@ window.addEventListener('load', function () {
             notify.display = "inline-block"
              self.nots.forEach(function(not){
                 if(not.readed){
+                    self.readed=self.readed+1
                     document.getElementById(not._id).style.backgroundColor = "white"
-                    axios.put('http://localhost:3000/api/' + 'notifications/'+not._id).catch(function (error) {
+                    axios.put(self.base_url_api + 'notifications/'+not._id).catch(function (error) {
                         console.log(error.message)
                     })
                 }else{
@@ -922,10 +924,10 @@ window.addEventListener('load', function () {
             })
 
         } else {
-          self.notReaded=0
+          self.notReaded=self.notReaded-self.readed
           if(self.notReaded==0){
             document.getElementById("numberNots").style.display="none"
-        }
+          }
             notify.display = "none"
         }
 
