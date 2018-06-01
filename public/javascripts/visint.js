@@ -910,7 +910,7 @@ window.addEventListener('load', function () {
                        
                         break
                 }
-                if(not.readed){
+                if(!not.readed){
                     self.notReaded=self.notReaded+1
                 }
                     
@@ -939,7 +939,7 @@ window.addEventListener('load', function () {
         if (notify.display === "none") {
             notify.display = "inline-block"
              self.nots.forEach(function(not){
-                if(not.readed){
+                if(!not.readed){
                     self.readed=self.readed+1
                     document.getElementById(not._id).style.backgroundColor = "#1E88E5"
                     axios.put(self.base_url_api + 'notifications/'+not._id).catch(function (error) {
