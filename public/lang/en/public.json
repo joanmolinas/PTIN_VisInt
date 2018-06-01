@@ -23,6 +23,7 @@
     "smoke": "Smoke sensor",
     "weather": "weather sensor",
     "air_quality": "Air quality sensor",
+    "nurse":"Nurse",
     "total":"Total",
     "activeDevice":"Active",
     "information": "Information",

@@ -62,6 +62,7 @@ window.addEventListener('load', function () {
       blue: "rgb(0, 140, 255,1)",
       green: "rgb(7, 112, 7)",
       lightblue: "rgb(45, 231, 245)",
+      purple:"rgb(162, 24, 226)",
       notifications: [],//[{'_id':"1",'date':"26012018",'type':"General"},{'_id':"2",'date':"27012018",'type':"General"},{'_id':"3",'date':"28012018",'type':"General"}],
       page: 1,
       typeDev: {
@@ -71,6 +72,7 @@ window.addEventListener('load', function () {
         4: '<i class="fas fa-user img-circle center-block" style="color:white;background-color: #077007;width:80px; margin-left:-5px;margin-top:30px;padding:20px;height:80px;font-size: 20px;"></i>',
         5: '<i class="fas fa-sun img-circle center-block" style="color:white;background-color: #DCF11C;width:80px; margin-left:-5px;margin-top:30px;padding:20px;height:80px;font-size: 20px;"></i>',
         6: '<i class="fas fa-cloud img-circle center-block" style="color:white;background-color: rgb(45, 231, 245);width:80px; margin-left:-5px;margin-top:30px;padding:20px;height:80px;font-size: 20px;"></i>',
+        7: '<i class="fas fa-medkit img-circle center-block" style="color:white;background-color: rgb(162, 24, 226);width:80px; margin-left:-5px;margin-top:30px;padding:20px;height:80px;font-size: 20px;"></i>',
       }
     },
     mounted: function () {
@@ -342,6 +344,16 @@ window.addEventListener('load', function () {
           })
         })
         this.iconstyle.push(style)
+        style = new ol.style.Style({
+          image: new ol.style.Circle({
+            radius: 6,
+            fill: new ol.style.Fill({
+              color: self.purple
+            }),
+
+          })
+        })
+        this.iconstyle.push(style)
 
 
 
@@ -505,7 +517,10 @@ window.addEventListener('load', function () {
                   point.setStyle(self.iconstyle[4])
                   break;
                 case 6:
-                  point.setStyle(self.iconstyle[4])
+                  point.setStyle(self.iconstyle[5])
+                  break;
+                case 7:
+                  point.setStyle(self.iconstyle[6])
                   break;
 
               }
@@ -631,6 +646,13 @@ window.addEventListener('load', function () {
                     document.getElementById('closeDetail').style.color = self.lightblue
                     self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
                     self.deviceInfo.push(self.trans["air_quality"])
+                    self.deviceAtributes.push(self.deviceInfo)
+                    break;
+                  case 7:
+                    document.getElementById('icon').style.backgroundColor = self.purple
+                    document.getElementById('closeDetail').style.color = self.purple
+                    self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                    self.deviceInfo.push(self.trans["nurse"])
                     self.deviceAtributes.push(self.deviceInfo)
                     break;
               
@@ -994,6 +1016,9 @@ window.addEventListener('load', function () {
                   case "6":
                     self.stadisticsBuilding[0][index + 1] = self.trans["air_quality"]
                     break;
+                  case "7":
+                  self.stadisticsBuilding[0][index + 1] = self.trans["nurse"]
+                    break;
                   case "total":
                     self.stadisticsBuilding[0][index + 1] = self.trans["total"]
                     break;
@@ -1026,6 +1051,7 @@ window.addEventListener('load', function () {
           document.getElementById(self.trans["weather"]).style.backgroundColor = "#ccc";
           document.getElementById(self.trans["total"]).style.backgroundColor = "#ccc";
           document.getElementById(self.trans["activeDevice"]).style.backgroundColor = "#ccc";
+         // document.getElementById(self.trans["nurse"]).style.backgroundColor="#ccc";
           document.getElementById(self.trans["eA"]).style.backgroundColor = "#ccc";
           document.getElementById(self.trans["eB"]).style.backgroundColor = "#ccc";
           document.getElementById(self.trans["neapolis"]).style.backgroundColor = "#ccc";

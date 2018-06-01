@@ -232,8 +232,10 @@
                   <option value="1">{{trans['doctor']}}</option>
                   <option value="2">{{trans['ambulance']}}</option>
                   <option value="3">{{trans['smoke']}}</option>
-                  <option value="4">{{trans['weather']}}</option>
-                  <option value="4">{{trans['air_quality']}}</option>
+                  <option value="4">{{trans['patient']}}</option>
+                  <option value="5">{{trans['weather']}}</option>
+                  <option value="6">{{trans['air_quality']}}</option>
+                  <option value="7">{{trans['nurse']}}</option>
                 </select>
               </div>
             </div>
@@ -312,6 +314,9 @@
               </div>
               <div v-if="selected_device.type==6" id="icon" class="img-circle center-block ">
                 <i class="fas fa-cloud  iconPicture"></i>
+              </div>
+              <div v-if="selected_device.type==7" id="icon" class="img-circle center-block ">
+                <i class="fas fa-medkit  iconPicture"></i>
               </div>
             </div>
             <div class="row blocs">
