@@ -9,6 +9,7 @@ var fs = require('fs')
 var routes = require('./routes/routes')
 var admin = require('./routes/admin')
 var session = require('express-session')
+let cors = require('cors');
 
 var app = express();
 
@@ -51,6 +52,9 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
+
+//Cors "bug"
+app.use(cors());
 
 // error handler
 app.use(function(err, req, res, next) {

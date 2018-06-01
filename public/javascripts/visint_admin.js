@@ -1,11 +1,9 @@
-// http://localhost:3000/api/
-// https://ptin2018.herokuapp.com/api/
 window.addEventListener('load', function () {
     new Vue({
         el: '#vue',
 
         data: {
-            base_url_api: 'https://ptin2018.herokuapp.com/api/',
+            base_url_api: 'http://localhost:3000/api/',
             debugging: false,
             userInputValue: '',
             passwordInputValue: '',

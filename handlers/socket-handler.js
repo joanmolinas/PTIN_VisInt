@@ -49,11 +49,13 @@ let callbacks = {
 
 function alarm(socket) {
     socket.on('alarm', (data) => {
+        
         let id = socket.handshake.query['id']
         data.requester = id
         callbacks[data.type](socket, data).
         then(resp => {
             notificationWasUpdated()
+            
         })
         .catch(e => {
             console.log(e)
@@ -113,7 +115,7 @@ function heartAttack(socket, data) {
                 readed: false,
                 typeOfAction: 1
             })
-
+           
             notification.save()
             .then(resolve)
             .catch(reject)

@@ -10,11 +10,13 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
+    "cors": "^2.8.4",
     "debug": "~2.6.9",
     "express": "~4.15.5",
     "express-session": "^1.15.6",
     "geo-nearby": "^2.0.1",
     "hbs": "~4.0.1",
+    "js-string-format": "^0.1.0",
     "jwt-simple": "^0.5.1",
     "moment": "^2.22.1",
     "mongoose": "^5.0.11",
@@ -24,6 +26,7 @@
     "node-sass-middleware": "^0.11.0",
     "request": "^2.85.0",
     "serve-favicon": "~2.4.5",
-    "socket.io": "^2.1.0"
+    "socket.io": "^2.1.0",
+    "string-format": "^2.0.0"
   }
 }
