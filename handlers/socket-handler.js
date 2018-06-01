@@ -33,6 +33,7 @@ function onDisconnect(socket) {
     socket.on('disconnect', () => {
         let dId = socket.handshake.query['id']
         delete sockets[dId]
+        delete generalTokenStored[id]
         Device.findByIdAndUpdate(dId, {
             $set: { active: false }
         }).exec()
