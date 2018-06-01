@@ -92,6 +92,7 @@ window.addEventListener('load', function () {
       getDevices: function () {
         let self = this
         axios.get(this.base_url_api + 'devices?page=' + self.page + '&size=10').then(function (response) {
+          self.maxDevicesPages=response.data.pages
           self.devices = response.data.docs
           self.devices.filter(function (device) {
             return device.lastInfo != null || device.lastInfo != undefined
@@ -111,6 +112,7 @@ window.addEventListener('load', function () {
 
       refreshDevices: function () {
         this.removeDevicesFromList()
+        
         this.getDevices()
         this.drawDevicesOnHeatMap()
       },
@@ -126,7 +128,8 @@ window.addEventListener('load', function () {
         this.page = 1
         let source = this.vectorLayer.getSource();
         source.clear()
-
+        this.devices_column1=[]
+        this.devices_column2=[]
         devices.getElementsByClassName("col-md-6")[0].innerHTML = ''
         devices.getElementsByClassName("col-md-6")[1].innerHTML = ''
 
@@ -139,10 +142,12 @@ window.addEventListener('load', function () {
        * @todo add spinner while. Filter by specified field.
        */
       filterByText: function () {
+        
         if (this.filter_text.length == 0) {
           this.removeDevicesFromList()
           this.filterByType()
         } else if (this.filter_text.length > 0 && this.filter_text.length < this.min_length_filter)
+          
           console.log("Nothing TO DO")
         else {
           let self = this
@@ -164,7 +169,7 @@ window.addEventListener('load', function () {
               self.devices.filter(function (device) {
                 return device.lastInfo != null || device.lastInfo != undefined
               }).forEach(function (device, index) {
-                console.log(device)
+               
                 if (index % 2 == 0)
                   self.devices_column1.push(device)
                 else
@@ -194,10 +199,10 @@ window.addEventListener('load', function () {
         let self = this
         let query = this.base_url_api + 'devices/?'
 
-        if (this.device_type.length > 0)
+        if (this.device_type.length > 0){
           console.log(this.device_type)
         query += 'type=' + this.device_type
-
+        console.log(this.device_type)
         if (this.filter_text.length >= this.min_length_filter) {
           if (query.slice(-1) != '?')
             query += '&'
@@ -207,8 +212,10 @@ window.addEventListener('load', function () {
         if (this.debug) console.log(query)
 
         axios.get(query).then(function (response) {
+          
           self.removeDevicesFromList()
           self.devices = response.data.docs
+          
           self.devices.filter(function (device) {
             return device.lastInfo != null || device.lastInfo != undefined
           }).forEach(function (device, index) {
@@ -217,13 +224,17 @@ window.addEventListener('load', function () {
             else
               self.devices_column2.push(device)
           });
+          
         }).catch(function (error) {
           console.log(error.message)
         }).then(function () {
           //Draw The devices on the map after the filter is done
+          
           self.drawDevices()
         })
-
+      }else{
+        self.getDevices()
+      }
       },
 
       /**
@@ -464,6 +475,7 @@ window.addEventListener('load', function () {
         let self = this
 
         let devices = self.devices_column1.concat(self.devices_column2)
+       
         //Defining variables for compute the average center
         /* let i=0
          let latitudeCenter=0
@@ -867,20 +879,13 @@ window.addEventListener('load', function () {
 
         if (devicelist.scrollHeight - devicelist.scrollTop === devicelist.clientHeight) {
           this.page = this.page + 1
-          if ((this.devices_column1.length + this.devices_column2.length) >= 100) {
-            while ((this.devices_column1.length + this.devices_column2.length) >= 100) {
-              this.devices_column1.pop(0)
-              this.devices_column2.pop(0)
-            }
-          }
-
           devices = document.getElementById("devices-list")
           let source = this.vectorLayer.getSource();
           source.clear()
           console.log('num pagina' + this.page + 'paginas totales' + this.maxDevicesPages)
           if (this.page <= this.maxDevicesPages) {
-            devices.getElementsByClassName("col-md-6")[0].innerHTML = ''
-            devices.getElementsByClassName("col-md-6")[1].innerHTML = ''
+          //  devices.getElementsByClassName("col-md-6")[0].innerHTML = ''
+            //devices.getElementsByClassName("col-md-6")[1].innerHTML = ''
 
             this.getDevices()
           }
@@ -931,6 +936,7 @@ window.addEventListener('load', function () {
         
         this.notifications=[]
         this.nots=[]
+        this.notReaded=0
         this.loadNotifications()
     },
     toggleNotifies: function () {

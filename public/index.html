@@ -53,7 +53,7 @@
     
     socket.on('refreshNotificationsTable',function(){
      
-      document.getElementById("numberNots").click()
+      document.getElementById("newNot").click()
     })
     socket.on('shutdown', () => {
       console.log('shutdown received')
@@ -124,11 +124,11 @@
                 <i class="fas fa-list-alt" id="displaySidebarMap"></i>
               </a>
               <div  v-on:click="newNotification" ></div>
-              <span class="hidden-xs hidden-sm dropdown" >
+              <span id="newNot" v-on:click="newNotification" class="hidden-xs hidden-sm dropdown" >
                 <a href="#" v-bind:title="trans['notifications_icon']" v-on:click="toggleNotifies" class="dropdown-toggle" data-toggle="dropdown">
                   <i class="fas fa-bell"></i>
                   
-                  <sup id="numberNots" class="no-notification" v-on:click="newNotification"> {{notReaded}}</sup>
+                  <sup id="numberNots" class="no-notification" > {{notReaded}}</sup>
 
                 </a>
                 <div id="notifications" class="dropdown-menu">
