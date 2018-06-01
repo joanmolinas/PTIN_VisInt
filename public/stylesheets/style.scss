@@ -14,8 +14,25 @@ body {
   overflow: hidden;
  
 }
-
+#spinner{
+  color:#0D47A1;
+  height: 200vh;
+  vertical-align: center;
+  font-size: 150px;
+  text-align: center;
+  background-color: #E3F2FD;
+  padding-top: 200px;
+  .separators{
+    
+    text-align: center;
+    font-weight: bold;
+    color:#0D47A1;
+    font-size: 100px;
+    
+   }
+}
 #header {
+  display:none;
   height: $header-height;
   background-color:$sidebar-menu-color;
   border-bottom: 1px solid #ccc;
@@ -177,6 +194,7 @@ body {
 }
 
 #sidebar {
+  display:none;
   background-color: white;
   padding: 0;
   min-height: $vh;
@@ -421,6 +439,7 @@ body {
 }
 
 #content {
+  display:none;
   min-height: $vh;
   max-height: $vh;
   margin:0;

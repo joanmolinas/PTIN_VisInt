@@ -63,6 +63,9 @@ window.addEventListener('load', function () {
       purple:"rgb(162, 24, 226)",
       notifications: [], 
       page: 1,
+      mapLoaded:false,
+      languageLoaded:false,
+      devicesLoaded:false,
       typeDev: {
         1: '<i class="fas fa-user-md img-circle center-block" style="color:white;background-color: #008CFF;width:80px; margin-left:-5px;margin-top:30px;padding:20px;height:80px;font-size: 20px;"></i>',
         2: '<i class="fas fa-ambulance img-circle center-block" style="color:white;background-color: rgb(125, 134, 134);width:80px; margin-left:-5px;margin-top:30px;padding:20px;height:80px;font-size: 20px;"></i>',
@@ -80,6 +83,8 @@ window.addEventListener('load', function () {
       this.drawDevicesOnHeatMap()
       this.loadNotifications()
       console.log('Usuario: ' + localStorage.username)
+     
+      
      
     },
     methods: {
@@ -106,7 +111,9 @@ window.addEventListener('load', function () {
           console.log(error.message)
         }).then(function () {
           //Draw The devices on the map
+          self.devicesLoaded=true
           self.drawDevices()
+
         })
       },
 
@@ -134,6 +141,7 @@ window.addEventListener('load', function () {
         devices.getElementsByClassName("col-md-6")[1].innerHTML = ''
 
       },
+     
 
       /**
        * @author ncarmona
@@ -151,6 +159,7 @@ window.addEventListener('load', function () {
           console.log("Nothing TO DO")
         else {
           let self = this
+          self.removeDevicesFromList()
           setTimeout(function () {
             let query = self.base_url_api + 'devices/?'
 
@@ -161,9 +170,10 @@ window.addEventListener('load', function () {
               query += '&type=' + self.device_type
 
             if (self.debug) console.log(query)
-
+            self.devices_column1=[]
+            self.devices_column1=[]
             axios.get(query).then(function (response) {
-              self.removeDevicesFromList()
+              //self.removeDevicesFromList()
               self.devices = response.data.docs
 
               self.devices.filter(function (device) {
@@ -403,6 +413,7 @@ window.addEventListener('load', function () {
           let cord = evt.coordinate
           self.detaillonMapDevices(cord)
         })
+        self.mapLoaded=true
 
       },
       changeMap: function () {
@@ -477,7 +488,7 @@ window.addEventListener('load', function () {
         let devices = self.devices_column1.concat(self.devices_column2)
        
         //Defining variables for compute the average center
-        /* let i=0
+       /*  let i=0
          let latitudeCenter=0
          let longitudeCenter=0*/
         devices.forEach(function (device) {
@@ -485,11 +496,11 @@ window.addEventListener('load', function () {
           if (device.lastInfo) {
             if ((device.lastInfo.latitude) && (device.lastInfo.longitude)) {
               //Compute a sum of latituds and a sum of longituds only if the device values are not very diferents from the map center
-              /*if((device.lastInfo[0].latitude<self.mapCenter[1]+0.1)&&(device.lastInfo[0].latitude>self.mapCenter[1]-0.1)){
+            /*  if((device.lastInfo.latitude<self.mapCenter[1]+0.1)&&(device.lastInfo.latitude>self.mapCenter[1]-0.1)){
 
-                  if((device.lastInfo[0].longitude<self.mapCenter[0]+0.1)&&(device.lastInfo[0].longitude>self.mapCenter[0]-0.1)){
-                      latitudeCenter=latitudeCenter+device.lastInfo[0].latitude
-                      longitudeCenter=longitudeCenter+device.lastInfo[0].longitude
+                  if((device.lastInfo.longitude<self.mapCenter[0]+0.1)&&(device.lastInfo.longitude>self.mapCenter[0]-0.1)){
+                      latitudeCenter=latitudeCenter+device.lastInfo.latitude
+                      longitudeCenter=longitudeCenter+device.lastInfo.longitude
                       i=i+1
                   }
 
@@ -542,11 +553,15 @@ window.addEventListener('load', function () {
             }
           }
 
-
-
+          document.getElementById("spinner").style.display="none"
+          document.getElementById("header").style.display="inherit"
+          document.getElementById("sidebar").style.display="inherit"
+          document.getElementById("content").style.display="block"
+          self.shrinkMap()
+      
         });
         //Compute the average center map and set the map center.
-        /*self.mapCenter=[longitudeCenter/i,latitudeCenter/i]
+       /* self.mapCenter=[longitudeCenter/i,latitudeCenter/i]
         self.map.getView().setCenter(self.mapCenter)*/
 
 
@@ -773,6 +788,8 @@ window.addEventListener('load', function () {
             
           }).catch(function (error) {
             console.log(error.message)
+          }).then(function(){
+            self.languageLoaded=true
           })
         }
 
@@ -1051,8 +1068,9 @@ window.addEventListener('load', function () {
         }).then(function () {
           console.log(self.stadisticsBuilding)
           document.getElementById("devices").style.display = "none"
-          document.getElementById("filter").style.display = "none"
+          
           document.getElementById("detail").style.display = "none"
+          document.getElementById("charts").style.display = "none"
           document.getElementById("staticsTable").style.display = "inherit"
           document.getElementById(self.trans["doctor"]).style.backgroundColor = "#0D47A1";
           document.getElementById(self.trans["patient"]).style.backgroundColor = "#0D47A1";
@@ -1086,7 +1104,7 @@ window.addEventListener('load', function () {
       },
       closeTable: function () {
         document.getElementById("devices").style.display = "inherit"
-        document.getElementById("filter").style.display = "inherit"
+        
         document.getElementById("detail").style.display = "none"
         document.getElementById("staticsTable").style.display = "none"
       },
