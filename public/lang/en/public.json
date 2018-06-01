@@ -41,9 +41,10 @@
     "body_temperature":"Body Temperature",
     "heart_rate":"Heart Rate",
     "blood_pressure_systolic":"Low Pressure",
-    "bloog_pressure_diastolic":"Hight Pressure",
-    "gas_level":"Gas Level"
-    ,"tyres_pressure_alarm":"Pressure Alarm",
+    "blood_pressure_diastolic":"Hight Pressure",
+    "temperature":"Temperature",
+    "gas_level":"Gas Level",
+    "tyres_pressure_alarm":"Pressure Alarm",
     "Detection_alarm":"Alarm Detection",
     "humidity":"Humidity",
     "air_pressure":"Air Pressure",

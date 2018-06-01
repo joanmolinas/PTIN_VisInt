@@ -40,8 +40,9 @@
     "deleted":"Borrat",
     "body_temperature":"Temperatura Corporal",
     "heart_rate":"Ritme Cardiac",
+    "temperature":"Temperatura",
     "blood_pressure_systolic":"Presio Alta",
-    "bloog_pressure_diastolic":"Presio Baixa",
+    "blood_pressure_diastolic":"Presio Baixa",
     "gas_level":"Nivell de Gas"
     ,"tyres_pressure_alarm":"Alarma presio",
     "Detection_alarm":"Deteccio Alarma",

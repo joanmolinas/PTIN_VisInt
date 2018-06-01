@@ -1,8 +1,8 @@
 $header-height: 65px;
 $sidebar-width: 70px;
 $vh: 93vh;
-$sidebar-menu-color: #7A7979;
-$sidebar-device-list-color: white;
+$sidebar-menu-color:#0D47A1;
+$sidebar-device-list-color:white;;
 
 * {
   padding: 0;
@@ -10,7 +10,9 @@ $sidebar-device-list-color: white;
 }
 
 body {
+  
   overflow: hidden;
+ 
 }
 
 #header {
@@ -47,6 +49,7 @@ body {
         .icon {
           font-size: 25px;
           margin-right: 10px;
+          color:#E3F2FD;
         }
       }
     }
@@ -74,10 +77,7 @@ body {
         background-color: violet;
       }
 
-      .new-notification {
-        background-color: blue;
-        font-weight: bolder;
-      }
+      
     }
     
     #settings {
@@ -112,25 +112,28 @@ body {
 }    
 .dropdown-toggle{
   margin-right: 30px;
-  
+  border-color:#0D47A1;
 }  
 #notifications{
   display: none;
-  
-  margin-top: 15px;
+ // padding: 0px;
+  margin-top: 19px;
   margin-right: 100px;
   overflow-y:scroll;
+  
+  border:1px solid #0D47A1;
   height: 37vh;
   
     font-size: 15px;
-    color: black;
+    color: #0D47A1;
     padding:3px;
-    background-color:#ccc;
+    background-color:#E3F2FD;
    .notify{
-        border-bottom: 1px solid black;
+        border-right: 1px solid #0D47A1;
+        border-bottom: 1px solid #0D47A1;
         width: 100%;
         text-align: center;
-        background-color:rgb(187, 184, 184);
+        
        
       }
 }
@@ -140,14 +143,14 @@ body {
         z-index: 100;
         nav {
           margin-top:13px;
-          border:1px solid #ccc;
-          background-color: white;
+          border:1px solid #1E88E5;
+          background-color: #E3F2FD;
 
           a {
             display: block;
             font-size: 15px;
-            color: #ccc;
-            border-bottom: 1px solid #ccc;
+            color: #0D47A1;
+            border-bottom: 1px solid #0D47A1;
             margin-left: 0;
             padding-bottom: 5px;
             padding-top: 5px;
@@ -174,6 +177,7 @@ body {
 }
 
 #sidebar {
+  background-color: white;
   padding: 0;
   min-height: $vh;
   max-height: $vh;
@@ -201,21 +205,24 @@ body {
   #devices {
     background-color: $sidebar-device-list-color;
     min-height: inherit;
-    margin-left: 2px;
+    margin-left: 0px;
     display: block;
+    border-left: 1px solid $sidebar-menu-color;
     #filter {
       width: 100%;
       padding-top:10px;
       margin-left: 0px;
+      padding-left: 5px;
       padding-bottom: 10px;
       padding-right: 15px;
       background-color: white;
-      border-bottom: 1px solid #ccc;
+      border-bottom: 1px solid $sidebar-menu-color;
       
       .filter-input {
         border-radius: 10px;
         padding-left: 10px;
         padding-top: 5px;
+        
         padding-bottom: 5px;
         padding-right: 15px;
         margin-right: 10px;
@@ -225,6 +232,7 @@ body {
         input {
           width: 90%;
           border:0;
+          background-color: white;
         }
 
         .filter-search-icon {
@@ -265,16 +273,19 @@ body {
         }
       }
       .device {
+        
         border-radius: 5px 40px 5px 40px;
-        background-color: #FAFAFA;
+        background-color: #E3F2FD;
         margin: 20px;
         padding: 20px;
         p {
+          
           padding-bottom: 10px;
         }
         p:first-child {
           padding-top: 20px;
         }
+       
         .device-icon {
           color:white;
           font-size:15px;
@@ -294,40 +305,43 @@ body {
       text-align: left;
       font-size: 30px;
       margin:10px;
-      color:#ccc;
+      color:#0D47A1;
       
      }
      #iconTable{
       text-align: center;
       font-size: 100px;
       font-size-adjust: inherit;
-      color:#ccc;
+      color:#0D47A1;
       
       width: 150px;
      }
      .separators{
       text-align: center;
       font-weight: bold;
+      color:#0D47A1;
       font-size: x-large;
      }
      strong{
        color:#ccc;
      }
      #table{
+       background-color: #E3F2FD;
+      color:#1E88E5;
       margin-top:10px;
       margin-left: 12%;
       margin-right: 15%;
-      border: 1px solid black;
+      border: 1px solid #0D47A1;
       border-radius: 5px 5px;
       width: 78%;
       tr{
         width: 100%;
         margin-left: 0%;
-        border:1px solid black;
+        border:1px solid #0D47A1;
       }
       th{
         padding: 5px;
-        border:1px solid black;
+        border:1px solid #0D47A1;
         text-align: center;
         
         
@@ -339,6 +353,8 @@ body {
       height: 100%;
       overflow-y:scroll;
       height: $vh;
+      background-color: white;
+     
       
      #closeDetail{
       text-align: left;
@@ -364,30 +380,33 @@ body {
         text-align: center;
         font-weight: bold;
         font-size: x-large;
+         color:#0D47A1;
        }
 
       .blocinfo{
+        background-color: #E3F2FD;
         margin-left: 12%;
         margin-right: 15%;
-        border: 1px solid #ccc;
+        border: 1px solid #0D47A1;
         border-radius: 5px 5px;
         width: 78%;
         
         .info{
           width: 100%;
           margin-left: 0%;
-          border:1px solid #ccc;
+          border:1px solid #0D47A1;
         }
         
         .field{
          padding: 3%;
          font-size: large;
+         color:#0D47A1;
          text-align: center;
          font-weight: bold;
         }
         
         .fieldInfo{
-         color:#ccc;
+         color:#1E88E5;
          padding: 3%;
          text-align: center;
          font-size: large;

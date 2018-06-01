@@ -41,7 +41,7 @@
   <!-- Socket io -->
  
   <script>
-  var socket = io.connect('http://localhost:3000');
+  var socket = io.connect('https://ptin2018.herokuapp.com');
   socket.on('refreshDevicesTable', function() {
       console.log('refresh')
       
@@ -72,7 +72,8 @@
  <!-- End socket io -->
 </head>
 
-<body>
+<body >
+  
   <div id="vue">
     <div class="container-fluid" id="body-content">
       <div class="row" style="padding:0;border:0;">
@@ -248,18 +249,18 @@
                       <div class="col-md-3 icon-col" v-bind:id="device._id">
                         <span v-html="typeDev[device.type]"></span>
                       </div>
-                      <div class="col-md-8" style="border:1px solid #e2e2e2;border-radius: 2px;font-weight:bolder;">
+                      <div class="col-md-8" style="border:1px solid #0D47A1;border-radius: 2px;font-weight:bolder;">
                         <p>
-                          <span style="color:#4A4A4A">{{trans['device_name']}}</span>
-                          <strong class="pull-right" style="color:#C2C2C2">{{ device.name }}</strong>
+                          <span style="color:#0D47A1">{{trans['device_name']}}</span>
+                          <strong class="pull-right" style="color:#1E88E5">{{ device.name }}</strong>
                         </p>
                         <p v-if="device.lastInfo">
-                          <span style="color:#4A4A4A">{{trans['device_latitude']}}</span>
-                          <strong class="pull-right" style="color:#C2C2C2">{{ device.lastInfo.latitude }}</strong>
+                          <span style="color:#0D47A1">{{trans['device_latitude']}}</span>
+                          <strong class="pull-right" style="color:#1E88E5">{{ device.lastInfo.latitude }}</strong>
                         </p>
                         <p v-if="device.lastInfo">
-                          <span style="color:#4A4A4A">{{trans['device_longitude']}}</span>
-                          <strong class="pull-right" style="color:#C2C2C2">{{ device.lastInfo.longitude }}</strong>
+                          <span style="color:#0D47A1">{{trans['device_longitude']}}</span>
+                          <strong class="pull-right" style="color:#1E88E5">{{ device.lastInfo.longitude }}</strong>
                         </p>
                       </div>
                     </div>
@@ -271,18 +272,18 @@
                       <div class="col-md-3" class="dev-icon">
                         <span v-html="typeDev[device.type]"></span>
                       </div>
-                      <div class="col-md-8" style="border:1px solid #e2e2e2;border-radius: 2px;font-weight:bolder;">
+                      <div class="col-md-8" style="border:1px solid #0D47A1;border-radius: 2px;font-weight:bolder;">
                         <p>
-                          <span style="color:#4A4A4A">{{trans['device_name']}}</span>
-                          <strong class="pull-right" style="color:#C2C2C2">{{ device.name }}</strong>
+                          <span style="color:#0D47A1">{{trans['device_name']}}</span>
+                          <strong class="pull-right" style="color:#1E88E5">{{ device.name }}</strong>
                         </p>
                         <p v-if="device.lastInfo">
-                          <span style="color:#4A4A4A">{{trans['device_latitude']}}</span>
-                          <strong class="pull-right" style="color:#C2C2C2">{{ device.lastInfo.latitude }}</strong>
+                          <span style="color:#0D47A1">{{trans['device_latitude']}}</span>
+                          <strong class="pull-right" style="color:#1E88E5">{{ device.lastInfo.latitude }}</strong>
                         </p>
                         <p v-if="device.lastInfo">
-                          <span style="color:#4A4A4A">{{trans['device_longitude']}}</span>
-                          <strong class="pull-right" style="color:#C2C2C2">{{ device.lastInfo.longitude }}</strong>
+                          <span style="color:#0D47A1">{{trans['device_longitude']}}</span>
+                          <strong class="pull-right" style="color:#1E88E5">{{ device.lastInfo.longitude }}</strong>
                         </p>
                       </div>
                     </div>

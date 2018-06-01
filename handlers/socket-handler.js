@@ -149,7 +149,7 @@ function deviceWasUpdated() {
 
 // nil
 function notificationWasUpdated() {
-    io.emit('refreshNotificationsTable', "");
+    io.emit('refreshNotificationsTable',{ for: 'everyone' });
 }
 
 function emitShutdown(clientID) {

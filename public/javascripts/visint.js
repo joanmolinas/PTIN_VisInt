@@ -47,8 +47,6 @@ window.addEventListener('load', function () {
       notReaded:0,
       readed:0,
       trans: [],
-      atributesNames: ["latitude", "longitude", "creationDate", "name", "_id", "modificationDate", "type", "active", "enabled", "deleted", "body_temperature", "heart_rate", "blood_pressure_systolic", "bloog_pressure_diastolic", "gas_level", "tyres_pressure_alarm", "Detection_alarm", "humidity", "air_pressure", "NO2", "PM10","floor","building","availability","alarmButton","ips","general","cardiologist"],
-      atributesTraductionNames: [],
       debug: false,
       stadistics: [],
       stadisticsBuilding: [[], [], [], [], []],
@@ -63,7 +61,7 @@ window.addEventListener('load', function () {
       green: "rgb(7, 112, 7)",
       lightblue: "rgb(45, 231, 245)",
       purple:"rgb(162, 24, 226)",
-      notifications: [],//[{'_id':"1",'date':"26012018",'type':"General"},{'_id':"2",'date':"27012018",'type':"General"},{'_id':"3",'date':"28012018",'type':"General"}],
+      notifications: [], 
       page: 1,
       typeDev: {
         1: '<i class="fas fa-user-md img-circle center-block" style="color:white;background-color: #008CFF;width:80px; margin-left:-5px;margin-top:30px;padding:20px;height:80px;font-size: 20px;"></i>',
@@ -82,6 +80,7 @@ window.addEventListener('load', function () {
       this.drawDevicesOnHeatMap()
       this.loadNotifications()
       console.log('Usuario: ' + localStorage.username)
+     
     },
     methods: {
       /**
@@ -589,7 +588,8 @@ window.addEventListener('load', function () {
                   case 1:
                     document.getElementById('icon').style.backgroundColor = self.blue
                     document.getElementById('closeDetail').style.color = self.blue
-                    self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                    self.deviceInfo.push(self.trans[k])
+                    
                     self.deviceInfo.push(self.trans["doctor"])
                     self.deviceAtributes.push(self.deviceInfo)
                   
@@ -616,42 +616,48 @@ window.addEventListener('load', function () {
                   case 2:
                     document.getElementById('icon').style.backgroundColor = self.gray
                     document.getElementById('closeDetail').style.color = self.gray
-                    self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                    self.deviceInfo.push(self.trans[k])
+                    
                     self.deviceInfo.push(self.trans["ambulance"])
                     self.deviceAtributes.push(self.deviceInfo)
                     break;
                   case 3:
                     document.getElementById('icon').style.backgroundColor = self.orange
                     document.getElementById('closeDetail').style.color = self.orange
-                    self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                    self.deviceInfo.push(self.trans[k])
+                    
                     self.deviceInfo.push(self.trans["smoke"])
                     self.deviceAtributes.push(self.deviceInfo)
                     break;
                   case 4:
                     document.getElementById('icon').style.backgroundColor = self.green
                     document.getElementById('closeDetail').style.color = self.green
-                    self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                    self.deviceInfo.push(self.trans[k])
+                    //self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
                     self.deviceInfo.push(self.trans["patient"])
                     self.deviceAtributes.push(self.deviceInfo)
                     break;
                   case 5:
                     document.getElementById('icon').style.backgroundColor = self.yellow
                     document.getElementById('closeDetail').style.color = self.yellow
-                    self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                    self.deviceInfo.push(self.trans[k])
+                   
                     self.deviceInfo.push(self.trans["wheather"])
                     self.deviceAtributes.push(self.deviceInfo)
                     break;
                   case 6:
                     document.getElementById('icon').style.backgroundColor = self.lightblue
                     document.getElementById('closeDetail').style.color = self.lightblue
-                    self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                    self.deviceInfo.push(self.trans[k])
+                    
                     self.deviceInfo.push(self.trans["air_quality"])
                     self.deviceAtributes.push(self.deviceInfo)
                     break;
                   case 7:
                     document.getElementById('icon').style.backgroundColor = self.purple
                     document.getElementById('closeDetail').style.color = self.purple
-                    self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
+                    self.deviceInfo.push(self.trans[k])
+                    
                     self.deviceInfo.push(self.trans["nurse"])
                     self.deviceAtributes.push(self.deviceInfo)
                     break;
@@ -667,8 +673,8 @@ window.addEventListener('load', function () {
               }
               if( (k != "token")&&(k!="type")) {
                 
-                self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
-
+             
+                self.deviceInfo.push(self.trans[k])
                 self.deviceInfo.push(self.selected_device[k])
                 self.deviceAtributes.push(self.deviceInfo)
 
@@ -689,8 +695,8 @@ window.addEventListener('load', function () {
           keysSensors.forEach(function (k) {
             if (k != "date") {
               console.log(k)
-              self.deviceInfo.push(self.atributesTraductionNames[self.atributesNames.indexOf(k)])
-
+              
+              self.deviceInfo.push(self.trans[k])
 
               self.deviceInfo.push(self.selected_device.lastInfo[k])
 
@@ -752,8 +758,7 @@ window.addEventListener('load', function () {
             self.trans = trans_string.data
             console.log("language file: " + trans_file)
             console.log("Website language: " + localStorage.language)
-            self.atributesTraductionNames = [self.trans["latitude"], self.trans["longitude"], self.trans["creationDate"], self.trans["name"], self.trans["_id"], self.trans["modificationDate"], self.trans["type"], self.trans["active"], self.trans["enabled"], self.trans["deleted"], self.trans["body_temperature"], self.trans["heart_rate"], self.trans["blood_pressure_systolic"], self.trans["bloog_pressure_diastolic"], self.trans["gas_level"], self.trans["tyres_pressure_alarm"], self.trans["Detection_alarm"], self.trans["humidity"], self.trans["air_pressure"], self.trans["NO2"], self.trans["PM10"],self.trans["floor"],self.trans["building"],self.trans["availability"],self.trans["alarmButton"],self.trans["ips"],self.trans["general"],self.trans["cardiologist"]]
-
+            
           }).catch(function (error) {
             console.log(error.message)
           })
@@ -923,7 +928,7 @@ window.addEventListener('load', function () {
     
     },
     newNotification:function(){
-        console.log("hols")
+        
         this.notifications=[]
         this.nots=[]
         this.loadNotifications()
@@ -936,12 +941,12 @@ window.addEventListener('load', function () {
              self.nots.forEach(function(not){
                 if(not.readed){
                     self.readed=self.readed+1
-                    document.getElementById(not._id).style.backgroundColor = "white"
+                    document.getElementById(not._id).style.backgroundColor = "#1E88E5"
                     axios.put(self.base_url_api + 'notifications/'+not._id).catch(function (error) {
                         console.log(error.message)
                     })
                 }else{
-                    document.getElementById(not._id).style.backgroundColor = "#ccc"
+                    document.getElementById(not._id).style.backgroundColor = "#E3F2FD"
                 }
             })
 
@@ -1043,19 +1048,32 @@ window.addEventListener('load', function () {
           document.getElementById("filter").style.display = "none"
           document.getElementById("detail").style.display = "none"
           document.getElementById("staticsTable").style.display = "inherit"
-          document.getElementById(self.trans["doctor"]).style.backgroundColor = "#ccc";
-          document.getElementById(self.trans["patient"]).style.backgroundColor = "#ccc";
-          document.getElementById(self.trans["ambulance"]).style.backgroundColor = "#ccc";
-          document.getElementById(self.trans["smoke"]).style.backgroundColor = "#ccc";
-          document.getElementById(self.trans["air_quality"]).style.backgroundColor = "#ccc";
-          document.getElementById(self.trans["weather"]).style.backgroundColor = "#ccc";
-          document.getElementById(self.trans["total"]).style.backgroundColor = "#ccc";
-          document.getElementById(self.trans["activeDevice"]).style.backgroundColor = "#ccc";
+          document.getElementById(self.trans["doctor"]).style.backgroundColor = "#0D47A1";
+          document.getElementById(self.trans["patient"]).style.backgroundColor = "#0D47A1";
+          document.getElementById(self.trans["ambulance"]).style.backgroundColor = "#0D47A1";
+          document.getElementById(self.trans["smoke"]).style.backgroundColor = "#0D47A1";
+          document.getElementById(self.trans["air_quality"]).style.backgroundColor = "#0D47A1";
+          document.getElementById(self.trans["weather"]).style.backgroundColor = "#0D47A1";
+          document.getElementById(self.trans["total"]).style.backgroundColor = "#0D47A1";
+          document.getElementById(self.trans["activeDevice"]).style.backgroundColor = "#0D47A1";
          // document.getElementById(self.trans["nurse"]).style.backgroundColor="#ccc";
-          document.getElementById(self.trans["eA"]).style.backgroundColor = "#ccc";
-          document.getElementById(self.trans["eB"]).style.backgroundColor = "#ccc";
-          document.getElementById(self.trans["neapolis"]).style.backgroundColor = "#ccc";
-          document.getElementById(self.trans["out"]).style.backgroundColor = "#ccc";
+          document.getElementById(self.trans["eA"]).style.backgroundColor = "#0D47A1";
+          document.getElementById(self.trans["eB"]).style.backgroundColor = "#0D47A1";
+          document.getElementById(self.trans["neapolis"]).style.backgroundColor = "#0D47A1";
+          document.getElementById(self.trans["out"]).style.backgroundColor = "#0D47A1";
+          document.getElementById(self.trans["doctor"]).style.color = "white";
+          document.getElementById(self.trans["patient"]).style.color = "white";
+          document.getElementById(self.trans["ambulance"]).style.color = "white";
+          document.getElementById(self.trans["smoke"]).style.color = "white";
+          document.getElementById(self.trans["air_quality"]).style.color = "white";
+          document.getElementById(self.trans["weather"]).style.color = "white";
+          document.getElementById(self.trans["total"]).style.color = "white";
+          document.getElementById(self.trans["activeDevice"]).style.color = "white";
+         // document.getElementById(self.trans["nurse"]).style.backgroundColor="#ccc";
+          document.getElementById(self.trans["eA"]).style.color = "white";
+          document.getElementById(self.trans["eB"]).style.color = "white";
+          document.getElementById(self.trans["neapolis"]).style.color = "white";
+          document.getElementById(self.trans["out"]).style.color = "white";
         })
 
 
@@ -1096,7 +1114,7 @@ window.addEventListener('load', function () {
             datasets: [
               {
                 label: "HR",
-                backgroundColor: "#3e95cd",
+                backgroundColor: "#0D47A1",
                 data: [5, 5, 5, 5, 5, 5, 5, 5]
               }
             ]
@@ -1127,7 +1145,7 @@ window.addEventListener('load', function () {
             datasets: [
               {
                 label: "Humedad por %",
-                backgroundColor: "#3e95cd",
+                backgroundColor: "#0D47A1",
                 data: [5, 5, 5, 5, 5, 5, 5, 5]
               }
             ]

@@ -39,8 +39,9 @@
         "deleted":"Borrado",
         "body_temperature":"Temperatura Corporal",
         "heart_rate":"Ritmo Cardiaco",
+        "temperature":"Temperatura",
         "blood_pressure_systolic":"Presion Alta",
-        "bloog_pressure_diastolic":"Presion Baixa",
+        "blood_pressure_diastolic":"Presion Baixa",
         "gas_level":"Nivel de Gas"
         ,"tyres_pressure_alarm":"Alarma Presion",
         "Detection_alarm":"Deteccion Alarma",
