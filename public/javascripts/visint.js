@@ -867,6 +867,15 @@ window.addEventListener('load', function () {
         let langlist = document.getElementById(layer).style
         langlist.display = langlist.display == "block" ? "none" : "block"
       },
+      toggleLanOnMobile:function(){
+        let langM=document.getElementById("languagesMobil").style
+        if(langM.display=="none"){
+          langM.display="inherit"
+
+        }else{
+          langM.display="none"
+        }
+      },
 
       /**
        * @author ncarmona
@@ -981,6 +990,35 @@ window.addEventListener('load', function () {
             notify.display = "none"
         }
 
+    },
+    toggleNotsOnMobile:function(){
+      let notify = document.getElementById("notificationsMobile").style
+      let self = this
+      if (notify.display === "none") {
+          notify.display = "inherit"
+          document.getElementById("iLangMobile").style.display="none"
+          document.getElementById("languagesMobil").style.display="none"
+           self.nots.forEach(function(not){
+              if(!not.readed){
+                  self.readed=self.readed+1
+                  document.getElementById(not._id).style.backgroundColor = "#1E88E5"
+                  axios.put(self.base_url_api + 'notifications/'+not._id).catch(function (error) {
+                      console.log(error.message)
+                  })
+              }else{
+                  document.getElementById(not._id).style.backgroundColor = "#E3F2FD"
+              }
+          })
+
+      } else {
+        self.notReaded=self.notReaded-self.readed
+        if(self.notReaded==0){
+          document.getElementById("numberNots").style.display="none"
+        }
+          notify.display = "none"
+          document.getElementById("iLangMobile").style.display="inherit"
+      }
+      
     },
       showStaticsTable: function () {
         let self = this

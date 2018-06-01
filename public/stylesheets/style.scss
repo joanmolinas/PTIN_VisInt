@@ -45,20 +45,52 @@ body {
 
     #responsive-menu {
       background-color:white;
-      border: 1px solid #ccc;
+      border: 1px solid #0D47A1;
       margin-top: 13px;
       display: none;
       width: 200px;
       position: absolute;
       z-index: 100;
-
-      
+      #languagesMobil{
+        display:none;
+      }
+      #notificationsMobile{
+        display: none;
+       // padding: 0px;
+       
+        overflow-y:scroll;
+        
+        border:1px solid #0D47A1;
+        height: 37vh;
+        
+          font-size: 10px;
+          color: #0D47A1;
+          padding:3px;
+          background-color:#E3F2FD;
+        .notify{
+          
+          border-bottom: 1px solid #0D47A1;
+          width: 100%;
+          text-align: center;
+          
+        
+        }
+        .notMobile{
+          color: #ccc;
+          font-size: 5px;
+          padding: 10px 5px 10px 5px;
+          display: block;
+          border-bottom: 1px solid #ccc;
+          margin-left: 0px;
+          padding-left: 20px;
+        }
+      }
       a{
-        color: #ccc;
+        color: #0D47A1;
         font-size: 15px;
         padding: 10px 5px 10px 5px;
         display: block;
-        border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid #0D47A1;
         margin-left: 0px;
         padding-left: 20px;
        

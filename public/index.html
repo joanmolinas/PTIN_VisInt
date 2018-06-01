@@ -87,26 +87,50 @@
             <span>
               <a href="#" class="hidden-lg hidden-md" v-on:click="toggleMenu('responsive-menu')">
                 <i class="fas fa-bars"></i>
+                <sup id="numberNots" class="no-notification" > {{notReaded}}</sup>
               </a>
               <div id="responsive-menu">
                 <a href="#">
                   <i class="fas fa-home icon"></i> {{trans['home_icon']}}</a>
-                <a href="#">
+                <a href="#" v-on:click="toggleNotsOnMobile">
                   <i class="fas fa-bell icon"></i> {{trans['notifications_icon']}}
                   <i class="fas fa-caret-down"></i>
                 </a>
                 <a href="#" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
                     <i class="far fa-chart-bar"></i>
                   </a> 
-                <a href="#">
+                <a id="iLangMobile" v-on:click="toggleLanOnMobile" href="#">
                   <i class="fas fa-language icon"></i> {{trans['language_icon']}}
+                  <i class="fas fa-caret-down"></i>
                 </a>
+                <div id="notificationsMobile">
+                    <div class=" notify" v-for="notify in notifications" v-bind:id="notify._id">
+                      <div class="notMobil">
+                        <div >
+                            <strong>{{notify.message}}</strong>
+                        </div>
+                        <div>
+                            <strong>{{notify.message2}}</strong>
+                        </div>
+                        <div>
+                            <strong>{{notify.message3}}</strong>
+                        </div>
+                        <div>
+                          <strong>{{notify.message4}}</strong>
+                      </div>
+                      </div>
+  
+                    </div>
+  
+                  </div>
+                <div id="languagesMobil">
                 <a href="#" title="Mostra la web en català" v-on:click="toggleLanguage('cat')">
                   <img src="images/catalonia.png" />Català</a>
                 <a href="#" title="Display the website in english" v-on:click="toggleLanguage('en')">
                   <img src="images/gb.png">English</a>
                 <a href="#" class="selected-lang" title="Muestra la web en castellano." v-on:click="toggleLanguage('es')">
                   <img src="images/es.png" />Español</a>
+                </div>
 
               </div>
             </span>
