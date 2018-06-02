@@ -98,6 +98,7 @@ window.addEventListener('load', function () {
         let self = this
         axios.get(this.base_url_api + 'devices?page=' + self.page + '&size=10').then(function (response) {
           self.maxDevicesPages=response.data.pages
+          
           self.devices = response.data.docs
           self.devices.filter(function (device) {
             return device.lastInfo != null || device.lastInfo != undefined
@@ -904,15 +905,13 @@ window.addEventListener('load', function () {
         let devicelist = document.getElementById("devices-list")
 
         if (devicelist.scrollHeight - devicelist.scrollTop === devicelist.clientHeight) {
-          this.page = this.page + 1
-          devices = document.getElementById("devices-list")
-          let source = this.vectorLayer.getSource();
-          source.clear()
+         
+                 
           console.log('num pagina' + this.page + 'paginas totales' + this.maxDevicesPages)
-          if (this.page <= this.maxDevicesPages) {
-          //  devices.getElementsByClassName("col-md-6")[0].innerHTML = ''
-            //devices.getElementsByClassName("col-md-6")[1].innerHTML = ''
-
+          if (this.page != this.maxDevicesPages) {
+            this.page = this.page + 1
+            let source = this.vectorLayer.getSource();
+            source.clear()
             this.getDevices()
           }
         }
