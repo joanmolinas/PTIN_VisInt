@@ -1175,66 +1175,83 @@ window.addEventListener('load', function () {
         document.getElementById('responsive-menu').style.display = 'none'
       },
       displayHumidityChart: function () {
-        new Chart(document.getElementById("humidity"), {
-          type: 'bar',
-          data: {
-            labels: ["8:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"],
-            datasets: [
-              {
-                label: "HR",
-                backgroundColor: "#0D47A1",
-                data: [5, 5, 5, 5, 5, 5, 5, 5]
-              }
-            ]
-          },
-          options: {
-            legend: { display: false },
-            title: {
-              display: true,
-              text: 'temperatura media por horas'
-            },
-            scales: {
-              yAxes: [{
-                ticks: {
-                  beginAtZero: true,
-                  max: 100,
-                  min: 0
+        axios.get(this.base_url_api + 'devices/hum').then(response => {
+          let humy = response.data[0]
+          humy.forEach(e => {
+            if (e === null) e = 0;
+          })
+          new Chart(document.getElementById("humidity"), {
+            type: 'bar',
+            data: {
+              labels: ['8:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00'],
+              datasets: [
+                {
+                  label: "HR",
+                  backgroundColor: "#3e95cd",
+                  data: humy
                 }
-              }]
+              ]
+            },
+            options: {
+              legend: { display: false },
+              title: {
+                display: true,
+                text: 'Humedad relativa media cada 2 horas'
+              },
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true,
+                    max: 100,
+                    min: 0
+                  }
+                }]
+              }
             }
-          }
-        });
+          });
+        }).catch(e => {
+          console.log(e)
+        })
       },
       displayTemperatureChart: function () {
-        new Chart(document.getElementById("temperature"), {
-          type: 'bar',
-          data: {
-            labels: ["8:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"],
-            datasets: [
-              {
-                label: "Humedad por %",
-                backgroundColor: "#0D47A1",
-                data: [5, 5, 5, 5, 5, 5, 5, 5]
-              }
-            ]
-          },
-          options: {
-            legend: { display: false },
-            title: {
-              display: true,
-              text: 'Humedad relativa media por horas'
+        axios.get(this.base_url_api + 'devices/temp').then(response => {
+          let temp = response.data[0]
+          temp.forEach(e => {
+            if (e === null) e = 0;
+          })
+          console.log(response.data)
+          new Chart(document.getElementById("temperature"), {
+            type: 'bar',
+            data: {
+              labels: ['8:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00'],
+              datasets: [
+                {
+                  label: "En ºC",
+                  backgroundColor: "#3e95cd",
+                  data: temp
+                }
+              ]
             },
-            scales: {
-              yAxes: [{
-                ticks: {
-                  beginAtZero: true,
-                  max: 40,
-                  min: 30
-                },
-              }]
+            options: {
+              legend: { display: false },
+              title: {
+                display: true,
+                text: 'Temperatura media por horas'
+              },
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true,
+                    max: 40,
+                    min: 20
+                  },
+                }]
+              }
             }
-          }
-        });
+          });
+        }).catch(e => {
+          console.log(e)
+        })
       }
     }
   })
