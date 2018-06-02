@@ -1,7 +1,7 @@
 <template>
   <tr id="userRow">
     <th scope="row">{{username}}</th>
-    <td><a :href="'/admin/users/' + this.userid + '.html'">Modificar</a></td>
+    <td><a :href="'/admin/#/user-' + this.userid">Modificar</a></td>
   </tr>
 </template>
 <script>

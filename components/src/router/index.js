@@ -10,22 +10,21 @@ import Login from '@/pages/Login'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
   routes: [
     {
-      path: '/admin/devices.html',
+      path: '/devices',
       name: 'admindevices',
       component: AdminDevices
     }, {
-      path: '/admin/users.html',
+      path: '/users',
       name: 'adminUsers',
       component: AdminUsers
     }, {
-      path: '/admin/users/:id.html',
+      path: '/user-:id',
       name: 'adminmodifyuser',
       component: AdminModifyUsers
     }, {
-      path: '/admin/login.html',
+      path: '/',
       name: 'login',
       component: Login
     }

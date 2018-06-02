@@ -21,7 +21,7 @@ export default {
   },
   mounted () {
     if (localStorage.token === undefined) {
-      location.replace('/#/admin/login.html')
+      location.replace('/admin')
     }
   }
 }

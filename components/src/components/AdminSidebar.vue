@@ -1,7 +1,7 @@
 <template>
   <div id="sidebar" class="col-md-2">
-      <sidebar-option url="/admin/devices.html" text="Dispositivos" icon="fas fa-microchip"></sidebar-option>
-      <sidebar-option url="/admin/users.html" text="Usuarios" icon="fa fa-user"></sidebar-option>
+      <sidebar-option url="/admin/#/devices" text="Dispositivos" icon="fas fa-microchip"></sidebar-option>
+      <sidebar-option url="/admin/#/users" text="Usuarios" icon="fa fa-user"></sidebar-option>
   </div>
 </template>
 

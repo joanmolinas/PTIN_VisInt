@@ -10,7 +10,7 @@
                     <i class="fas fa-home"></i>
                 </a>
                 <span id="settings" class="pull-right">
-                    <a href="/admin/login.html" title="Cerrar sesión como admin" v-on:click="logout">
+                    <a href="/admin/" title="Cerrar sesión como admin" v-on:click="logout">
                       <i class="fas fa-sign-out-alt"></i>
                     </a>
                 </span>

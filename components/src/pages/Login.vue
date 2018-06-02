@@ -52,7 +52,6 @@ export default {
       this.waitingValidationButton()
       // eslint-disable-next-line
       self = this
-      console.log(this.username + ' asd ' + this.password)
       axios.post(this.endpoint + 'auth/signin', {
         username: this.username,
         password: this.password
@@ -62,7 +61,7 @@ export default {
           localStorage.token = response.data.data.token
           localStorage.language = self.int2lang(response.data.data.language)
           localStorage.userID = response.data.data._id
-          window.location.replace('/admin/devices.html')
+          window.location.replace('/admin/#/devices')
         } else {
           self.displayError('Error inesperado al validar el usuario.')
         }
