@@ -666,7 +666,8 @@ router.get('/', function(req, res, next){
     let size = parseInt(query.size || 20)
     let page = parseInt(query.page || 1)
     let paginated = query.paginated || 'true'
-
+    query.deleted = false
+    query.enabled = true
     
     delete query.size
     delete query.page
@@ -682,7 +683,7 @@ router.get('/', function(req, res, next){
         filter = arr.join('')
         delete query.fields
     }
-
+    
     let prom;
     if (paginated == 'true') {
         prom = Device.paginate(query, {page: page, limit: size, sort: { modificationDate: -1}, select: filter})
@@ -691,6 +692,7 @@ router.get('/', function(req, res, next){
     }
 
     prom.then(docs => {
+        console.log(docs)
         res.status(200).send(docs)
     })
     .catch(e => {

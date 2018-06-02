@@ -33,7 +33,7 @@ function onDisconnect(socket) {
     socket.on('disconnect', () => {
         let dId = socket.handshake.query['id']
         delete sockets[dId]
-        delete generalTokenStored[id]
+        delete generalTokenStored[dId]
         Device.findByIdAndUpdate(dId, {
             $set: { active: false }
         }).exec()
@@ -66,10 +66,10 @@ function alarm(socket) {
 // Private
 function general(socket, data) {
     return new Promise((resolve, reject) => {
-        if(data.requester in generalTokenStored) {
-            reject({'message': 'Processing a request from this user'})
-            return
-        }
+        // if(data.requester in generalTokenStored) {
+        //     reject({'message': 'Processing a request from this user'})
+        //     return
+        // }
         let token = Token_Service.createTokenDevice(data.requester)
         generalTokenStored[data.requester] = token
 
