@@ -1,10 +1,8 @@
 <template>
-  <div id="userRow">
-    <tr>
-      <th scope="row">{{username}}</th>
-      <td><a :href="'/admin/users/' + this.userid + '.html'">Modificar</a></td>
-    </tr>
-  </div>
+  <tr id="userRow">
+    <th scope="row">{{username}}</th>
+    <td><a :href="'/admin/users/' + this.userid + '.html'">Modificar</a></td>
+  </tr>
 </template>
 <script>
 export default {
