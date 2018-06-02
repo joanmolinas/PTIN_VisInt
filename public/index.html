@@ -76,7 +76,7 @@
   
   <div id="vue">
     <div id="spinner">
-      <div class="separators">Higia</div>
+      <div class="separators">Higía</div>
       <i class= "fas fa-spinner fa-spin"></i>
     </div>
     <div class="container-fluid" id="body-content">
@@ -87,7 +87,7 @@
             <span>
               <a href="#" class="hidden-lg hidden-md" v-on:click="toggleMenu('responsive-menu')">
                 <i class="fas fa-bars"></i>
-                <sup id="numberNots" class="no-notification" > {{notReaded}}</sup>
+                <sup id="numberNotsMobil" class="no-notification" > {{notReaded}}</sup>
               </a>
               <div id="responsive-menu">
                 <a href="#">
@@ -134,7 +134,8 @@
 
               </div>
             </span>
-            <a href="/" v-on:click="refreshDevices" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
+            <div id="inici" v-on:click="refreshDevices"></div>
+            <a  href="/"  v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
               <i class="fas fa-home"></i>
             </a>
             <a href="#" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm" v-on:click="displayCharts">

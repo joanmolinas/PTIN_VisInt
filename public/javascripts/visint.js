@@ -22,7 +22,7 @@ window.addEventListener('load', function () {
   new Vue({
     el: '#vue',
     data: {
-      base_url_api: 'https://ptin2018.herokuapp.com/api/',/* 'http://localhost:3000/api/',*/
+      base_url_api: 'https://ptin2018.herokuapp.com/api/', /*'http://localhost:3000/api/',*/
       devices_column1: [],
       devices_column2: [],
       devices: [],
@@ -598,7 +598,7 @@ window.addEventListener('load', function () {
           if ((k != "lastInfo") && (k != "__v")) {
             //If device is active the icon shadow wil be green, if it is not active the icon shadow will be red
             if (k == "active") {
-
+              console.log(self.selected_device[k])
               if (self.selected_device[k] == true) {
 
                 document.getElementById('icon').style.boxShadow = " 0px 0px 20px 5px greenyellow"
@@ -948,8 +948,10 @@ window.addEventListener('load', function () {
             })
             if(self.notReaded==0){
                 document.getElementById("numberNots").style.display="none"
+                document.getElementById("numberNotsMobil").style.display="none"
             }else{
                 document.getElementById("numberNots").style.display="inherit"
+                document.getElementById("numberNotsMobil").style.display="inherit"
             }
         }).catch(function (error) {
             console.log(error.message)
@@ -986,6 +988,11 @@ window.addEventListener('load', function () {
           self.notReaded=self.notReaded-self.readed
           if(self.notReaded==0){
             document.getElementById("numberNots").style.display="none"
+            document.getElementById("numberNotsMobil").style.display="none"
+            
+          }else{
+            document.getElementById("numberNots").style.display="inherit"
+            document.getElementById("numberNotsMobil").style.display="inherit"
           }
             notify.display = "none"
         }
