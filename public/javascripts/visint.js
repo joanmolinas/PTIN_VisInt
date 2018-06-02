@@ -77,15 +77,14 @@ window.addEventListener('load', function () {
       }
     },
     mounted: function () {
-      this.loadMap()
-      this.getLanguage()
-      this.getDevices()
-      this.drawDevicesOnHeatMap()
-      this.loadNotifications()
-      console.log('Usuario: ' + localStorage.username)
-     
-      
-     
+      if (localStorage.username === undefined) location.replace('/admin')
+      else {
+        this.loadMap()
+        this.getLanguage()
+        this.getDevices()
+        this.drawDevicesOnHeatMap()
+        this.loadNotifications()
+      }
     },
     methods: {
       /**
