@@ -796,12 +796,10 @@ router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
         return
     }
 
+    req.body.modificationDate = new Date().toISOString()
+
     Device.findByIdAndUpdate(req.params.id,{
-        $set: {
-        	modificationDate: new Date(),
-            enabled: req.body.enabled,
-            deleted: req.body.deleted
-        }
+        $set: req.body
     })
     .then(doc => {
     	socket.deviceWasUpdated()
