@@ -98,7 +98,7 @@ window.addEventListener('load', function () {
         let self = this
         axios.get(this.base_url_api + 'devices?page=' + self.page + '&size=10').then(function (response) {
           self.maxDevicesPages=response.data.pages
-          
+         
           self.devices = response.data.docs
           self.devices.filter(function (device) {
             return device.lastInfo != null || device.lastInfo != undefined
@@ -670,7 +670,7 @@ window.addEventListener('load', function () {
                     document.getElementById('closeDetail').style.color = self.yellow
                     self.deviceInfo.push(self.trans[k])
                    
-                    self.deviceInfo.push(self.trans["wheather"])
+                    self.deviceInfo.push(self.trans["weather"])
                     self.deviceAtributes.push(self.deviceInfo)
                     break;
                   case 6:
