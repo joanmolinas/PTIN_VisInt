@@ -41,7 +41,7 @@ window.addEventListener('load', function () {
       deviceInfo: [],
       deviceAtributes: [],
       deviceSensors: [],
-      maxDevicesPages: 0,
+      maxDevicesPages: false,
       min_length_filter: 3,
       nots: [],
       notReaded:0,
@@ -96,9 +96,12 @@ window.addEventListener('load', function () {
       getDevices: function () {
         let self = this
         axios.get(this.base_url_api + 'devices?page=' + self.page + '&size=10').then(function (response) {
-          self.maxDevicesPages=response.data.pages
+          //self.maxDevicesPages=response.data.pages
          
           self.devices = response.data.docs
+          if(self.devices.length!=10){
+            self.maxDevicesPages=true
+          }
           self.devices.filter(function (device) {
             return device.lastInfo != null || device.lastInfo != undefined
           }).forEach(function (device, index) {
@@ -907,7 +910,7 @@ window.addEventListener('load', function () {
          
                  
           console.log('num pagina' + this.page + 'paginas totales' + this.maxDevicesPages)
-          if (this.page != this.maxDevicesPages) {
+          if (!this.maxDevicesPages) {
             this.page = this.page + 1
             let source = this.vectorLayer.getSource();
             source.clear()
