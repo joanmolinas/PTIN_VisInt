@@ -1185,7 +1185,7 @@ window.addEventListener('load', function () {
           new Chart(document.getElementById("humidity"), {
             type: 'bar',
             data: {
-              labels: ['8:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00'],
+              labels: ['10:00','12:00','14:00','16:00','18:00','20:00','22:00','24:00'],
               datasets: [
                 {
                   label: "HR",
@@ -1225,7 +1225,7 @@ window.addEventListener('load', function () {
           new Chart(document.getElementById("temperature"), {
             type: 'bar',
             data: {
-              labels: ['8:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00'],
+              labels: ['10:00','12:00','14:00','16:00','18:00','20:00','22:00','24:00'],
               datasets: [
                 {
                   label: "En ºC",
