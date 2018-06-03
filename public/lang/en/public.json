@@ -11,6 +11,8 @@
     "eB":"Building B",
     "neapolis":"Neapolis",
     "out":"Outdoor",
+    "stadistics":"Estadistics",
+    "chars":"Chars",
     "filter_device_by_type": "All devices",
     "device_name": "Alias",
     "device_latitude": "Latitude",

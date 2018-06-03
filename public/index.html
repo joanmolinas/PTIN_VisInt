@@ -92,6 +92,18 @@
               <div id="responsive-menu">
                 <a href="#">
                   <i class="fas fa-home icon"></i> {{trans['home_icon']}}</a>
+                  <a href="#" v-on:click="toggleNotsOnMobile">
+                    <i class="fas fa-bell icon"></i> {{trans['notifications_icon']}}
+                    <i class="fas fa-caret-down"></i>
+                  </a>
+                  <a href="#" v-on:click="showStaticsTable">
+                    <i class="fas fa-table"></i> {{trans['stadistics']}}
+                   
+                  </a>
+                  <a href="#" v-on:click="displayCharts">
+                    <i class="fas fa-chart-bar"></i> {{trans['chars']}}
+                   
+                  </a>
                 <a href="#" v-on:click="toggleNotsOnMobile">
                   <i class="fas fa-bell icon"></i> {{trans['notifications_icon']}}
                   <i class="fas fa-caret-down"></i>
@@ -138,11 +150,11 @@
             <a  href="/"  v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm">
               <i class="fas fa-home"></i>
             </a>
-            <a href="#" v-bind:title="trans['home_icon']" class="hidden-xs hidden-sm" v-on:click="displayCharts">
+            <a href="#" v-bind:title="trans['chars']" class="hidden-xs hidden-sm" v-on:click="displayCharts">
               <i class="fas fa-chart-bar"></i>
             </a>
           </a>
-          <a href="#" id="iTable" v-on:click="showStaticsTable" class="hidden-xs hidden-sm">
+          <a href="#" id="iTable" v-on:click="showStaticsTable" v-bind:title="trans['stadistics']" class="hidden-xs hidden-sm">
             <i class="fas fa-table"></i>
           </a>       
             <span id="settings" class="pull-right">

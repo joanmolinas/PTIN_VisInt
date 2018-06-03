@@ -10,6 +10,8 @@
     "eB":"Edifici B",
     "neapolis":"Neapolis",
     "out":"Exterior",
+   "stadistics":"Estadisticas",
+    "chars":"Grafiques",
     "filter_device": "Filtrar dispositiu ...",
     "filter_device_by_type": "Tots els dispositius",
     "device_name": "Nom",

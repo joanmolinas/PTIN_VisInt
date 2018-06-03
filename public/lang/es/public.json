@@ -9,6 +9,8 @@
         "eB":"Edificio B",
         "neapolis":"Neapolis",
         "out":"Exterior",
+        "stadistics":"Estadisticas",
+        "chars":"Graficas",
         "language_icon":"Cambiar de idioma.",
         "filter_device": "Filtrar dispositivo ...",
         "filter_device_by_type": "Todos los dispositivos",
