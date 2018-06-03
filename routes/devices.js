@@ -536,7 +536,7 @@ router.get('/stadistics', function(req, res, next){
     var ArrayB = [];
     var ArrayNea = [];
     var ArrayExterior = [];
-    for (i=0;i<8;i++){
+    for (i=0;i<9;i++){
     	ArrayA[i] = 0
     	ArrayB[i] = 0;
     	ArrayNea[i] = 0;
@@ -578,7 +578,8 @@ router.get('/stadistics', function(req, res, next){
 	        3: ArrayA[4],
 	        4: ArrayA[5],
 	        5: ArrayA[6],
-	        6: ArrayA[7]
+	        6: ArrayA[7],
+	        7: ArrayA[8]
 		};
 	    var edificiB = {
 	        total: ArrayB[0],
@@ -588,7 +589,8 @@ router.get('/stadistics', function(req, res, next){
 	        3: ArrayB[4],
 	        4: ArrayB[5],
 	        5: ArrayB[6],
-	        6: ArrayB[7]
+	        6: ArrayB[7],
+	        7: ArrayB[8]
 	    };
 	    var edificiNea = {
 	        total: ArrayNea[0],
@@ -598,7 +600,8 @@ router.get('/stadistics', function(req, res, next){
 	        3: ArrayNea[4],
 	        4: ArrayNea[5],
 	        5: ArrayNea[6],
-	        6: ArrayNea[7]
+	        6: ArrayNea[7],
+	        7: ArrayNea[8]
 	    };
 	    var exterior = {
 	        total: ArrayExterior[0],
@@ -608,7 +611,8 @@ router.get('/stadistics', function(req, res, next){
 	        3: ArrayExterior[4],
 	        4: ArrayExterior[5],
 	        5: ArrayExterior[6],
-	        6: ArrayExterior[7]
+	        6: ArrayExterior[7],
+	        7: ArrayExterior[8]
         };
         let result = {
             "Edifici A": edificiA,
@@ -796,12 +800,10 @@ router.put('/:id', service.ensureDeviceAuthenticated, function(req, res, body) {
         return
     }
 
+    req.body.modificationDate = new Date().toISOString()
+
     Device.findByIdAndUpdate(req.params.id,{
-        $set: {
-        	modificationDate: new Date(),
-            enabled: req.body.enabled,
-            deleted: req.body.deleted
-        }
+        $set: req.body
     })
     .then(doc => {
     	socket.deviceWasUpdated()

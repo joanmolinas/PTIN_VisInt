@@ -2,14 +2,6 @@
 
 First of all npm must be installed in your system.
 
-__IMPORTANT!__ replace url variable routes/public.js line 25 with a valid getall devices url.
-
-## Version S1.ncarmona ##
-
-- Layout has been implemented.
-- Devices can be displayed in the sidebar.
-- Responsive design.
-
 ## Installing dependencies ##
 
 Open your terminal, go to project folder and execute the follow command:
@@ -109,3 +101,28 @@ Add new element on language following this pattern
 └── propuesta.md
 └── README.md/
 ```
+
+## Load admin panel ##
+
+Admin panel works with vue components. At the moment it works as separated project in port 8080
+
+## Run as developer ##
+
+``` bash
+cd components
+npm run dev
+```
+
+open your browser in
+> localhost:8080/admin/login.html
+
+### Deploy ###
+
+First we will need generate html files, so in order to do that we will execute:
+
+``` bash
+cd components
+npm run build
+```
+
+Now move the dist folder and the index.html file to a http server.
