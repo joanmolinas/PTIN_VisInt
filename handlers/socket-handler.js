@@ -133,7 +133,7 @@ function generalAuthentication(socket) {
         let token = data.token
         let ensured = Token_Service.ensureTokenDevice(user, token)
 
-        if (ensured && generalTokenStored[data.requester] == token) {z
+        if (ensured && generalTokenStored[data.requester] == token) {
             delete generalTokenStored[data.requester]
             socket.emit("generalResponse", {code: 200} )
         } else {
