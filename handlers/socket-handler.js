@@ -136,6 +136,47 @@ function generalAuthentication(socket) {
         if (ensured && generalTokenStored[data.requester] == token) {
             delete generalTokenStored[data.requester]
             socket.emit("generalResponse", {code: 200} )
+
+            Device.find({type: 1, active: true})
+            .then(doctors => {
+                if (doctors.length == 0) {
+                    console.log("Metges no actius")
+                    reject({error: 404, message: 'Metges no disponibles'})
+                    return
+                }
+    
+                const dataSet = Geo.createCompactSet(doctors, {id: '_id', lat: ['lastInfo', 'latitude'], lon: ['lastInfo', 'longitude']})
+                const geo = new Geo(dataSet)
+                let nearestDoctors = geo.limit(1).nearBy(data.latitude, data.longitude, [0, 5000])
+    
+                if (nearestDoctors.length == 0) {
+                    console.log("Cap metge aprop")
+                    reject({error: 404, message: 'Metges no disponibles'})
+                    return
+                } 
+                let doctorId = nearestDoctors[0].i
+                console.log("Metge trobat => " + nearestDoctors[0].i)
+                data.requester = requester
+                emitToDoctor(doctorId, data)
+    
+                let doctor = doctors.filter(item => item._id === doctorId)[0]
+    
+                let notification = new Notification({
+                    requester: requester._id,
+                    date: new Date().toISOString(),
+                    deviceAssociated: doctor._id,
+                    readed: false,
+                    typeOfAction: 1
+                })
+               
+                notification.save()
+                .then(resolve)
+                .catch(reject)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+
         } else {
             socket.emit("generalResponse",{code: 500})
         }
