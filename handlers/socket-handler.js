@@ -132,55 +132,10 @@ function generalAuthentication(socket) {
         let user = data.requester 
         let token = data.token
         let ensured = Token_Service.ensureTokenDevice(user, token)
-        
-        let notification = new Notification({
-            requester: "5b07e5d82c25910014b6b2b7",
-            date: new Date().toISOString(),
-            deviceAssociated: "5b087201274f810014e2769b",
-            readed: false,
-            typeOfAction: 1
-        })
-       
-        notification.save()
-        .then(resolve)
-        .catch(reject)
 
-        socket.emit("generalResponse",{code: 200})
-
-        if (ensured && generalTokenStored[data.requester] == token) {
+        if (ensured && generalTokenStored[data.requester] == token) {z
             delete generalTokenStored[data.requester]
-            
-
-            
-
-            // Device.findById("5b07e5d82c25910014b6b2b7")
-            // .then(doctor => {
-
-            //     // const dataSet = Geo.createCompactSet(doctor, {id: '_id', lat: ['lastInfo', 'latitude'], lon: ['lastInfo', 'longitude']})
-            //     // const geo = new Geo(dataSet)
-
-            //     // let doctorId = nearestDoctors[0].i
-            //     // console.log("Metge trobat => " + nearestDoctors[0].i)
-            //     // emitToDoctor(doctorId, data)
-            //     // socket.emit("generalResponse", {code: 200} )
-            //     // let doctor = doctors.filter(item => item._id === doctorId)[0]
-    
-            //     let notification = new Notification({
-            //         requester: "5b07e5d82c25910014b6b2b7",
-            //         date: new Date().toISOString(),
-            //         deviceAssociated: "5b087201274f810014e2769b",
-            //         readed: false,
-            //         typeOfAction: 1
-            //     })
-               
-            //     notification.save()
-            //     .then(resolve)
-            //     .catch(reject)
-            // })
-            // .catch(e => {
-            //     socket.emit("generalResponse",{code: 501, error: e})
-            // })
-
+            socket.emit("generalResponse", {code: 200} )
         } else {
             socket.emit("generalResponse",{code: 500})
         }
