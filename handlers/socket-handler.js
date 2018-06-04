@@ -174,7 +174,7 @@ function generalAuthentication(socket) {
                 .catch(reject)
             })
             .catch(e => {
-                socket.emit("generalResponse",{code: 501})
+                socket.emit("generalResponse",{code: 501, error: e})
             })
 
         } else {
