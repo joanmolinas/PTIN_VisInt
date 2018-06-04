@@ -135,13 +135,13 @@ function generalAuthentication(socket) {
 
         if (ensured && generalTokenStored[data.requester] == token) {
             delete generalTokenStored[data.requester]
-            socket.emit("generalResponse", {code: 200} )
+            
 
             Device.find({type: 1, active: true})
             .then(doctors => {
                 if (doctors.length == 0) {
                     console.log("Metges no actius")
-                    reject({error: 404, message: 'Metges no disponibles'})
+                    socket.emit("generalResponse",{code: 404})
                     return
                 }
     
@@ -151,14 +151,14 @@ function generalAuthentication(socket) {
     
                 if (nearestDoctors.length == 0) {
                     console.log("Cap metge aprop")
-                    reject({error: 404, message: 'Metges no disponibles'})
+                    socket.emit("generalResponse",{code: 404})
                     return
                 } 
+
                 let doctorId = nearestDoctors[0].i
                 console.log("Metge trobat => " + nearestDoctors[0].i)
-                data.requester = requester
                 emitToDoctor(doctorId, data)
-    
+                socket.emit("generalResponse", {code: 200} )
                 let doctor = doctors.filter(item => item._id === doctorId)[0]
     
                 let notification = new Notification({
@@ -174,7 +174,7 @@ function generalAuthentication(socket) {
                 .catch(reject)
             })
             .catch(e => {
-                console.log(e)
+                console.log(e)  
             })
 
         } else {
