@@ -28,6 +28,7 @@ window.addEventListener('load', function () {
       devices: [],
       selected_device: '',
       filter_text: '',
+      filter_on:false,
       device_type: '',
       queryDelay: 1000,
       zoomInicial: 17,
@@ -122,8 +123,16 @@ window.addEventListener('load', function () {
 
       refreshDevices: function () {
         this.removeDevicesFromList()
+        if(!this.filter_on){
+          this.getDevices()
+
+        }else{
+          this.filterByText()
+          if(!this.filter_on){
+            this.getDevices()
+          }
+        }
         
-        this.getDevices()
         this.drawDevicesOnHeatMap()
       },
 
@@ -157,10 +166,10 @@ window.addEventListener('load', function () {
         if (this.filter_text.length == 0) {
           this.removeDevicesFromList()
           this.filterByType()
-        } else if (this.filter_text.length > 0 && this.filter_text.length < this.min_length_filter)
-          
+        } else if (this.filter_text.length > 0 && this.filter_text.length < this.min_length_filter){
+          this.filter_on=false
           console.log("Nothing TO DO")
-        else {
+        }else {
           let self = this
           self.removeDevicesFromList()
           setTimeout(function () {
@@ -178,6 +187,7 @@ window.addEventListener('load', function () {
             axios.get(query).then(function (response) {
               //self.removeDevicesFromList()
               self.devices = response.data.docs
+              self.filter_on=true
 
               self.devices.filter(function (device) {
                 return device.lastInfo != null || device.lastInfo != undefined
@@ -225,7 +235,7 @@ window.addEventListener('load', function () {
         if (this.debug) console.log(query)
 
         axios.get(query).then(function (response) {
-          
+          self.filter_on=true
           self.removeDevicesFromList()
           self.devices = response.data.docs
           
@@ -246,6 +256,7 @@ window.addEventListener('load', function () {
           self.drawDevices()
         })
       }else{
+        self.filter_on=false
         self.getDevices()
       }
       },
@@ -1126,7 +1137,7 @@ window.addEventListener('load', function () {
           document.getElementById(self.trans["weather"]).style.backgroundColor = "#0D47A1";
           document.getElementById(self.trans["total"]).style.backgroundColor = "#0D47A1";
           document.getElementById(self.trans["activeDevice"]).style.backgroundColor = "#0D47A1";
-         // document.getElementById(self.trans["nurse"]).style.backgroundColor="#ccc";
+          document.getElementById(self.trans["nurse"]).style.backgroundColor="#0D47A1";
           document.getElementById(self.trans["eA"]).style.backgroundColor = "#0D47A1";
           document.getElementById(self.trans["eB"]).style.backgroundColor = "#0D47A1";
           document.getElementById(self.trans["neapolis"]).style.backgroundColor = "#0D47A1";
@@ -1139,7 +1150,7 @@ window.addEventListener('load', function () {
           document.getElementById(self.trans["weather"]).style.color = "white";
           document.getElementById(self.trans["total"]).style.color = "white";
           document.getElementById(self.trans["activeDevice"]).style.color = "white";
-         // document.getElementById(self.trans["nurse"]).style.backgroundColor="#ccc";
+          document.getElementById(self.trans["nurse"]).style.color="white";
           document.getElementById(self.trans["eA"]).style.color = "white";
           document.getElementById(self.trans["eB"]).style.color = "white";
           document.getElementById(self.trans["neapolis"]).style.color = "white";
