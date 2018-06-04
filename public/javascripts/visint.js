@@ -68,13 +68,13 @@ window.addEventListener('load', function () {
       languageLoaded:false,
       devicesLoaded:false,
       typeDev: {
-        1: '<i class="fas fa-user-md img-circle center-block" style="color:white;background-color: #008CFF;width:80px; margin-left:-5px;margin-top:30px;padding:20px;height:80px;font-size: 20px;"></i>',
-        2: '<i class="fas fa-ambulance img-circle center-block" style="color:white;background-color: rgb(125, 134, 134);width:80px; margin-left:-5px;margin-top:30px;padding:20px;height:80px;font-size: 20px;"></i>',
-        3: '<i class="fas fa-fire img-circle center-block" style="color:white;background-color: rgb(243, 123, 11);width:80px; margin-left:-5px;margin-top:30px;padding:20px;height:80px;font-size: 20px;"></i>',
-        4: '<i class="fas fa-user img-circle center-block" style="color:white;background-color: #077007;width:80px; margin-left:-5px;margin-top:30px;padding:20px;height:80px;font-size: 20px;"></i>',
-        5: '<i class="fas fa-sun img-circle center-block" style="color:white;background-color: #DCF11C;width:80px; margin-left:-5px;margin-top:30px;padding:20px;height:80px;font-size: 20px;"></i>',
-        6: '<i class="fas fa-cloud img-circle center-block" style="color:white;background-color: rgb(45, 231, 245);width:80px; margin-left:-5px;margin-top:30px;padding:20px;height:80px;font-size: 20px;"></i>',
-        7: '<i class="fas fa-medkit img-circle center-block" style="color:white;background-color: rgb(162, 24, 226);width:80px; margin-left:-5px;margin-top:30px;padding:20px;height:80px;font-size: 20px;"></i>',
+        1: '<i class="fas fa-user-md img-circle center-block" style="color:white;background-color: #008CFF;width:50px; margin-left:0px;margin-top:30px;padding:10px;height:50px;"></i>',
+        2: '<i class="fas fa-ambulance img-circle center-block" style="color:white;background-color: rgb(125, 134, 134);width:50px; margin-left:0px;margin-top:30px;padding:10px;height:50px;"></i>',
+        3: '<i class="fas fa-fire img-circle center-block" style="color:white;background-color: rgb(243, 123, 11);width:50px;margin-left:0px;margin-top:30px;padding:10px;height:50px;"></i>',
+        4: '<i class="fas fa-user img-circle center-block" style="color:white;background-color: #077007;width:50px; margin-left:0px;margin-top:30px;padding:10px;height:50px;"></i>',
+        5: '<i class="fas fa-sun img-circle center-block" style="color:white;background-color: #DCF11C;width:50px; margin-left:0px;margin-top:30px;padding:10px;height:50px;"></i>',
+        6: '<i class="fas fa-cloud img-circle center-block" style="color:white;background-color: rgb(45, 231, 245);width:50px;margin-left:0px;margin-top:30px;padding:10px;height:50px;"></i>',
+        7: '<i class="fas fa-medkit img-circle center-block" style="color:white;background-color: rgb(162, 24, 226);width:50px; margin-left:0px;margin-top:30px;padding:10px;height:50px;"></i>',
       }
     },
     mounted: function () {
